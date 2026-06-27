@@ -1,11 +1,12 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect, useRef, ReactNode } from "react";
+import React, { createContext, useContext, useState, useEffect, useRef, ReactNode, useCallback } from "react";
+import { useLogin, useRegister } from "@/hooks/use-auth";
+import { removeToken } from "@/lib/api-client";
+import { AuthUser } from "@/lib/types";
 
-export interface User {
-  id: string;
-  email: string;
-  name: string;
+export interface User extends AuthUser {
+  name?: string;
   avatar?: string;
   phone?: string;
   address?: string;
@@ -26,106 +27,89 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+// Helper to get initial user from localStorage (only runs on client)
+const getInitialUser = (): User | null => {
+  if (typeof window === 'undefined') return null;
+  try {
+    const saved = localStorage.getItem("user");
+    return saved ? JSON.parse(saved) : null;
+  } catch {
+    return null;
+  }
+};
+
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
-  const initialized = useRef(false);
+  // Use lazy initializer to set initial state from localStorage
+  const [user, setUser] = useState<User | null>(() => getInitialUser());
+  const loginMutation = useLogin();
+  const registerMutation = useRegister();
 
+  // Save user to localStorage when it changes
   useEffect(() => {
-    if (initialized.current) return;
-    initialized.current = true;
-
-    // Only access localStorage on client
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem("user");
-      if (saved) {
-        try {
-          const parsed = JSON.parse(saved);
-          // Use a simple assignment pattern instead of setState
-          setUser(parsed);
-        } catch (e) {
-          console.error("Failed to parse user from localStorage", e);
-        }
-      }
-    }
-  }, []);
-
-  useEffect(() => {
-    if (typeof window !== 'undefined' && initialized.current) {
-      if (user) {
-        localStorage.setItem("user", JSON.stringify(user));
-      } else if (initialized.current) {
-        localStorage.removeItem("user");
-      }
+    if (typeof window === 'undefined') return;
+    
+    if (user) {
+      localStorage.setItem("user", JSON.stringify(user));
+    } else {
+      localStorage.removeItem("user");
     }
   }, [user]);
 
-  const login = async (email: string, password: string): Promise<boolean> => {
-    if (typeof window === 'undefined') return false;
-    
-    // Mock login - check stored users
-    const users = JSON.parse(localStorage.getItem("users") || "[]");
-    const foundUser = users.find(
-      (u: { email: string; password: string }) =>
-        u.email === email && u.password === password
-    );
-
-    if (foundUser) {
-      const { password: _, ...userWithoutPassword } = foundUser;
-      setUser(userWithoutPassword);
-      return true;
+  const login = useCallback(async (email: string, password: string): Promise<boolean> => {
+    try {
+      const result = await loginMutation.mutateAsync({ email, password });
+      if (result) {
+        const userData: User = {
+          ...result.user,
+          name: result.user.email.split('@')[0],
+        };
+        setUser(userData);
+        return true;
+      }
+      return false;
+    } catch {
+      return false;
     }
-    return false;
-  };
+  }, [loginMutation]);
 
-  const register = async (
+  const register = useCallback(async (
     email: string,
     password: string,
     name: string
   ): Promise<boolean> => {
-    if (typeof window === 'undefined') return false;
-    
-    const users = JSON.parse(localStorage.getItem("users") || "[]");
-    const exists = users.some((u: { email: string }) => u.email === email);
-
-    if (exists) {
+    try {
+      const result = await registerMutation.mutateAsync({ email, password });
+      if (result) {
+        const userData: User = {
+          ...result.user,
+          name,
+        };
+        setUser(userData);
+        return true;
+      }
+      return false;
+    } catch {
       return false;
     }
+  }, [registerMutation]);
 
-    const newUser = {
-      id: crypto.randomUUID(),
-      email,
-      password,
-      name,
-      avatar: `https://api.dicebear.com/7.x/initials/svg?seed=${name}`,
-    };
-
-    users.push(newUser);
-    localStorage.setItem("users", JSON.stringify(users));
-
-    const { password: _, ...userWithoutPassword } = newUser;
-    setUser(userWithoutPassword);
-    return true;
-  };
-
-  const logout = () => {
+  const logout = useCallback(() => {
     setUser(null);
-  };
+    removeToken();
+  }, []);
 
-  const updateProfile = (updates: Partial<User>) => {
+  const updateProfile = useCallback((updates: Partial<User>) => {
     if (typeof window === 'undefined') return;
     
-    if (user) {
-      const updatedUser = { ...user, ...updates };
-      setUser(updatedUser);
-
-      // Also update in users storage
-      const users = JSON.parse(localStorage.getItem("users") || "[]");
-      const updatedUsers = users.map((u: User & { password?: string }) =>
-        u.id === user.id ? { ...u, ...updates } : u
-      );
-      localStorage.setItem("users", JSON.stringify(updatedUsers));
-    }
-  };
+    setUser(prev => {
+      if (prev) {
+        const updatedUser = { ...prev, ...updates };
+        localStorage.setItem("user", JSON.stringify(updatedUser));
+        return updatedUser;
+      }
+      return prev;
+    });
+  }, []);
 
   return (
     <AuthContext.Provider

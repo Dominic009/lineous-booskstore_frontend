@@ -1,100 +1,53 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
-
-export interface Book {
-  id: string;
-  title: string;
-  author: string;
-  price: number;
-  originalPrice?: number;
-  image: string;
-  rating: number;
-  description?: string;
-  genre?: string;
-  pages?: number;
-  publishDate?: string;
-  isbn?: string;
-  isNew?: boolean;
-  isBestseller?: boolean;
-}
-
-export interface CartItem extends Book {
-  quantity: number;
-}
+import React, { createContext, useContext, useState, ReactNode } from "react";
+import { useCart, useAddToCart, useUpdateCartItem, useRemoveFromCart, useClearCart } from "@/hooks/use-cart";
+import { Cart, CartItem } from "@/lib/types";
 
 interface CartContextType {
   items: CartItem[];
-  addToCart: (book: Book) => void;
-  removeFromCart: (bookId: string) => void;
-  updateQuantity: (bookId: string, quantity: number) => void;
+  addToCart: (bookId: string, quantity?: number) => void;
+  removeFromCart: (cartItemId: string) => void;
+  updateQuantity: (cartItemId: string, quantity: number) => void;
   clearCart: () => void;
   totalItems: number;
   totalPrice: number;
   isCartOpen: boolean;
   setIsCartOpen: (open: boolean) => void;
+  isLoading: boolean;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider = ({ children }: { children: ReactNode }) => {
-  const [items, setItems] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const { data: cart, isLoading } = useCart();
+  const { mutate: addToCartMutate } = useAddToCart();
+  const { mutate: updateCartItemMutate } = useUpdateCartItem();
+  const { mutate: removeFromCartMutate } = useRemoveFromCart();
+  const { mutate: clearCartMutate } = useClearCart();
 
-  useEffect(() => {
-    // Only access localStorage on client
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem("cart");
-      if (saved) {
-        try {
-          setItems(JSON.parse(saved));
-        } catch (e) {
-          console.error("Failed to parse cart from localStorage", e);
-        }
-      }
-    }
-  }, []);
+  const items = cart?.cartItems || [];
 
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem("cart", JSON.stringify(items));
-    }
-  }, [items]);
-
-  const addToCart = (book: Book) => {
-    setItems((prev) => {
-      const existing = prev.find((item) => item.id === book.id);
-      if (existing) {
-        return prev.map((item) =>
-          item.id === book.id ? { ...item, quantity: item.quantity + 1 } : item
-        );
-      }
-      return [...prev, { ...book, quantity: 1 }];
-    });
-    setIsCartOpen(true);
+  const addToCart = (bookId: string, quantity: number = 1) => {
+    addToCartMutate({ bookId, quantity });
   };
 
-  const removeFromCart = (bookId: string) => {
-    setItems((prev) => prev.filter((item) => item.id !== bookId));
+  const removeFromCart = (cartItemId: string) => {
+    removeFromCartMutate(cartItemId);
   };
 
-  const updateQuantity = (bookId: string, quantity: number) => {
-    if (quantity <= 0) {
-      removeFromCart(bookId);
-      return;
-    }
-    setItems((prev) =>
-      prev.map((item) => (item.id === bookId ? { ...item, quantity } : item))
-    );
+  const updateQuantity = (cartItemId: string, quantity: number) => {
+    updateCartItemMutate({ cartItemId, quantity });
   };
 
   const clearCart = () => {
-    setItems([]);
+    clearCartMutate();
   };
 
   const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
   const totalPrice = items.reduce(
-    (sum, item) => sum + item.price * item.quantity,
+    (sum, item) => sum + (item.book.discountPrice || item.book.price) * item.quantity,
     0
   );
 
@@ -110,6 +63,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         totalPrice,
         isCartOpen,
         setIsCartOpen,
+        isLoading,
       }}
     >
       {children}
@@ -117,10 +71,10 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-export const useCart = () => {
+export const useCartContext = () => {
   const context = useContext(CartContext);
   if (!context) {
-    throw new Error("useCart must be used within a CartProvider");
+    throw new Error("useCartContext must be used within a CartProvider");
   }
   return context;
 };

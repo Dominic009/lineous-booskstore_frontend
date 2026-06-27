@@ -4,11 +4,26 @@ import { X, Minus, Plus, ShoppingBag, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Separator } from "@/components/ui/separator";
-import { useCart } from "@/contexts/CartContext";
+import { useCartContext } from "@/contexts/CartContext";
 import Link from "next/link";
 
 const CartDrawer = () => {
-  const { items, isCartOpen, setIsCartOpen, removeFromCart, updateQuantity, totalItems, totalPrice } = useCart();
+  const { items, isCartOpen, setIsCartOpen, removeFromCart, updateQuantity, totalItems, totalPrice, isLoading } = useCartContext();
+
+  if (isLoading) {
+    return (
+      <Sheet open={isCartOpen} onOpenChange={setIsCartOpen}>
+        <SheetContent className="w-full sm:max-w-lg flex flex-col">
+          <SheetHeader>
+            <SheetTitle className="flex items-center gap-2 font-display text-2xl">
+              <ShoppingBag className="w-6 h-6 text-primary" />
+              Loading...
+            </SheetTitle>
+          </SheetHeader>
+        </SheetContent>
+      </Sheet>
+    );
+  }
 
   return (
     <Sheet open={isCartOpen} onOpenChange={setIsCartOpen}>
@@ -52,26 +67,26 @@ const CartDrawer = () => {
                     className="flex gap-4 bg-muted/30 rounded-lg p-3"
                   >
                     <Link 
-                      href={`/book/${item.id}`} 
+                      href={`/book/${item.book.id}`} 
                       onClick={() => setIsCartOpen(false)}
                       className="shrink-0"
                     >
                       <img
-                        src={item.image}
-                        alt={item.title}
+                        src={item.book.thumbnail}
+                        alt={item.book.title}
                         className="w-20 h-28 object-cover rounded-lg hover:opacity-80 transition-opacity"
                       />
                     </Link>
                     <div className="flex-1 min-w-0">
                       <Link
-                        href={`/book/${item.id}`}
+                        href={`/book/${item.book.id}`}
                         onClick={() => setIsCartOpen(false)}
                         className="font-medium line-clamp-2 hover:text-primary transition-colors"
                       >
-                        {item.title}
+                        {item.book.title}
                       </Link>
                       <p className="text-sm text-muted-foreground mb-2">
-                        {item.author}
+                        {item.book.publication?.name || "Unknown Author"}
                       </p>
                       <div className="flex items-center justify-between">
                         <div className="flex items-center border border-border rounded-lg">
@@ -92,7 +107,7 @@ const CartDrawer = () => {
                           </button>
                         </div>
                         <span className="font-semibold text-primary">
-                          ${(item.price * item.quantity).toFixed(2)}
+                          ${((item.book.discountPrice || item.book.price) * item.quantity).toFixed(2)}
                         </span>
                       </div>
                     </div>

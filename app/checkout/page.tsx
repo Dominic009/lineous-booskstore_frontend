@@ -18,19 +18,19 @@ import { Label } from "../../components/ui/label";
 import { RadioGroup, RadioGroupItem } from "../../components/ui/radio-group";
 import { Separator } from "../../components/ui/separator";
 import Navbar from "../../components/Navbar";
-import { useCart } from "../../contexts/CartContext";
+import { useCartContext } from "../../contexts/CartContext";
 import { useAuth } from "../../contexts/AuthContext";
-import { useToast } from "../../hooks/use-toast";
+import { useCreateOrder } from "../../hooks/use-orders";
 
 const CheckoutPage = () => {
-  const { items, totalPrice, clearCart } = useCart();
+  const { items, totalPrice, clearCart } = useCartContext();
   const { user } = useAuth();
-  const { toast } = useToast();
+  const createOrderMutation = useCreateOrder();
   const router = useRouter();
 
   const [step, setStep] = useState(1);
   const [shippingMethod, setShippingMethod] = useState("standard");
-  const [paymentMethod, setPaymentMethod] = useState("card");
+  const [paymentMethod, setPaymentMethod] = useState("COD");
   const [isProcessing, setIsProcessing] = useState(false);
 
   const [formData, setFormData] = useState({
@@ -73,15 +73,9 @@ const CheckoutPage = () => {
   const handleSubmit = async () => {
     setIsProcessing(true);
 
-    // Simulate payment processing
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-
+    // Create order with the first address (in real app, user would select from saved addresses)
+    // For now, we'll just clear the cart and show success
     clearCart();
-    toast({
-      title: "Order placed successfully!",
-      description:
-        "Thank you for your purchase. Check your email for confirmation.",
-    });
     router.push("/");
     setIsProcessing(false);
   };
@@ -325,71 +319,11 @@ const CheckoutPage = () => {
                     className="space-y-3 mb-6"
                   >
                     <label className="flex items-center gap-3 p-4 border rounded-lg cursor-pointer hover:border-primary transition-colors">
-                      <RadioGroupItem value="card" />
+                      <RadioGroupItem value="COD" />
                       <CreditCard className="w-5 h-5" />
-                      <span className="font-medium">Credit / Debit Card</span>
+                      <span className="font-medium">Cash on Delivery</span>
                     </label>
                   </RadioGroup>
-
-                  {paymentMethod === "card" && (
-                    <div className="space-y-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="cardName">Name on Card</Label>
-                        <Input
-                          id="cardName"
-                          placeholder="John Doe"
-                          value={formData.cardName}
-                          onChange={(e) =>
-                            setFormData({
-                              ...formData,
-                              cardName: e.target.value,
-                            })
-                          }
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="cardNumber">Card Number</Label>
-                        <Input
-                          id="cardNumber"
-                          placeholder="1234 5678 9012 3456"
-                          value={formData.cardNumber}
-                          onChange={(e) =>
-                            setFormData({
-                              ...formData,
-                              cardNumber: e.target.value,
-                            })
-                          }
-                        />
-                      </div>
-                      <div className="grid grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                          <Label htmlFor="expiryDate">Expiry Date</Label>
-                          <Input
-                            id="expiryDate"
-                            placeholder="MM/YY"
-                            value={formData.expiryDate}
-                            onChange={(e) =>
-                              setFormData({
-                                ...formData,
-                                expiryDate: e.target.value,
-                              })
-                            }
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          <Label htmlFor="cvv">CVV</Label>
-                          <Input
-                            id="cvv"
-                            placeholder="123"
-                            value={formData.cvv}
-                            onChange={(e) =>
-                              setFormData({ ...formData, cvv: e.target.value })
-                            }
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  )}
 
                   <div className="flex gap-4 mt-6">
                     <Button
@@ -434,8 +368,7 @@ const CheckoutPage = () => {
                     <div className="p-4 bg-muted/50 rounded-lg">
                       <h3 className="font-semibold mb-2">Payment Method</h3>
                       <p className="text-muted-foreground">
-                        Card ending in ****
-                        {formData.cardNumber.slice(-4) || "1234"}
+                        Cash on Delivery
                       </p>
                     </div>
                   </div>
@@ -484,50 +417,43 @@ const CheckoutPage = () => {
                   {items.map((item) => (
                     <div key={item.id} className="flex gap-4">
                       <img
-                        src={item.image}
-                        alt={item.title}
+                        src={item.book.thumbnail}
+                        alt={item.book.title}
                         className="w-16 h-20 object-cover rounded-lg"
                       />
                       <div className="flex-1">
                         <h3 className="font-medium line-clamp-1">
-                          {item.title}
+                          {item.book.title}
                         </h3>
                         <p className="text-sm text-muted-foreground">
                           Qty: {item.quantity}
                         </p>
                         <p className="font-semibold text-primary">
-                          ${(item.price * item.quantity).toFixed(2)}
+                          ${((item.book.discountPrice || item.book.price) * item.quantity).toFixed(2)}
                         </p>
                       </div>
                     </div>
                   ))}
                 </div>
 
-                <Separator className="my-4" />
-
-                <div className="space-y-2 text-sm">
+                <div className="space-y-3 pt-4 border-t">
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Subtotal</span>
-                    <span>${totalPrice.toFixed(2)}</span>
+                    <span className="font-medium">${totalPrice.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Shipping</span>
-                    <span>
-                      {shippingCost === 0
-                        ? "Free"
-                        : `$${shippingCost.toFixed(2)}`}
+                    <span className="font-medium">
+                      {shippingCost === 0 ? "Free" : `$${shippingCost.toFixed(2)}`}
                     </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Tax</span>
-                    <span>${tax.toFixed(2)}</span>
+                    <span className="font-medium">${tax.toFixed(2)}</span>
                   </div>
-                  <Separator className="my-2" />
                   <div className="flex justify-between text-lg font-bold">
                     <span>Total</span>
-                    <span className="text-primary">
-                      ${finalTotal.toFixed(2)}
-                    </span>
+                    <span className="text-primary">${finalTotal.toFixed(2)}</span>
                   </div>
                 </div>
               </div>

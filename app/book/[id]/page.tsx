@@ -19,47 +19,22 @@ import { Badge } from "../../../components/ui/badge";
 import Navbar from "../../../components/Navbar";
 import Footer from "../../../components/Footer";
 import BookCard from "../../../components/BookCard";
-import { useCart } from "../../../contexts/CartContext";
-import { useToast } from "../../../hooks/use-toast";
+import { useCartContext } from "../../../contexts/CartContext";
+import { useBook } from "../../../hooks/use-books";
 import { Button } from "../../../components/ui/button";
-
-// Placeholder book data - will be replaced with actual data source
-const placeholderBook = {
-  id: "1",
-  title: "Sample Book",
-  author: "Author Name",
-  price: 29.99,
-  originalPrice: 39.99,
-  image: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400&h=600&fit=crop",
-  description: "This is a sample book description. Replace with actual book data.",
-  rating: 4,
-  genre: "Fiction",
-  pages: 320,
-  publishDate: "2024",
-  isbn: "978-3-16-148410-0",
-  isNew: true,
-  isBestseller: false,
-};
 
 const BookDetailsPage = () => {
   const params = useParams();
   const router = useRouter();
-  const { addToCart } = useCart();
-  const { toast } = useToast();
+  const { addToCart } = useCartContext();
   const [quantity, setQuantity] = useState(1);
-
-  // In a real app, you'd fetch book data here
-  // const book = getBookById(params.id as string);
-  const book = { ...placeholderBook, id: params?.id as string };
+  
+  const { data: book, isLoading, error } = useBook(params?.id as string);
 
   const handleAddToCart = () => {
-    for (let i = 0; i < quantity; i++) {
-      addToCart(book);
+    if (book) {
+      addToCart(book.id, quantity);
     }
-    toast({
-      title: "Added to cart",
-      description: `${quantity}x "${book.title}" added to your cart.`,
-    });
   };
 
   const features = [
@@ -67,6 +42,49 @@ const BookDetailsPage = () => {
     { icon: Shield, text: "Secure payment" },
     { icon: RotateCcw, text: "30-day returns" },
   ];
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Navbar />
+        <main className="pt-24 pb-16">
+          <div className="container mx-auto px-4 lg:px-8">
+            <div className="animate-pulse">
+              <div className="h-8 bg-muted rounded mb-4" />
+              <div className="grid md:grid-cols-2 gap-8">
+                <div className="h-96 bg-muted rounded-xl" />
+                <div className="space-y-4">
+                  <div className="h-12 bg-muted rounded" />
+                  <div className="h-6 bg-muted rounded w-3/4" />
+                  <div className="h-8 bg-muted rounded w-1/2" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (error || !book) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Navbar />
+        <main className="pt-24 pb-16">
+          <div className="container mx-auto px-4 lg:px-8 text-center">
+            <h1 className="font-display text-2xl font-bold mb-4">Book not found</h1>
+            <p className="text-muted-foreground mb-6">The book you are looking for doesnt exist or is not available.</p>
+            <Button onClick={() => router.push("/")}>Browse Books</Button>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  const displayPrice = book.discountPrice || book.price;
+  const hasDiscount = !!book.discountPrice;
 
   return (
     <div className="min-h-screen bg-background">
@@ -100,25 +118,16 @@ const BookDetailsPage = () => {
             >
               <div className="aspect-[3/4] rounded-2xl overflow-hidden bg-muted shadow-warm-hover">
                 <img
-                  src={book.image}
+                  src={book.thumbnail}
                   alt={book.title}
                   className="w-full h-full object-cover"
                 />
               </div>
               {/* Badges */}
               <div className="absolute top-4 left-4 flex flex-col gap-2">
-                {book.isNew && (
-                  <Badge className="bg-secondary text-secondary-foreground">
-                    New Release
-                  </Badge>
-                )}
-                {book.isBestseller && (
-                  <Badge className="bg-gold text-charcoal">Bestseller</Badge>
-                )}
-                {book.originalPrice && (
+                {hasDiscount && (
                   <Badge className="bg-primary text-primary-foreground">
-                    -{Math.round((1 - book.price / book.originalPrice) * 100)}%
-                    OFF
+                    -{Math.round((1 - displayPrice / book.price) * 100)}% OFF
                   </Badge>
                 )}
               </div>
@@ -132,7 +141,7 @@ const BookDetailsPage = () => {
               className="flex flex-col"
             >
               <Badge variant="outline" className="w-fit mb-4">
-                {book.genre}
+                {book.subject?.name || "Uncategorized"}
               </Badge>
 
               <h1 className="font-display text-2xl sm:text-3xl lg:text-5xl font-bold text-foreground mb-2">
@@ -140,35 +149,38 @@ const BookDetailsPage = () => {
               </h1>
 
               <p className="text-xl text-muted-foreground mb-4">
-                by {book.author}
+                by {book.publication?.name || "Unknown Author"}
               </p>
 
               {/* Rating */}
-              <div className="flex items-center gap-2 mb-6">
-                <div className="flex">
-                  {[...Array(5)].map((_, i) => (
-                    <Star
-                      key={i}
-                      className={`w-5 h-5 ${i < book.rating
-                          ? "fill-gold text-gold"
-                          : "text-muted-foreground/30"
+              {book.reviews && book.reviews.length > 0 && (
+                <div className="flex items-center gap-2 mb-6">
+                  <div className="flex">
+                    {[...Array(5)].map((_, i) => (
+                      <Star
+                        key={i}
+                        className={`w-5 h-5 ${
+                          i < Math.round(book.reviews.reduce((sum, r) => sum + r.rating, 0) / book.reviews.length)
+                            ? "fill-gold text-gold"
+                            : "text-muted-foreground/30"
                         }`}
-                    />
-                  ))}
+                      />
+                    ))}
+                  </div>
+                  <span className="text-muted-foreground">
+                    ({book.reviews.length} reviews)
+                  </span>
                 </div>
-                <span className="text-muted-foreground">
-                  ({book.rating}.0) • 124 reviews
-                </span>
-              </div>
+              )}
 
               {/* Price */}
               <div className="flex items-baseline gap-3 mb-6">
                 <span className="text-2xl sm:text-4xl font-bold text-primary">
-                  ${book.price.toFixed(2)}
+                  ${displayPrice.toFixed(2)}
                 </span>
-                {book.originalPrice && (
+                {hasDiscount && (
                   <span className="text-xl text-muted-foreground line-through">
-                    ${book.originalPrice.toFixed(2)}
+                    ${book.price.toFixed(2)}
                   </span>
                 )}
               </div>
@@ -182,19 +194,19 @@ const BookDetailsPage = () => {
               <div className="grid grid-cols-2 gap-4 mb-8 p-4 bg-muted/50 rounded-xl">
                 <div>
                   <p className="text-sm text-muted-foreground">Pages</p>
-                  <p className="font-semibold">{book.pages}</p>
+                  <p className="font-semibold">{book.edition}</p>
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">Published</p>
-                  <p className="font-semibold">{book.publishDate}</p>
+                  <p className="font-semibold">{book.publicationDate}</p>
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">ISBN</p>
                   <p className="font-semibold">{book.isbn}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground">Genre</p>
-                  <p className="font-semibold">{book.genre}</p>
+                  <p className="text-sm text-muted-foreground">Language</p>
+                  <p className="font-semibold">{book.language}</p>
                 </div>
               </div>
 

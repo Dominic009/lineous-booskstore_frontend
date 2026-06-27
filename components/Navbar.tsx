@@ -14,7 +14,7 @@ import {
   ChevronDown,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useCart } from "@/contexts/CartContext";
+import { useCartContext } from "@/contexts/CartContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -118,7 +118,7 @@ const MenuItem = ({
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState<Record<string, boolean>>({});
-  const { totalItems, setIsCartOpen } = useCart();
+  const { totalItems, setIsCartOpen } = useCartContext();
   const { isAuthenticated } = useAuth();
   const navigate = useRouter();
 

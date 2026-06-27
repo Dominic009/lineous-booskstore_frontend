@@ -1,61 +1,30 @@
-
 "use client"
 import { motion } from "framer-motion";
 import { Heart, ShoppingCart, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useCart, Book } from "@/contexts/CartContext";
-import { useToast } from "@/hooks/use-toast";
+import { useCartContext } from "@/contexts/CartContext";
+import { Book } from "@/lib/types";
 
 interface BookCardProps {
-  id?: string;
-  title: string;
-  author: string;
-  price: number;
-  originalPrice?: number;
-  image: string;
-  rating: number;
-  isNew?: boolean;
-  isBestseller?: boolean;
+  book: Book;
   delay?: number;
 }
 
 const BookCard = ({
-  id,
-  title,
-  author,
-  price,
-  originalPrice,
-  image,
-  rating,
-  isNew,
-  isBestseller,
+  book,
   delay = 0,
 }: BookCardProps) => {
-  const { addToCart } = useCart();
-  const { toast } = useToast();
+  const { addToCart } = useCartContext();
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     
-    const book: Book = {
-      id: id || crypto.randomUUID(),
-      title,
-      author,
-      price,
-      originalPrice,
-      image,
-      rating,
-      isNew,
-      isBestseller,
-    };
-    
-    addToCart(book);
-    toast({
-      title: "Added to cart",
-      description: `"${title}" has been added to your cart.`,
-    });
+    addToCart(book.id, 1);
   };
+
+  const displayPrice = book.discountPrice || book.price;
+  const hasDiscount = !!book.discountPrice;
 
   return (
     <motion.div
@@ -69,8 +38,8 @@ const BookCard = ({
       {/* Image Container */}
       <div className="relative aspect-[3/4] overflow-hidden bg-muted">
         <motion.img
-          src={image}
-          alt={title}
+          src={book.thumbnail}
+          alt={book.title}
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
         />
         
@@ -102,33 +71,13 @@ const BookCard = ({
 
         {/* Badges */}
         <div className="absolute top-3 left-3 flex flex-col gap-2">
-          {isNew && (
+          {hasDiscount && (
             <motion.span
               initial={{ x: -20, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
-              className="px-3 py-1 bg-secondary text-secondary-foreground text-xs font-semibold rounded-full"
-            >
-              New
-            </motion.span>
-          )}
-          {isBestseller && (
-            <motion.span
-              initial={{ x: -20, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              transition={{ delay: 0.1 }}
-              className="px-3 py-1 bg-gold text-charcoal text-xs font-semibold rounded-full"
-            >
-              Bestseller
-            </motion.span>
-          )}
-          {originalPrice && (
-            <motion.span
-              initial={{ x: -20, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              transition={{ delay: 0.2 }}
               className="px-3 py-1 bg-primary text-primary-foreground text-xs font-semibold rounded-full"
             >
-              -{Math.round((1 - price / originalPrice) * 100)}%
+              -{Math.round((1 - displayPrice / book.price) * 100)}%
             </motion.span>
           )}
         </div>
@@ -136,32 +85,38 @@ const BookCard = ({
 
       {/* Content */}
       <div className="p-3 sm:p-4">
-        {/* Rating */}
-        <div className="flex items-center gap-1 mb-1 sm:mb-2">
-          {[...Array(5)].map((_, i) => (
-            <Star
-              key={i}
-              className={`w-3 h-3 sm:w-4 sm:h-4 ${
-                i < rating ? "fill-gold text-gold" : "text-muted-foreground/30"
-              }`}
-            />
-          ))}
-          <span className="text-xs sm:text-sm text-muted-foreground ml-1">({rating}.0)</span>
-        </div>
+        {/* Rating - using average of reviews if available */}
+        {book.reviews && book.reviews.length > 0 && (
+          <div className="flex items-center gap-1 mb-1 sm:mb-2">
+            {[...Array(5)].map((_, i) => (
+              <Star
+                key={i}
+                className={`w-3 h-3 sm:w-4 sm:h-4 ${
+                  i < Math.round(book.reviews.reduce((sum, r) => sum + r.rating, 0) / book.reviews.length) ? "fill-gold text-gold" : "text-muted-foreground/30"
+                }`}
+              />
+            ))}
+            <span className="text-xs sm:text-sm text-muted-foreground ml-1">
+              ({book.reviews.length})
+            </span>
+          </div>
+        )}
 
         {/* Title & Author */}
         <h3 className="font-display text-sm sm:text-lg font-semibold text-foreground mb-1 line-clamp-1 group-hover:text-primary transition-colors">
-          {title}
+          {book.title}
         </h3>
-        <p className="text-xs sm:text-sm text-muted-foreground mb-2 sm:mb-3">{author}</p>
+        <p className="text-xs sm:text-sm text-muted-foreground mb-2 sm:mb-3">
+          {book.publication?.name || "Unknown Author"}
+        </p>
 
         {/* Price & Action */}
         <div className="flex items-center justify-between">
           <div className="flex items-baseline gap-1 sm:gap-2">
-            <span className="text-base sm:text-xl font-bold text-primary">${price.toFixed(2)}</span>
-            {originalPrice && (
+            <span className="text-base sm:text-xl font-bold text-primary">${displayPrice.toFixed(2)}</span>
+            {hasDiscount && (
               <span className="text-xs sm:text-sm text-muted-foreground line-through">
-                ${originalPrice.toFixed(2)}
+                ${book.price.toFixed(2)}
               </span>
             )}
           </div>

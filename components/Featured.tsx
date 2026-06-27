@@ -4,11 +4,28 @@ import { Sparkles, ArrowRight } from "lucide-react";
 import BookCard from "@/components/BookCard";
 import SectionHeader from "@/components/SectionHeader";
 import { Button } from "@/components/ui/button";
-import { allBooks } from "@/data/books";
+import { useBooks } from "@/hooks/use-books";
 import Link from "next/link";
 
 const Featured = () => {
-  const featuredBooks = allBooks.filter((book) => book.isBestseller).slice(0, 4);
+  const { data: books = [], isLoading } = useBooks();
+  
+  // Show first 4 books as featured
+  const featuredBooks = books.slice(0, 4);
+
+  if (isLoading) {
+    return (
+      <section id="featured" className="py-16 lg:py-24 bg-muted/50">
+        <div className="container mx-auto px-4 lg:px-8">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="animate-pulse bg-muted rounded-xl h-96" />
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section id="featured" className="py-16 lg:py-24 bg-muted/50">
@@ -63,7 +80,7 @@ const Featured = () => {
           {featuredBooks.map((book, index) => (
             <Link key={book.id} href={`/book/${book.id}`}>
               <BookCard
-                {...book}
+                book={book}
                 delay={index * 0.1}
               />
             </Link>
