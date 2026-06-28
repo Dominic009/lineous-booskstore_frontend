@@ -1,6 +1,6 @@
 "use client";
 
-import { Toaster } from "@/components/ui/sonner";
+import { Toaster } from "sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { CartProvider } from "@/contexts/CartContext";
@@ -13,7 +13,7 @@ import { OrderProvider } from "@/contexts/OrderContext";
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 5 * 60 * 1000, // 5 minutes
+      staleTime: 5 * 60 * 1000,
       retry: 1,
     },
   },
@@ -32,7 +32,7 @@ export default function Providers({
             <AddressProvider>
               <OrderProvider>
                 <TooltipProvider>
-                  <Toaster />
+                  <Toaster richColors position="top-center" />
                   <CartDrawer />
                   {children}
                 </TooltipProvider>

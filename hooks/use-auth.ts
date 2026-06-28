@@ -1,8 +1,7 @@
 "use client";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
-import { apiClient, setToken, removeToken, ApiError } from "@/lib/api-client";
+import { apiClient, setToken, removeToken } from "@/lib/api-client";
 import { AuthResponse, AuthUser } from "@/lib/types";
 
 interface LoginCredentials {
@@ -15,7 +14,6 @@ interface RegisterData {
   password: string;
 }
 
-// Login hook
 export const useLogin = () => {
   const queryClient = useQueryClient();
 
@@ -27,19 +25,10 @@ export const useLogin = () => {
     onSuccess: (data) => {
       setToken(data.accessToken);
       queryClient.setQueryData(["user"], data.user);
-      toast.success("Login successful", {
-        description: "Welcome back!",
-      });
-    },
-    onError: (error) => {
-      if (error instanceof ApiError) {
-        toast.error(error.message);
-      }
     },
   });
 };
 
-// Register hook
 export const useRegister = () => {
   const queryClient = useQueryClient();
 
@@ -51,32 +40,19 @@ export const useRegister = () => {
     onSuccess: (data) => {
       setToken(data.accessToken);
       queryClient.setQueryData(["user"], data.user);
-      toast.success("Registration successful", {
-        description: "Your account has been created!",
-      });
-    },
-    onError: (error) => {
-      if (error instanceof ApiError) {
-        toast.error(error.message);
-      }
     },
   });
 };
 
-// Logout hook
 export const useLogout = () => {
   const queryClient = useQueryClient();
 
   return () => {
     removeToken();
     queryClient.clear();
-    toast.success("Logged out", {
-      description: "You have been logged out successfully.",
-    });
   };
 };
 
-// Get current user hook
 export const useCurrentUser = () => {
   return {
     data: null as AuthUser | null,

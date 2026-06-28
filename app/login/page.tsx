@@ -9,7 +9,7 @@ import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
 import { Label } from "../../components/ui/label";
 import { useAuth } from "../../contexts/AuthContext";
-import { useToast } from "../../hooks/use-toast";
+import { toast } from "sonner";
 
 const LoginPage = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -23,7 +23,6 @@ const LoginPage = () => {
   });
 
   const { login, register } = useAuth();
-  const { toast } = useToast();
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -32,57 +31,28 @@ const LoginPage = () => {
 
     try {
       if (isLogin) {
-        const res = await login(formData.email, formData.password);
-        console.log(res);
-        if (res) {
-          toast({
-            title: "Welcome back!",
-            description: "You've successfully logged in.",
-          });
-          router.push("/");
-        } else {
-          toast({
-            title: "Login failed",
-            description: "Invalid email or password.",
-            variant: "destructive",
-          });
-        }
+        await login(formData.email, formData.password);
+        toast.success("Welcome back!", {
+          description: "You've successfully logged in.",
+        });
+        router.push("/");
       } else {
         if (formData.password !== formData.confirmPassword) {
-          toast({
-            title: "Passwords don't match",
+          toast.warning("Passwords don't match", {
             description: "Please make sure your passwords match.",
-            variant: "destructive",
           });
           setIsLoading(false);
           return;
         }
 
-        const success = await register(
-          formData.email,
-          formData.password,
-          formData.name,
-        );
-        if (success) {
-          toast({
-            title: "Account created!",
-            description: "Welcome to BookHaven.",
-          });
-          router.push("/");
-        } else {
-          toast({
-            title: "Registration failed",
-            description: "An account with this email already exists.",
-            variant: "destructive",
-          });
-        }
+        await register(formData.email, formData.password, formData.name);
+        toast.success("Account created!", {
+          description: "Welcome to BookHaven.",
+        });
+        router.push("/");
       }
     } catch (error) {
-      toast({
-        title: "Error",
-        description: "Something went wrong. Please try again.",
-        variant: "destructive",
-      });
+      toast.error(error instanceof Error ? error.message : "Something went wrong. Please try again.");
     } finally {
       setIsLoading(false);
     }

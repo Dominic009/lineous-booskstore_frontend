@@ -27,8 +27,8 @@ export interface User extends AuthUser {
 interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
-  login: (email: string, password: string) => Promise<AuthResponse | null>;
-  register: (email: string, password: string, name: string) => Promise<AuthResponse | null>;
+  login: (email: string, password: string) => Promise<AuthResponse>;
+  register: (email: string, password: string, name: string) => Promise<AuthResponse>;
   logout: () => void;
   updateProfile: (updates: Partial<User>) => void;
 }
@@ -64,43 +64,29 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, [user]);
 
   const login = useCallback(
-    async (email: string, password: string): Promise<AuthResponse | null> => {
-      try {
-        const result = await loginMutation.mutateAsync({ email, password });
-        if (result) {
-          const userData: User = {
-            ...result.user,
-            name: result.user.email.split("@")[0],
-          };
-          setUser(userData);
-          setToken(result.accessToken);
-          return result;
-        }
-        return null;
-      } catch {
-        return null;
-      }
+    async (email: string, password: string): Promise<AuthResponse> => {
+      const result = await loginMutation.mutateAsync({ email, password });
+      const userData: User = {
+        ...result.user,
+        name: result.user.email.split("@")[0],
+      };
+      setUser(userData);
+      setToken(result.accessToken);
+      return result;
     },
     [loginMutation],
   );
 
   const register = useCallback(
-    async (email: string, password: string, name: string): Promise<AuthResponse | null> => {
-      try {
-        const result = await registerMutation.mutateAsync({ email, password });
-        if (result) {
-          const userData: User = {
-            ...result.user,
-            name,
-          };
-          setUser(userData);
-          setToken(result.accessToken);
-          return result;
-        }
-        return null;
-      } catch {
-        return null;
-      }
+    async (email: string, password: string, name: string): Promise<AuthResponse> => {
+      const result = await registerMutation.mutateAsync({ email, password });
+      const userData: User = {
+        ...result.user,
+        name,
+      };
+      setUser(userData);
+      setToken(result.accessToken);
+      return result;
     },
     [registerMutation],
   );
