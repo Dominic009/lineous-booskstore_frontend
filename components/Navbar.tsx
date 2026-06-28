@@ -187,27 +187,31 @@ const Navbar = () => {
 
           {/* Actions */}
           <div className="flex items-center gap-3">
-            <Search className="w-5 h-5 cursor-pointer" />
-            <Heart className="w-5 h-5 cursor-pointer hidden sm:block" />
-            <User
-              className="w-5 h-5 cursor-pointer hidden sm:block"
-              onClick={() =>
-                isAuthenticated
-                  ? navigate.push("/profile")
-                  : navigate.push("/login")
-              }
-            />
-            <div
-              className="relative cursor-pointer"
-              onClick={() => setIsCartOpen(true)}
-            >
-              <ShoppingCart className="w-5 h-5" />
-              {totalItems > 0 && (
-                <span className="absolute -top-1 -right-1 text-xs bg-primary text-white w-5 h-5 flex items-center justify-center rounded-full">
-                  {totalItems}
-                </span>
-              )}
-            </div>
+            {isAuthenticated ? (
+              <>
+                <Search className="w-5 h-5 cursor-pointer" />
+                <Heart className="w-5 h-5 cursor-pointer hidden sm:block" />
+                <User
+                  className="w-5 h-5 cursor-pointer hidden sm:block"
+                  onClick={() => navigate.push("/profile")}
+                />
+                <div
+                  className="relative cursor-pointer"
+                  onClick={() => setIsCartOpen(true)}
+                >
+                  <ShoppingCart className="w-5 h-5" />
+                  {totalItems > 0 && (
+                    <span className="absolute -top-1 -right-1 text-xs bg-primary text-white w-5 h-5 flex items-center justify-center rounded-full">
+                      {totalItems}
+                    </span>
+                  )}
+                </div>
+              </>
+            ) : (
+              <Button onClick={() => navigate.push("/login")}>
+                Sign In
+              </Button>
+            )}
 
             {/* Mobile Toggle */}
             <button
