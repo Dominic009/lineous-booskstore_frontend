@@ -22,7 +22,7 @@ export const useLogin = () => {
   return useMutation<AuthResponse, Error, LoginCredentials>({
     mutationFn: async (credentials) => {
       const response = await apiClient.post<AuthResponse>("/auth/login", credentials);
-      return response.data;
+      return response as unknown as AuthResponse;
     },
     onSuccess: (data) => {
       setToken(data.accessToken);
@@ -46,7 +46,7 @@ export const useRegister = () => {
   return useMutation<AuthResponse, Error, RegisterData>({
     mutationFn: async (data) => {
       const response = await apiClient.post<AuthResponse>("/auth/signup", data);
-      return response.data;
+      return response as unknown as AuthResponse;
     },
     onSuccess: (data) => {
       setToken(data.accessToken);

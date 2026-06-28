@@ -395,7 +395,7 @@ const CheckoutPage = () => {
                     >
                       {isProcessing
                         ? "Processing..."
-                        : `Place Order - $${finalTotal.toFixed(2)}`}
+                        : `Place Order - $${finalTotal }`}
                     </Button>
                   </div>
                 </div>
@@ -429,7 +429,7 @@ const CheckoutPage = () => {
                           Qty: {item.quantity}
                         </p>
                         <p className="font-semibold text-primary">
-                          ${((item.book.discountPrice || item.book.price) * item.quantity).toFixed(2)}
+                          ${((item.book.discountPrice || item.book.price) * item.quantity) }
                         </p>
                       </div>
                     </div>
@@ -439,21 +439,21 @@ const CheckoutPage = () => {
                 <div className="space-y-3 pt-4 border-t">
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Subtotal</span>
-                    <span className="font-medium">${totalPrice.toFixed(2)}</span>
+                    <span className="font-medium">${totalPrice }</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Shipping</span>
                     <span className="font-medium">
-                      {shippingCost === 0 ? "Free" : `$${shippingCost.toFixed(2)}`}
+                      {shippingCost === 0 ? "Free" : `$${shippingCost }`}
                     </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Tax</span>
-                    <span className="font-medium">${tax.toFixed(2)}</span>
+                    <span className="font-medium">${tax }</span>
                   </div>
                   <div className="flex justify-between text-lg font-bold">
                     <span>Total</span>
-                    <span className="text-primary">${finalTotal.toFixed(2)}</span>
+                    <span className="text-primary">${finalTotal }</span>
                   </div>
                 </div>
               </div>

@@ -176,11 +176,11 @@ const BookDetailsPage = () => {
               {/* Price */}
               <div className="flex items-baseline gap-3 mb-6">
                 <span className="text-2xl sm:text-4xl font-bold text-primary">
-                  ${displayPrice.toFixed(2)}
+                  ${displayPrice }
                 </span>
                 {hasDiscount && (
                   <span className="text-xl text-muted-foreground line-through">
-                    ${book.price.toFixed(2)}
+                    ${book.price }
                   </span>
                 )}
               </div>

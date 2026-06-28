@@ -113,10 +113,10 @@ const BookCard = ({
         {/* Price & Action */}
         <div className="flex items-center justify-between">
           <div className="flex items-baseline gap-1 sm:gap-2">
-            <span className="text-base sm:text-xl font-bold text-primary">${displayPrice.toFixed(2)}</span>
+            <span className="text-base sm:text-xl font-bold text-primary">${displayPrice}</span>
             {hasDiscount && (
               <span className="text-xs sm:text-sm text-muted-foreground line-through">
-                ${book.price.toFixed(2)}
+                ${book.price}
               </span>
             )}
           </div>

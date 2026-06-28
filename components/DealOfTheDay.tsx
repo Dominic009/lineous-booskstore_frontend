@@ -158,13 +158,13 @@ const DealOfTheDay = () => {
             {/* Price */}
             <div className="flex items-baseline gap-4 mb-8">
               <span className="text-4xl font-bold text-primary">
-                ${book.price.toFixed(2)}
+                ${book.price }
               </span>
               <span className="text-xl text-muted-foreground line-through">
-                ${book.originalPrice.toFixed(2)}
+                ${book.originalPrice }
               </span>
               <span className="px-3 py-1 bg-primary/10 text-primary text-sm font-semibold rounded-full">
-                Save ${(book.originalPrice - book.price).toFixed(2)}
+                Save ${(book.originalPrice - book.price) }
               </span>
             </div>
 

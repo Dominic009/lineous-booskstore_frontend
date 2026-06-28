@@ -107,7 +107,7 @@ const CartDrawer = () => {
                           </button>
                         </div>
                         <span className="font-semibold text-primary">
-                          ${((item.book.discountPrice || item.book.price) * item.quantity).toFixed(2)}
+                          ${((item.book.discountPrice || item.book.price) * item.quantity) }
                         </span>
                       </div>
                     </div>
@@ -126,7 +126,7 @@ const CartDrawer = () => {
               <div className="flex justify-between items-center mb-4">
                 <span className="text-muted-foreground">Subtotal</span>
                 <span className="text-2xl font-bold text-primary">
-                  ${totalPrice.toFixed(2)}
+                  ${totalPrice }
                 </span>
               </div>
               <p className="text-sm text-muted-foreground mb-4">

@@ -32,8 +32,9 @@ const LoginPage = () => {
 
     try {
       if (isLogin) {
-        const success = await login(formData.email, formData.password);
-        if (success) {
+        const res = await login(formData.email, formData.password);
+        console.log(res);
+        if (res) {
           toast({
             title: "Welcome back!",
             description: "You've successfully logged in.",
@@ -60,7 +61,7 @@ const LoginPage = () => {
         const success = await register(
           formData.email,
           formData.password,
-          formData.name
+          formData.name,
         );
         if (success) {
           toast({
@@ -88,7 +89,7 @@ const LoginPage = () => {
   };
 
   return (
-    <div className=" bg-background flex flex-col lg:flex-row">
+    <div className=" bg-background flex flex-col lg:flex-row max-h-screen overflow-hidde">
       {/* Left Side - Form */}
       <motion.div
         initial={{ opacity: 0, x: -50 }}
@@ -244,8 +245,8 @@ const LoginPage = () => {
               {isLoading
                 ? "Please wait..."
                 : isLogin
-                ? "Sign In"
-                : "Create Account"}
+                  ? "Sign In"
+                  : "Create Account"}
             </Button>
           </form>
 

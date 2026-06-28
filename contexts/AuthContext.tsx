@@ -1,9 +1,17 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect, useRef, ReactNode, useCallback } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useRef,
+  ReactNode,
+  useCallback,
+} from "react";
 import { useLogin, useRegister } from "@/hooks/use-auth";
-import { removeToken } from "@/lib/api-client";
-import { AuthUser } from "@/lib/types";
+import { removeToken, setToken } from "@/lib/api-client";
+import { AuthUser, AuthResponse } from "@/lib/types";
 
 export interface User extends AuthUser {
   name?: string;
@@ -19,8 +27,8 @@ export interface User extends AuthUser {
 interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
-  login: (email: string, password: string) => Promise<boolean>;
-  register: (email: string, password: string, name: string) => Promise<boolean>;
+  login: (email: string, password: string) => Promise<AuthResponse | null>;
+  register: (email: string, password: string, name: string) => Promise<AuthResponse | null>;
   logout: () => void;
   updateProfile: (updates: Partial<User>) => void;
 }
@@ -29,7 +37,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 // Helper to get initial user from localStorage (only runs on client)
 const getInitialUser = (): User | null => {
-  if (typeof window === 'undefined') return null;
+  if (typeof window === "undefined") return null;
   try {
     const saved = localStorage.getItem("user");
     return saved ? JSON.parse(saved) : null;
@@ -46,8 +54,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   // Save user to localStorage when it changes
   useEffect(() => {
-    if (typeof window === 'undefined') return;
-    
+    if (typeof window === "undefined") return;
+
     if (user) {
       localStorage.setItem("user", JSON.stringify(user));
     } else {
@@ -55,43 +63,47 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [user]);
 
-  const login = useCallback(async (email: string, password: string): Promise<boolean> => {
-    try {
-      const result = await loginMutation.mutateAsync({ email, password });
-      if (result) {
-        const userData: User = {
-          ...result.user,
-          name: result.user.email.split('@')[0],
-        };
-        setUser(userData);
-        return true;
+  const login = useCallback(
+    async (email: string, password: string): Promise<AuthResponse | null> => {
+      try {
+        const result = await loginMutation.mutateAsync({ email, password });
+        if (result) {
+          const userData: User = {
+            ...result.user,
+            name: result.user.email.split("@")[0],
+          };
+          setUser(userData);
+          setToken(result.accessToken);
+          return result;
+        }
+        return null;
+      } catch {
+        return null;
       }
-      return false;
-    } catch {
-      return false;
-    }
-  }, [loginMutation]);
+    },
+    [loginMutation],
+  );
 
-  const register = useCallback(async (
-    email: string,
-    password: string,
-    name: string
-  ): Promise<boolean> => {
-    try {
-      const result = await registerMutation.mutateAsync({ email, password });
-      if (result) {
-        const userData: User = {
-          ...result.user,
-          name,
-        };
-        setUser(userData);
-        return true;
+  const register = useCallback(
+    async (email: string, password: string, name: string): Promise<AuthResponse | null> => {
+      try {
+        const result = await registerMutation.mutateAsync({ email, password });
+        if (result) {
+          const userData: User = {
+            ...result.user,
+            name,
+          };
+          setUser(userData);
+          setToken(result.accessToken);
+          return result;
+        }
+        return null;
+      } catch {
+        return null;
       }
-      return false;
-    } catch {
-      return false;
-    }
-  }, [registerMutation]);
+    },
+    [registerMutation],
+  );
 
   const logout = useCallback(() => {
     setUser(null);
@@ -99,9 +111,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const updateProfile = useCallback((updates: Partial<User>) => {
-    if (typeof window === 'undefined') return;
-    
-    setUser(prev => {
+    if (typeof window === "undefined") return;
+
+    setUser((prev) => {
       if (prev) {
         const updatedUser = { ...prev, ...updates };
         localStorage.setItem("user", JSON.stringify(updatedUser));

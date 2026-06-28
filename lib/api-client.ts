@@ -1,6 +1,6 @@
 import { ApiResponse } from "./types";
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api";
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 // Token management
 export const getToken = (): string | null => {
