@@ -45,7 +45,7 @@ export default function PopularBooks() {
           icon={<TrendingUp className="w-6 h-6 text-primary" />}
         />
 
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {popularBooks.map((book, index) => (
             <Link key={book.id} href={`/book/${book.id}`}>
               <BookCard
