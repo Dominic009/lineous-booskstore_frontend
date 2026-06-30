@@ -1,6 +1,6 @@
 import { ApiResponse } from "./types";
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 // Token management
 export const getToken = (): string | null => {
