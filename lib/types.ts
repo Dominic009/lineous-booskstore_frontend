@@ -262,7 +262,36 @@ export interface AuthResponse {
   user: AuthUser;
 }
 
-// User Profile (extended user info)
+// Book Tree (for /books/tree endpoint)
+export interface BookTreeBook {
+  id: string;
+  title: string;
+  slug: string;
+  price: number;
+  thumbnail: string | null;
+}
+
+export interface BookTreeSubject {
+  subject: {
+    id: string;
+    name: string;
+    slug: string;
+    isActive: boolean;
+  };
+  books: BookTreeBook[];
+}
+
+export interface BookTreePublication {
+  publication: {
+    id: string;
+    name: string;
+    slug: string;
+    isActive: boolean;
+  };
+  subjects: BookTreeSubject[];
+}
+
+export type BookTreeResponse = BookTreePublication[];
 export interface UserProfile {
   id: string;
   email: string;
