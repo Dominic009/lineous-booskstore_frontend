@@ -4,12 +4,13 @@ import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "@/lib/api-client";
 import { Book } from "@/lib/types";
 
-// Get all books
-export const useBooks = () => {
+// Get all books or books by subject
+export const useBooks = (subjectId?: string) => {
   return useQuery<Book[], Error>({
-    queryKey: ["books"],
+    queryKey: ["books", subjectId],
     queryFn: async () => {
-      const response = await apiClient.get<Book[]>("/books");
+      const url = subjectId ? `/books?subjectId=${subjectId}` : "/books";
+      const response = await apiClient.get<Book[]>(url);
       return response.data;
     },
   });

@@ -54,6 +54,7 @@ const MenuItem = ({
   const [activeGrandchildIndex, setActiveGrandchildIndex] = useState<
     number | null
   >(null);
+  const router = useRouter();
   const hasChildren =
     (item.children && item.children.length > 0) || isLoading || !!error;
 
@@ -207,7 +208,7 @@ const MenuItem = ({
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.15, ease: "easeOut" }}
-              className="absolute top-full left-1/2 -translate-x-1/2 mt-2 rounded-xl shadow-xl border border-border/60 bg-card/95 backdrop-blur-md z-50 p-6 min-w-[520px] min-h-[200px] overflow-hidden"
+              className="absolute top-full left-1/2 -translate-x-1/2 mt-2 rounded-xl shadow-xl border border-border/60 bg-card/95 backdrop-blur-md z-50 p-6 min-w-[640px] min-h-[300px] overflow-hidden"
               onMouseEnter={() => setSubMenuHovered(true)}
               onMouseLeave={() => {
                 setSubMenuHovered(false);
@@ -226,6 +227,7 @@ const MenuItem = ({
                   </div>
                 ) : (
                   <>
+                    {/* Level 1: Publications */}
                     <div className="flex flex-col min-w-[160px]">
                       {item.children!.map(
                         (child: MenuItemProps | string, idx: number) => {
@@ -238,39 +240,35 @@ const MenuItem = ({
                           const isActive = activeChildIndex === idx;
 
                           return (
-                            <div
-                              key={idx}
-                              className={`
-                                flex items-center justify-between cursor-pointer py-2.5 px-3 rounded-lg transition-colors duration-150
-                                ${
-                                  isActive
-                                    ? "bg-primary/10 text-primary"
-                                    : "text-foreground/80 hover:text-primary hover:bg-muted/60"
-                                }
-                              `}
-                              onMouseEnter={() => {
-                                setActiveChildIndex(idx);
-                                setActiveGrandchildIndex(null);
-                              }}
-                              onClick={() => {
-                                if (isMobile && childHasChildren) {
-                                  toggleMobile?.(childItem.name);
-                                }
-                              }}
-                            >
-                              <span className="text-[13px] font-medium tracking-wide">
-                                {childItem.name}
-                              </span>
-                              {childHasChildren && (
-                                <ChevronDown className="w-3.5 h-3.5 -rotate-90 text-foreground/50" />
-                              )}
-                            </div>
-                          );
-                        },
+                             <div
+                               key={idx}
+                               className={`
+                                 flex items-center justify-between cursor-pointer py-2.5 px-3 rounded-lg transition-colors duration-150
+                                 ${
+                                   isActive
+                                     ? "bg-primary/10 text-primary"
+                                     : "text-foreground/80 hover:text-primary hover:bg-muted/60"
+                                 }
+                               `}
+                               onMouseEnter={() => {
+                                 setActiveChildIndex(idx);
+                                 setActiveGrandchildIndex(null);
+                               }}
+                             >
+                               <span className="text-[13px] font-medium tracking-wide">
+                                 {childItem.name}
+                               </span>
+                               {childHasChildren && (
+                                 <ChevronDown className="w-3.5 h-3.5 -rotate-90 text-foreground/50" />
+                               )}
+                             </div>
+                           );
+                         },
                       )}
                     </div>
 
-                    <div className="relative w-[280px] border-l border-border/40">
+                    {/* Level 2: Subjects */}
+                    <div className="relative w-[200px] border-l border-border/40">
                       <AnimatePresence initial={false}>
                         {activeChild &&
                         activeChild.children &&
@@ -286,7 +284,7 @@ const MenuItem = ({
                             <h3 className="text-[11px] font-semibold text-foreground/50 uppercase tracking-wider mb-2 px-3 pt-1">
                               {activeChild.name}
                             </h3>
-                            <div className="space-y-0.5">
+                            <div className="space-y-0.5 max-h-[300px] overflow-y-auto">
                               {activeChild.children!.map(
                                 (
                                   child: MenuItemProps | string,
@@ -310,16 +308,8 @@ const MenuItem = ({
                                         setActiveGrandchildIndex(idx);
                                       }}
                                       onClick={() => {
-                                        if (
-                                          childHasChildren &&
-                                          childItem.children
-                                        ) {
-                                          const nextChild =
-                                            childItem.children[0];
-                                          if (typeof nextChild === "string") {
-                                            return;
-                                          }
-                                          setActiveGrandchildIndex(idx);
+                                        if (childItem.href) {
+                                          router.push(childItem.href);
                                         }
                                       }}
                                     >
@@ -355,7 +345,10 @@ const MenuItem = ({
                           </motion.div>
                         )}
                       </AnimatePresence>
+                    </div>
 
+                    {/* Level 3: Books */}
+                    <div className="relative w-[240px] border-l border-border/40">
                       <AnimatePresence initial={false}>
                         {activeGrandchild &&
                         activeGrandchild.children &&
@@ -368,15 +361,12 @@ const MenuItem = ({
                             animate={{ opacity: 1, x: 0 }}
                             exit={{ opacity: 0, x: -10 }}
                             transition={{ duration: 0.12 }}
-                            className="absolute inset-0 border-l border-border/40 pl-3 pr-1 py-1 bg-card rounded-r-lg"
+                            className="pl-3 pr-1 py-1 bg-card rounded-r-lg"
                           >
                             <h3 className="text-[11px] font-semibold text-foreground/50 uppercase tracking-wider mb-2 px-3 pt-1">
-                              {activeChild?.name}
-                              <span className="normal-case tracking-normal text-foreground/30 ml-1">
-                                / {activeGrandchild.name}
-                              </span>
+                              {activeGrandchild.name}
                             </h3>
-                            <div className="space-y-0.5  overflow-y-auto">
+                            <div className="space-y-0.5 max-h-[300px] overflow-y-auto">
                               {activeGrandchild.children!.map(
                                 (
                                   child: MenuItemProps | string,
@@ -392,10 +382,8 @@ const MenuItem = ({
                                       key={idx}
                                       className="cursor-pointer py-2 px-3 rounded-lg text-foreground/80 hover:text-primary hover:bg-muted/60 transition-colors duration-150"
                                       onClick={() => {
-                                        if (
-                                          childItem.children &&
-                                          childItem.children.length > 0
-                                        ) {
+                                        if (childItem.href) {
+                                          router.push(childItem.href);
                                         }
                                       }}
                                     >
@@ -433,32 +421,73 @@ const MobileSubItem = ({
 }) => {
   const [open, setOpen] = useState(false);
   const hasChildren = item.children && item.children.length > 0;
+  const router = useRouter();
 
   if (hasChildren) {
     return (
       <div>
         <div
           className="flex justify-between items-center cursor-pointer py-2 px-3 rounded-lg text-foreground/80 hover:text-primary hover:bg-muted/60 transition-colors duration-200"
-          onClick={() => setOpen(!open)}
+          onClick={() => {
+            if (item.href) {
+              router.push(item.href);
+            } else {
+              setOpen(!open);
+            }
+          }}
         >
           <span className="text-[13px] font-medium">{item.name}</span>
-          <ChevronDown
-            className={`w-3.5 h-3.5 transition-transform duration-200 ${
-              open ? "rotate-180" : ""
-            }`}
-          />
+          {!item.href && (
+            <ChevronDown
+              className={`w-3.5 h-3.5 transition-transform duration-200 ${
+                open ? "rotate-180" : ""
+              }`}
+            />
+          )}
         </div>
         {open && (
           <div className="ml-4 mt-1 space-y-1 border-l border-border/40 pl-3">
             {item.children!.map(
-              (child: MenuItemProps | string, idx: number) => (
-                <div
-                  key={idx}
-                  className="py-2 px-3 rounded-lg text-foreground/70 hover:text-primary hover:bg-muted/60 transition-colors duration-200 cursor-pointer text-[13px]"
-                >
-                  {typeof child === "string" ? child : child.name}
-                </div>
-              ),
+              (child: MenuItemProps | string, idx: number) => {
+                const childItem = typeof child === "string" ? { name: child, children: [] } : child;
+                const hasGrandchildren = childItem.children && childItem.children.length > 0;
+                return (
+                  <div key={idx} className="space-y-1">
+                    <div
+                      className="py-2 px-3 rounded-lg text-foreground/70 hover:text-primary hover:bg-muted/60 transition-colors duration-200 cursor-pointer text-[13px] font-medium"
+                      onClick={() => {
+                        if (childItem.href) {
+                          router.push(childItem.href);
+                        }
+                      }}
+                    >
+                      {childItem.name}
+                    </div>
+                    {hasGrandchildren && (
+                      <div className="ml-2 space-y-1 border-l border-border/40 pl-3">
+                        {childItem.children!.map(
+                          (grandchild: MenuItemProps | string, gIdx: number) => {
+                            const grandchildItem = typeof grandchild === "string" ? { name: grandchild, children: [] } : grandchild;
+                            return (
+                              <div
+                                key={gIdx}
+                                className="py-1.5 px-2 rounded-lg text-foreground/60 hover:text-primary hover:bg-muted/60 transition-colors duration-200 cursor-pointer text-[12px]"
+                                onClick={() => {
+                                  if (grandchildItem.href) {
+                                    router.push(grandchildItem.href);
+                                  }
+                                }}
+                              >
+                                {grandchildItem.name}
+                              </div>
+                            );
+                          }
+                        )}
+                      </div>
+                    )}
+                  </div>
+                );
+              },
             )}
           </div>
         )}
@@ -467,7 +496,14 @@ const MobileSubItem = ({
   }
 
   return (
-    <div className="py-2 px-3 rounded-lg text-foreground/80 hover:text-primary hover:bg-muted/60 transition-colors duration-200 cursor-pointer text-[13px]">
+    <div 
+      className="py-2 px-3 rounded-lg text-foreground/80 hover:text-primary hover:bg-muted/60 transition-colors duration-200 cursor-pointer text-[13px]"
+      onClick={() => {
+        if (item.href) {
+          router.push(item.href);
+        }
+      }}
+    >
       {item.name}
     </div>
   );
@@ -481,11 +517,16 @@ const Navbar = () => {
   const navigate = useRouter();
   const { data: bookTree = [], isLoading, error } = useBookTree();
 
+  // Build 3-layer menu: Publication > Subject > Book
   const pastPapersChildren = bookTree.map((pub) => ({
     name: pub.publication.name,
     children: pub.subjects.map((sub) => ({
       name: sub.subject.name,
-      children: sub.books.map((book) => book.title),
+      href: `/books?subjectId=${sub.subject.id}`,
+      children: sub.books.map((book) => ({
+        name: book.title,
+        href: `/book/${book.id}`,
+      })),
     })),
   }));
 
@@ -493,6 +534,7 @@ const Navbar = () => {
     { name: "Home", children: [], href: "/" },
     {
       name: "Past Papers",
+      href: "/books",
       children: isLoading || error ? [] : pastPapersChildren,
       isLoading,
       error: error?.message || null,
