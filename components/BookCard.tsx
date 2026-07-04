@@ -20,11 +20,16 @@ const BookCard = ({
     e.preventDefault();
     e.stopPropagation();
     
-    addToCart(book.id, 1);
+    // Get the default paper or first available paper
+    const defaultPaper = book.papers?.find(p => p.isDefault && p.isInStock) || book.papers?.[0];
+    if (defaultPaper) {
+      addToCart(book.id, defaultPaper.id, 1);
+    }
   };
 
-  const displayPrice = book.discountPrice || book.price;
-  const hasDiscount = !!book.discountPrice;
+  // Use priceRange.display for price display
+  const priceDisplay = book.priceRange?.display || "Price not available";
+  const hasMultiplePapers = book.papers && book.papers.length > 1;
 
   return (
     <motion.div
@@ -71,13 +76,13 @@ const BookCard = ({
 
         {/* Badges */}
         <div className="absolute top-3 left-3 flex flex-col gap-2">
-          {hasDiscount && (
+          {hasMultiplePapers && (
             <motion.span
               initial={{ x: -20, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               className="px-3 py-1 bg-primary text-primary-foreground text-xs font-semibold rounded-full"
             >
-              -{Math.round((1 - displayPrice / book.price) * 100)}%
+              {book.papers.length} variants
             </motion.span>
           )}
         </div>
@@ -113,12 +118,7 @@ const BookCard = ({
         {/* Price & Action */}
         <div className="flex items-center justify-between">
           <div className="flex items-baseline gap-1 sm:gap-2">
-            <span className="text-base sm:text-xl font-bold text-primary">${displayPrice}</span>
-            {hasDiscount && (
-              <span className="text-xs sm:text-sm text-muted-foreground line-through">
-                ${book.price}
-              </span>
-            )}
+            <span className="text-base sm:text-xl font-bold text-primary">{priceDisplay}</span>
           </div>
           <Button
             variant="ghost"

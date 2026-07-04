@@ -29,6 +29,35 @@ import { useCartContext } from "../../contexts/CartContext";
 import { useAuth } from "../../contexts/AuthContext";
 import { useCreateOrder } from "../../hooks/use-orders";
 import { useAddresses, useCreateAddress } from "../../hooks/use-addresses";
+import { BookPaper } from "../../lib/types";
+
+// Helper to calculate effective price from paper
+function getEffectivePrice(paper: BookPaper | null): number {
+  if (!paper) return 0;
+  
+  // If effectivePrice is provided, use it
+  if (paper.effectivePrice !== undefined) {
+    return paper.effectivePrice;
+  }
+  
+  // Calculate from price and discount
+  const price = typeof paper.price === 'string' ? parseFloat(paper.price) : paper.price;
+  const discountPrice = paper.discountPrice 
+    ? (typeof paper.discountPrice === 'string' ? parseFloat(paper.discountPrice) : paper.discountPrice)
+    : null;
+  
+  // Check if discount is active
+  if (discountPrice && paper.discountStartDate && paper.discountEndDate) {
+    const now = new Date();
+    const startDate = new Date(paper.discountStartDate);
+    const endDate = new Date(paper.discountEndDate);
+    if (now >= startDate && now <= endDate) {
+      return discountPrice;
+    }
+  }
+  
+  return price;
+}
 
 const CheckoutPage = () => {
   const { items, totalPrice, clearCart } = useCartContext();
@@ -55,9 +84,10 @@ const CheckoutPage = () => {
   const [formData, setFormData] = useState({
     firstName: user?.name?.split(" ")[0] || "",
     lastName: user?.name?.split(" ").slice(1).join(" ") || "",
-    address: user?.address || "",
-    city: user?.city || "",
+    addressLine: user?.address || "",
+    area: user?.city || "",
     division: "",
+    district: "",
     postalCode: "",
     country: user?.country || "",
     phone: user?.phone || "",
@@ -92,19 +122,19 @@ const CheckoutPage = () => {
       let addressId = selectedAddressId;
 
       if (addressMode === "new" || !addressId) {
-        const savedAddress = await createAddressMutation.mutateAsync({
-          name: `${formData.firstName} ${formData.lastName}`.trim() || user?.name || "",
-          phone: user?.phone || formData.phone,
-          country: formData.country,
-          division: formData.division,
-          district: "",
-          area: formData.city,
-          addressLine: formData.address,
-          postalCode: formData.postalCode,
-          isDefault: false,
-        });
-        addressId = savedAddress.id;
-      }
+         const savedAddress = await createAddressMutation.mutateAsync({
+           name: `${formData.firstName} ${formData.lastName}`.trim() || user?.name || "",
+           phone: user?.phone || formData.phone,
+           country: formData.country || null,
+           division: formData.division || null,
+           district: formData.district,
+           area: formData.area || null,
+           addressLine: formData.addressLine,
+           postalCode: formData.postalCode || null,
+           isDefault: false,
+         });
+         addressId = savedAddress.id;
+       }
 
       await createOrderMutation.mutateAsync({
         addressId,
@@ -241,27 +271,29 @@ const CheckoutPage = () => {
                         <SelectContent>
                           {addresses.map((addr) => (
                             <SelectItem key={addr.id} value={addr.id}>
-                              {addr.name} — {addr.addressLine},{" "}
-                              {addr.area || addr.district || addr.country}
-                            </SelectItem>
+                               {addr.name} — {addr.addressLine}, {addr.district}
+                             </SelectItem>
                           ))}
                         </SelectContent>
                       </Select>
                       {selectedAddress && (
                         <div className="p-3 bg-muted/50 rounded-lg text-sm text-muted-foreground">
-                          <p className="font-medium text-foreground">
-                            {selectedAddress.name}
-                          </p>
-                          <p>{selectedAddress.addressLine}</p>
-                          <p>
-                            {selectedAddress.area}
-                            {selectedAddress.district && `, ${selectedAddress.district}`}
-                          </p>
-                          <p>
-                            {selectedAddress.country}{" "}
-                            {selectedAddress.postalCode}
-                          </p>
-                        </div>
+                           <p className="font-medium text-foreground">
+                             {selectedAddress.name}
+                           </p>
+                           <p>{selectedAddress.addressLine}</p>
+                           <p>
+                             {selectedAddress.district}
+                             {selectedAddress.area && `, ${selectedAddress.area}`}
+                           </p>
+                           {selectedAddress.country && (
+                             <p>
+                               {selectedAddress.country}
+                               {selectedAddress.postalCode && ` ${selectedAddress.postalCode}`}
+                             </p>
+                           )}
+                           <p>Phone: {selectedAddress.phone}</p>
+                         </div>
                       )}
                     </div>
                   )}
@@ -297,28 +329,41 @@ const CheckoutPage = () => {
                         />
                       </div>
                       <div className="sm:col-span-2 space-y-2">
-                        <Label htmlFor="address">Address</Label>
+                        <Label htmlFor="addressLine">Address Line</Label>
                         <Input
-                          id="address"
-                          value={formData.address}
+                          id="addressLine"
+                          value={formData.addressLine}
                           onChange={(e) =>
                             setFormData({
                               ...formData,
-                              address: e.target.value,
+                              addressLine: e.target.value,
                             })
                           }
                           required
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="city">City / Area</Label>
+                        <Label htmlFor="area">Area / City</Label>
                         <Input
-                          id="city"
-                          value={formData.city}
+                          id="area"
+                          value={formData.area}
                           onChange={(e) =>
                             setFormData({
                               ...formData,
-                              city: e.target.value,
+                              area: e.target.value,
+                            })
+                          }
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="district">District</Label>
+                        <Input
+                          id="district"
+                          value={formData.district}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              district: e.target.value,
                             })
                           }
                           required
@@ -335,7 +380,6 @@ const CheckoutPage = () => {
                               division: e.target.value,
                             })
                           }
-                          required
                         />
                       </div>
                       <div className="space-y-2">
@@ -349,7 +393,6 @@ const CheckoutPage = () => {
                               postalCode: e.target.value,
                             })
                           }
-                          required
                         />
                       </div>
                       <div className="space-y-2">
@@ -363,7 +406,6 @@ const CheckoutPage = () => {
                               country: e.target.value,
                             })
                           }
-                          required
                         />
                       </div>
                       <div className="space-y-2">
@@ -402,8 +444,8 @@ const CheckoutPage = () => {
                         </div>
                       </div>
                       <span className="font-semibold">
-                        {totalPrice > 35 ? "Free" : "$4.99"}
-                      </span>
+                         {totalPrice > 35 ? "Free" : "৳4.99"}
+                       </span>
                     </label>
                     <label className="flex items-center justify-between p-4 border rounded-lg cursor-pointer hover:border-primary transition-colors">
                       <div className="flex items-center gap-3">
@@ -415,8 +457,8 @@ const CheckoutPage = () => {
                           </p>
                         </div>
                       </div>
-                      <span className="font-semibold">$9.99</span>
-                    </label>
+                      <span className="font-semibold">৳9.99</span>
+                     </label>
                   </RadioGroup>
 
                   <Button
@@ -479,29 +521,34 @@ const CheckoutPage = () => {
                       <h3 className="font-semibold mb-2">Shipping Address</h3>
                       {selectedAddress ? (
                         <p className="text-muted-foreground">
-                          {selectedAddress.name}
-                          <br />
-                          {selectedAddress.addressLine}
-                          <br />
-                          {selectedAddress.area}
-                          {selectedAddress.district && `, ${selectedAddress.district}`}
-                          <br />
-                          {selectedAddress.country}{" "}
-                          {selectedAddress.postalCode}
-                          <br />
-                          Phone: {selectedAddress.phone}
-                        </p>
-                      ) : (
-                        <p className="text-muted-foreground">
-                          {formData.firstName} {formData.lastName}
-                          <br />
-                          {formData.address}
-                          <br />
-                          {formData.city}, {formData.postalCode}
-                          <br />
-                          {formData.country}
-                        </p>
-                      )}
+                           {selectedAddress.name}
+                           <br />
+                           {selectedAddress.addressLine}
+                           <br />
+                           {selectedAddress.district}
+                           {selectedAddress.area && `, ${selectedAddress.area}`}
+                           <br />
+                           {selectedAddress.country && (
+                             <>
+                               {selectedAddress.country}
+                               {selectedAddress.postalCode && ` ${selectedAddress.postalCode}`}
+                             </>
+                           )}
+                           <br />
+                           Phone: {selectedAddress.phone}
+                         </p>
+                       ) : (
+                         <p className="text-muted-foreground">
+                           {formData.firstName} {formData.lastName}
+                           <br />
+                           {formData.addressLine}
+                           <br />
+                           {formData.district}
+                           {formData.area && `, ${formData.area}`}
+                           <br />
+                           {formData.country}
+                         </p>
+                       )}
                     </div>
 
                     <div className="p-4 bg-muted/50 rounded-lg">
@@ -535,8 +582,8 @@ const CheckoutPage = () => {
                       disabled={isSubmitting}
                     >
                       {isSubmitting
-                        ? "Processing..."
-                        : `Place Order - $${finalTotal}`}
+                         ? "Processing..."
+                         : `Place Order - ৳${finalTotal}`}
                     </Button>
                   </div>
                 </div>
@@ -558,7 +605,7 @@ const CheckoutPage = () => {
                   {items.map((item) => (
                     <div key={item.id} className="flex gap-4">
                       <img
-                        src={item.book.thumbnail}
+                        src={item.paper?.thumbnail || item.book.thumbnail}
                         alt={item.book.title}
                         className="w-16 h-20 object-cover rounded-lg"
                       />
@@ -566,11 +613,16 @@ const CheckoutPage = () => {
                         <h3 className="font-medium line-clamp-1">
                           {item.book.title}
                         </h3>
+                        {item.paper && (
+                          <p className="text-sm text-primary font-medium">
+                            {item.paper.name}
+                          </p>
+                        )}
                         <p className="text-sm text-muted-foreground">
                           Qty: {item.quantity}
                         </p>
                         <p className="font-semibold text-primary">
-                          ${((item.book.discountPrice || item.book.price) * item.quantity)}
+                          ৳{getEffectivePrice(item.paper) * item.quantity}
                         </p>
                       </div>
                     </div>
@@ -580,22 +632,22 @@ const CheckoutPage = () => {
                 <div className="space-y-3 pt-4 border-t">
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Subtotal</span>
-                    <span className="font-medium">${totalPrice}</span>
+                    <span className="font-medium">৳{totalPrice}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Shipping</span>
                     <span className="font-medium">
-                      {shippingCost === 0 ? "Free" : `$${shippingCost}`}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Tax</span>
-                    <span className="font-medium">${tax.toFixed(2)}</span>
-                  </div>
-                  <div className="flex justify-between text-lg font-bold">
-                    <span>Total</span>
-                    <span className="text-primary">${finalTotal.toFixed(2)}</span>
-                  </div>
+                       {shippingCost === 0 ? "Free" : `৳${shippingCost}`}
+                     </span>
+                   </div>
+                   <div className="flex justify-between">
+                     <span className="text-muted-foreground">Tax</span>
+                     <span className="font-medium">৳{tax.toFixed(2)}</span>
+                   </div>
+                   <div className="flex justify-between text-lg font-bold">
+                     <span>Total</span>
+                     <span className="text-primary">৳{finalTotal.toFixed(2)}</span>
+                   </div>
                 </div>
               </div>
             </motion.div>

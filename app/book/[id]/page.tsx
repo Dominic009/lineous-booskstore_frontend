@@ -14,31 +14,111 @@ import {
   Shield,
   RotateCcw,
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Badge } from "../../../components/ui/badge";
+import { Button } from "../../../components/ui/button";
 import Navbar from "../../../components/Navbar";
 import Footer from "../../../components/Footer";
-import BookCard from "../../../components/BookCard";
 import { useCartContext } from "../../../contexts/CartContext";
 import { useBook } from "../../../hooks/use-books";
-import { Button } from "../../../components/ui/button";
 
 const BookDetailsPage = () => {
   const params = useParams();
   const router = useRouter();
   const { addToCart } = useCartContext();
   const [quantity, setQuantity] = useState(1);
+  const [selectedPaperId, setSelectedPaperId] = useState<string | null>(null);
+  const initializedRef = useRef(false);
   
   const { data: book, isLoading, error } = useBook(params?.id as string);
 
+  // Set default paper on book load
+  useEffect(() => {
+    if (book && book.papers && !initializedRef.current) {
+      initializedRef.current = true;
+      const defaultPaper = book.papers.find(p => p.isDefault && p.status === "PUBLISHED");
+      const paperId = defaultPaper ? defaultPaper.id : (book.papers.length > 0 ? book.papers[0].id : null);
+      if (paperId) {
+        // Use setTimeout to avoid eslint warning about setState in useEffect
+        setTimeout(() => {
+          setSelectedPaperId(paperId);
+        }, 0);
+      }
+    }
+  }, [book]);
+
   const handleAddToCart = () => {
     if (book) {
-      addToCart(book.id, quantity);
+      if (!selectedPaperId) {
+        alert("Please select a paper variant");
+        return;
+      }
+      addToCart(book.id, selectedPaperId, quantity);
     }
   };
 
+  // Get selected paper
+  const selectedPaper = book?.papers?.find(p => p.id === selectedPaperId);
+
+  // Helper to calculate effective price from paper
+  const getEffectivePrice = (paper: typeof selectedPaper): number => {
+    if (!paper) return 0;
+    
+    // If effectivePrice is provided, use it
+    if (paper.effectivePrice !== undefined) {
+      return paper.effectivePrice;
+    }
+    
+    // Calculate from price and discount
+    const price = typeof paper.price === 'string' ? parseFloat(paper.price) : paper.price;
+    const discountPrice = paper.discountPrice 
+      ? (typeof paper.discountPrice === 'string' ? parseFloat(paper.discountPrice) : paper.discountPrice)
+      : null;
+    
+    // Check if discount is active
+    if (discountPrice && paper.discountStartDate && paper.discountEndDate) {
+      const now = new Date();
+      const startDate = new Date(paper.discountStartDate);
+      const endDate = new Date(paper.discountEndDate);
+      if (now >= startDate && now <= endDate) {
+        return discountPrice;
+      }
+    }
+    
+    return price;
+  };
+
+  // Price display logic
+  const getDisplayPrice = () => {
+    if (!selectedPaper) return { price: 0, originalPrice: null, discount: 0 };
+    
+    const price = typeof selectedPaper.price === 'string' ? parseFloat(selectedPaper.price) : selectedPaper.price;
+    const effectivePrice = getEffectivePrice(selectedPaper);
+    
+    const now = new Date();
+    const isDiscounted = selectedPaper.discountPrice &&
+      selectedPaper.discountStartDate &&
+      selectedPaper.discountEndDate &&
+      now >= new Date(selectedPaper.discountStartDate) &&
+      now <= new Date(selectedPaper.discountEndDate);
+
+    if (isDiscounted) {
+      return {
+        price: effectivePrice,
+        originalPrice: price,
+        discount: Math.round((1 - effectivePrice / price) * 100)
+      };
+    }
+
+    return {
+      price: price,
+      originalPrice: null,
+      discount: 0
+    };
+  };
+
   const features = [
-    { icon: Truck, text: "Free shipping over $35" },
+    { icon: Truck, text: "Free shipping over ৳35" },
     { icon: Shield, text: "Secure payment" },
     { icon: RotateCcw, text: "30-day returns" },
   ];
@@ -83,8 +163,8 @@ const BookDetailsPage = () => {
     );
   }
 
-  const displayPrice = book.discountPrice || book.price;
-  const hasDiscount = !!book.discountPrice;
+  const priceInfo = getDisplayPrice();
+  const thumbnail = selectedPaper?.thumbnail || book.thumbnail;
 
   return (
     <div className="min-h-screen bg-background">
@@ -118,16 +198,16 @@ const BookDetailsPage = () => {
             >
               <div className="aspect-[3/4] rounded-2xl overflow-hidden bg-muted shadow-warm-hover">
                 <img
-                  src={book.thumbnail}
+                  src={thumbnail}
                   alt={book.title}
                   className="w-full h-full object-cover"
                 />
               </div>
               {/* Badges */}
               <div className="absolute top-4 left-4 flex flex-col gap-2">
-                {hasDiscount && (
+                {priceInfo.discount > 0 && (
                   <Badge className="bg-primary text-primary-foreground">
-                    -{Math.round((1 - displayPrice / book.price) * 100)}% OFF
+                    -{priceInfo.discount}% OFF
                   </Badge>
                 )}
               </div>
@@ -173,14 +253,41 @@ const BookDetailsPage = () => {
                 </div>
               )}
 
+              {/* Paper Selection */}
+              {book.papers && book.papers.length > 0 && (
+                <div className="mb-6">
+                  <h3 className="font-semibold mb-3">Select Paper</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {book.papers
+                      .filter(p => p.status === "PUBLISHED")
+                      .map((paper) => (
+                      <button
+                        key={paper.id}
+                        onClick={() => setSelectedPaperId(paper.id)}
+                        className={`px-4 py-2 rounded-lg border transition-all ${
+                          selectedPaperId === paper.id
+                            ? "border-primary bg-primary/10 text-primary"
+                            : "border-border hover:border-primary"
+                        }`}
+                      >
+                        <div className="text-sm font-medium">{paper.name}</div>
+                        <div className="text-xs text-muted-foreground">
+                          ৳{getEffectivePrice(paper)}
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {/* Price */}
               <div className="flex items-baseline gap-3 mb-6">
                 <span className="text-2xl sm:text-4xl font-bold text-primary">
-                  ${displayPrice }
+                  ৳{priceInfo.price}
                 </span>
-                {hasDiscount && (
+                {priceInfo.originalPrice && (
                   <span className="text-xl text-muted-foreground line-through">
-                    ${book.price }
+                    ৳{priceInfo.originalPrice}
                   </span>
                 )}
               </div>
@@ -194,7 +301,7 @@ const BookDetailsPage = () => {
               <div className="grid grid-cols-2 gap-4 mb-8 p-4 bg-muted/50 rounded-xl">
                 <div>
                   <p className="text-sm text-muted-foreground">Pages</p>
-                  <p className="font-semibold">{book.edition}</p>
+                  <p className="font-semibold">{selectedPaper?.pageCount || book.edition}</p>
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">Published</p>

@@ -2,11 +2,11 @@
 
 import React, { createContext, useContext, useState, ReactNode } from "react";
 import { useCart, useAddToCart, useUpdateCartItem, useRemoveFromCart, useClearCart } from "@/hooks/use-cart";
-import { Cart, CartItem } from "@/lib/types";
+import { Cart, CartItem, BookPaper } from "@/lib/types";
 
 interface CartContextType {
   items: CartItem[];
-  addToCart: (bookId: string, quantity?: number) => void;
+  addToCart: (bookId: string, paperId?: string, quantity?: number) => void;
   removeFromCart: (cartItemId: string) => void;
   updateQuantity: (cartItemId: string, quantity: number) => void;
   clearCart: () => void;
@@ -19,6 +19,34 @@ interface CartContextType {
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
+// Helper to calculate effective price from paper
+function getEffectivePrice(paper: BookPaper | null): number {
+  if (!paper) return 0;
+  
+  // If effectivePrice is provided, use it
+  if (paper.effectivePrice !== undefined) {
+    return paper.effectivePrice;
+  }
+  
+  // Calculate from price and discount
+  const price = typeof paper.price === 'string' ? parseFloat(paper.price) : paper.price;
+  const discountPrice = paper.discountPrice 
+    ? (typeof paper.discountPrice === 'string' ? parseFloat(paper.discountPrice) : paper.discountPrice)
+    : null;
+  
+  // Check if discount is active
+  if (discountPrice && paper.discountStartDate && paper.discountEndDate) {
+    const now = new Date();
+    const startDate = new Date(paper.discountStartDate);
+    const endDate = new Date(paper.discountEndDate);
+    if (now >= startDate && now <= endDate) {
+      return discountPrice;
+    }
+  }
+  
+  return price;
+}
+
 export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const { data: cart, isLoading } = useCart();
@@ -29,8 +57,8 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
 
   const items = cart?.cartItems || [];
 
-  const addToCart = (bookId: string, quantity: number = 1) => {
-    addToCartMutate({ bookId, quantity });
+  const addToCart = (bookId: string, paperId?: string, quantity: number = 1) => {
+    addToCartMutate({ bookId, paperId, quantity });
   };
 
   const removeFromCart = (cartItemId: string) => {
@@ -47,7 +75,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
 
   const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
   const totalPrice = items.reduce(
-    (sum, item) => sum + (item.book.discountPrice || item.book.price) * item.quantity,
+    (sum, item) => sum + getEffectivePrice(item.paper) * item.quantity,
     0
   );
 

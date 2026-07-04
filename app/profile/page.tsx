@@ -105,12 +105,12 @@ const ProfilePage = () => {
       setAddressForm({
         name: address.name,
         phone: address.phone,
-        country: address.country,
-        division: address.division,
+        country: address.country || "",
+        division: address.division || "",
         district: address.district,
-        area: address.area,
+        area: address.area || "",
         addressLine: address.addressLine,
-        postalCode: address.postalCode,
+        postalCode: address.postalCode || "",
         isDefault: address.isDefault,
       });
     } else {
@@ -392,12 +392,15 @@ const ProfilePage = () => {
                               {addr.addressLine}
                             </p>
                             <p className="text-sm text-muted-foreground">
-                              {addr.area}
-                              {addr.district && `, ${addr.district}`}
-                            </p>
-                            <p className="text-sm text-muted-foreground">
-                              {addr.country} {addr.postalCode}
-                            </p>
+                               {addr.district}
+                               {addr.area && `, ${addr.area}`}
+                             </p>
+                             {addr.country && (
+                               <p className="text-sm text-muted-foreground">
+                                 {addr.country}
+                                 {addr.postalCode && ` ${addr.postalCode}`}
+                               </p>
+                             )}
                             <p className="text-sm text-muted-foreground">
                               Phone: {addr.phone}
                             </p>
@@ -486,7 +489,6 @@ const ProfilePage = () => {
                 onChange={(e) =>
                   setAddressForm({ ...addressForm, area: e.target.value })
                 }
-                required
               />
             </div>
             <div className="space-y-2">
@@ -497,6 +499,7 @@ const ProfilePage = () => {
                 onChange={(e) =>
                   setAddressForm({ ...addressForm, district: e.target.value })
                 }
+                required
               />
             </div>
             <div className="space-y-2">
@@ -507,7 +510,6 @@ const ProfilePage = () => {
                 onChange={(e) =>
                   setAddressForm({ ...addressForm, division: e.target.value })
                 }
-                required
               />
             </div>
             <div className="space-y-2">
@@ -518,7 +520,6 @@ const ProfilePage = () => {
                 onChange={(e) =>
                   setAddressForm({ ...addressForm, country: e.target.value })
                 }
-                required
               />
             </div>
             <div className="space-y-2">
@@ -529,7 +530,6 @@ const ProfilePage = () => {
                 onChange={(e) =>
                   setAddressForm({ ...addressForm, postalCode: e.target.value })
                 }
-                required
               />
             </div>
           </div>
