@@ -20,7 +20,7 @@ export const useCart = () => {
 export const useAddToCart = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<Cart, Error, { bookId: string; quantity: number }>({
+  return useMutation<Cart, Error, { bookId: string; paperId?: string; quantity: number }>({
     mutationFn: async (data) => {
       const response = await apiClient.post<Cart>("/cart", data);
       return response.data;
@@ -87,7 +87,7 @@ export const useClearCart = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["cart"] });
-      toast.success("Cart cleared");
+      // toast.success("Cart cleared");
     },
     onError: (error) => {
       if (error instanceof ApiError) {

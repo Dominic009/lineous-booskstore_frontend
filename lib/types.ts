@@ -81,6 +81,37 @@ export interface Review {
   updatedAt: string;
 }
 
+// Price Range (for book listing)
+export interface PriceRange {
+  min: number;
+  max: number;
+  display: string;
+}
+
+// Book Paper (variant)
+export interface BookPaper {
+  id: string;
+  bookId: string;
+  code: string;
+  name: string;
+  price: string | number;
+  discountPrice: string | number | null;
+  discountStartDate: string | null;
+  discountEndDate: string | null;
+  stock: number;
+  isbn: string | null;
+  pageCount: number | null;
+  thumbnail: string | null;
+  sortOrder: number;
+  isDefault: boolean;
+  status: "PUBLISHED" | "DRAFT" | "ARCHIVED";
+  effectivePrice?: number;
+  isInStock: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+  deletedAt?: string | null;
+}
+
 // Book
 export interface Book {
   id: string;
@@ -89,13 +120,9 @@ export interface Book {
   shortDescription: string;
   description: string;
   isbn: string;
-  price: number;
-  discountPrice: number | null;
   publicationDate: string;
   edition: string;
   language: string;
-  stock: boolean;
-  stockAmount: number;
   status: "PUBLISHED" | "DRAFT" | "ARCHIVED";
   thumbnail: string;
   publicationId: string;
@@ -107,6 +134,8 @@ export interface Book {
   parts: BookPart[];
   attachments: BookAttachment[];
   reviews: Review[];
+  papers: BookPaper[];
+  priceRange: PriceRange | null;
 }
 
 // Banner
@@ -159,8 +188,14 @@ export interface CartItem {
   id: string;
   cartId: string;
   bookId: string;
+  paperId: string | null;
   quantity: number;
-  book: Book;
+  book: {
+    id: string;
+    title: string;
+    thumbnail: string;
+  };
+  paper: BookPaper | null;
 }
 
 // Cart
@@ -187,12 +222,12 @@ export interface Address {
   userId: string;
   name: string;
   phone: string;
-  country: string;
-  division: string;
+  country: string | null;
+  division: string | null;
   district: string;
-  area: string;
+  area: string | null;
   addressLine: string;
-  postalCode: string;
+  postalCode: string | null;
   isDefault: boolean;
   createdAt: string;
   updatedAt: string;
@@ -203,10 +238,13 @@ export interface OrderItem {
   id: string;
   orderId: string;
   bookId: string;
+  paperId: string | null;
   bookTitle: string;
-  bookPrice: number;
+  paperName: string | null;
+  paperPrice: string | number;
   quantity: number;
-  subtotal: number;
+  subtotal: string | number;
+  paper: BookPaper | null;
 }
 
 // Payment
@@ -226,10 +264,10 @@ export interface Order {
   userId: string;
   addressId: string;
   orderNumber: string;
-  subtotal: number;
-  discount: number;
-  shipping: number;
-  total: number;
+  subtotal: string | number;
+  discount: string | number;
+  shipping: string | number;
+  total: string | number;
   status: "PENDING" | "CONFIRMED" | "SHIPPED" | "DELIVERED" | "CANCELLED";
   paymentStatus: "PENDING" | "PAID" | "FAILED";
   paymentMethod: "COD" | "CARD" | "BANK_TRANSFER" | "MOBILE_BANKING";
@@ -262,7 +300,36 @@ export interface AuthResponse {
   user: AuthUser;
 }
 
-// User Profile (extended user info)
+// Book Tree (for /books/tree endpoint)
+export interface BookTreeBook {
+  id: string;
+  title: string;
+  slug: string;
+  thumbnail: string | null;
+  priceRange: PriceRange | null;
+}
+
+export interface BookTreeSubject {
+  subject: {
+    id: string;
+    name: string;
+    slug: string;
+    isActive: boolean;
+  };
+  books: BookTreeBook[];
+}
+
+export interface BookTreePublication {
+  publication: {
+    id: string;
+    name: string;
+    slug: string;
+    isActive: boolean;
+  };
+  subjects: BookTreeSubject[];
+}
+
+export type BookTreeResponse = BookTreePublication[];
 export interface UserProfile {
   id: string;
   email: string;

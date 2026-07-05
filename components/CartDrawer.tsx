@@ -5,7 +5,36 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Separator } from "@/components/ui/separator";
 import { useCartContext } from "@/contexts/CartContext";
+import { BookPaper } from "@/lib/types";
 import Link from "next/link";
+
+// Helper to calculate effective price from paper
+function getEffectivePrice(paper: BookPaper | null): number {
+  if (!paper) return 0;
+  
+  // If effectivePrice is provided, use it
+  if (paper.effectivePrice !== undefined) {
+    return paper.effectivePrice;
+  }
+  
+  // Calculate from price and discount
+  const price = typeof paper.price === 'string' ? parseFloat(paper.price) : paper.price;
+  const discountPrice = paper.discountPrice 
+    ? (typeof paper.discountPrice === 'string' ? parseFloat(paper.discountPrice) : paper.discountPrice)
+    : null;
+  
+  // Check if discount is active
+  if (discountPrice && paper.discountStartDate && paper.discountEndDate) {
+    const now = new Date();
+    const startDate = new Date(paper.discountStartDate);
+    const endDate = new Date(paper.discountEndDate);
+    if (now >= startDate && now <= endDate) {
+      return discountPrice;
+    }
+  }
+  
+  return price;
+}
 
 const CartDrawer = () => {
   const { items, isCartOpen, setIsCartOpen, removeFromCart, updateQuantity, totalItems, totalPrice, isLoading } = useCartContext();
@@ -72,7 +101,7 @@ const CartDrawer = () => {
                       className="shrink-0"
                     >
                       <img
-                        src={item.book.thumbnail}
+                        src={item.paper?.thumbnail || item.book.thumbnail}
                         alt={item.book.title}
                         className="w-20 h-28 object-cover rounded-lg hover:opacity-80 transition-opacity"
                       />
@@ -85,8 +114,13 @@ const CartDrawer = () => {
                       >
                         {item.book.title}
                       </Link>
+                      {item.paper && (
+                        <p className="text-sm text-primary font-medium mb-1">
+                          {item.paper.name}
+                        </p>
+                      )}
                       <p className="text-sm text-muted-foreground mb-2">
-                        {item.book.publication?.name || "Unknown Author"}
+                        {item.paper ? `${item.paper.name} • ` : ""}Book
                       </p>
                       <div className="flex items-center justify-between">
                         <div className="flex items-center border border-border rounded-lg">
@@ -107,7 +141,7 @@ const CartDrawer = () => {
                           </button>
                         </div>
                         <span className="font-semibold text-primary">
-                          ${((item.book.discountPrice || item.book.price) * item.quantity) }
+                          ৳{getEffectivePrice(item.paper) * item.quantity}
                         </span>
                       </div>
                     </div>
@@ -126,7 +160,7 @@ const CartDrawer = () => {
               <div className="flex justify-between items-center mb-4">
                 <span className="text-muted-foreground">Subtotal</span>
                 <span className="text-2xl font-bold text-primary">
-                  ${totalPrice }
+                  ৳{totalPrice}
                 </span>
               </div>
               <p className="text-sm text-muted-foreground mb-4">

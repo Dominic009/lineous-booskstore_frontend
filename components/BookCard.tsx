@@ -1,7 +1,8 @@
 "use client";
 import { motion } from "framer-motion";
-import { Heart, ShoppingCart, Star, Zap, BookOpen, Share2 } from "lucide-react";
+import { Heart, ShoppingCart, Star, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { useCartContext } from "@/contexts/CartContext";
 import { Book } from "@/lib/types";
 
@@ -16,144 +17,97 @@ const BookCard = ({ book, delay = 0 }: BookCardProps) => {
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-
-    addToCart(book.id, 1);
+    
+    // Get the default paper or first available paper
+    const defaultPaper = book.papers?.find(p => p.isDefault && p.isInStock) || book.papers?.[0];
+    if (defaultPaper) {
+      addToCart(book.id, defaultPaper.id, 1);
+    }
   };
 
-  const displayPrice = book.discountPrice || book.price;
-  const hasDiscount = !!book.discountPrice;
-  const discountPercent = hasDiscount
-    ? Math.round((1 - displayPrice / book.price) * 100)
+  // Use priceRange.display for price display
+  const priceDisplay = book.priceRange?.display || "Price not available";
+  const hasMultiplePapers = book.papers && book.papers.length > 1;
+
+  // Calculate average rating
+  const avgRating = book.reviews && book.reviews.length > 0
+    ? Math.round(book.reviews.reduce((sum, r) => sum + r.rating, 0) / book.reviews.length)
     : 0;
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
+      initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      transition={{ delay, duration: 0.5 }}
-      whileHover={{ y: -12, scale: 1.02 }}
-      className="group relative bg-card rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 border border-border/50"
+      transition={{ delay, duration: 0.4 }}
+      whileHover={{ y: -5 }}
+      className="group bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100"
     >
       {/* Image Container */}
-      <div className="relative aspect-[3/4] overflow-hidden bg-gradient-to-br from-muted/30 to-muted">
-        <motion.img
+      <div className="relative aspect-[3/4] overflow-hidden bg-gray-50">
+        <img
           src={book.thumbnail}
           alt={book.title}
-          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
         />
-
-        {/* Glass Overlay on Hover */}
-        <div className="absolute inset-0 bg-gradient-to-t from-charcoal/60 via-charcoal/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col items-center justify-end p-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="flex gap-3 mb-4"
-          >
-            <motion.button
-              whileHover={{ scale: 1.15, rotate: -5 }}
-              whileTap={{ scale: 0.9 }}
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-              }}
-              className="p-3 bg-white/90 backdrop-blur-sm rounded-xl text-charcoal shadow-lg hover:bg-primary hover:text-primary-foreground transition-all duration-300"
-              aria-label="Add to wishlist"
-            >
-              <Heart className="w-5 h-5" />
-            </motion.button>
-            <motion.button
-              whileHover={{ scale: 1.15, rotate: 5 }}
-              whileTap={{ scale: 0.9 }}
-              onClick={handleAddToCart}
-              className="p-3 bg-primary rounded-xl text-primary-foreground shadow-lg hover:bg-terracotta-dark transition-all duration-300"
-              aria-label="Add to cart"
-            >
-              <ShoppingCart className="w-5 h-5" />
-            </motion.button>
-            <motion.button
-              whileHover={{ scale: 1.15 }}
-              whileTap={{ scale: 0.9 }}
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-              }}
-              className="p-3 bg-white/90 backdrop-blur-sm rounded-xl text-charcoal shadow-lg hover:bg-accent hover:text-accent-foreground transition-all duration-300"
-              aria-label="Share"
-            >
-              <Share2 className="w-5 h-5" />
-            </motion.button>
-          </motion.div>
+        
+        {/* Badges */}
+        <div className="absolute top-2 left-2 flex flex-col gap-1">
+          {hasMultiplePapers && (
+            <Badge className="bg-primary text-primary-foreground text-[10px] font-medium">
+              {book.papers.length} variants
+            </Badge>
+          )}
         </div>
 
-        {/* Discount Badge */}
-        {hasDiscount && (
-          <motion.div
-            initial={{ x: -30, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            transition={{ delay: delay + 0.3, duration: 0.4 }}
-            className="absolute top-4 left-4 bg-gradient-to-r from-primary to-terracotta-dark text-white px-3 py-1.5 rounded-full text-xs font-bold shadow-lg"
-          >
-            <div className="flex items-center gap-1">
-              <Zap className="w-3 h-3" />-{discountPercent}%
-            </div>
-          </motion.div>
-        )}
-
-        {/* Rating Badge */}
-        {book.reviews && book.reviews.length > 0 && (
-          <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-full flex items-center gap-1 shadow-md">
-            <Star className="w-3 h-3 fill-gold text-gold" />
-            <span className="text-xs font-semibold text-charcoal">
-              {Math.round(
-                book.reviews.reduce((sum, r) => sum + r.rating, 0) /
-                  book.reviews.length,
-              )}
-            </span>
+        {/* Subject Badge */}
+        {book.subject && (
+          <div className="absolute top-2 right-2">
+            <Badge variant="secondary" className="text-[10px] font-medium bg-white/90 backdrop-blur-sm">
+              {book.subject.name}
+            </Badge>
           </div>
         )}
       </div>
 
       {/* Content */}
-      <div className="p-4 sm:p-5">
-        {/* Genre/Category */}
-        <div className="flex items-center gap-2 mb-2">
-          <BookOpen className="w-4 h-4 text-primary" />
-          <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
-            {book.publication?.name || "Literature"}
-          </span>
-        </div>
-
+      <div className="p-3 flex flex-col h-[120px]">
         {/* Title */}
-        <h3 className="font-display text-base sm:text-lg font-bold text-foreground mb-1 line-clamp-1 group-hover:text-primary transition-colors">
+        <h3 className="font-semibold text-sm text-gray-900 mb-1 line-clamp-2 leading-tight group-hover:text-primary transition-colors">
           {book.title}
         </h3>
-
+        
         {/* Author */}
-        <p className="text-sm text-muted-foreground mb-3">
+        <p className="text-xs text-gray-500 mb-2 truncate">
           {book.publication?.name || "Unknown Author"}
         </p>
 
-        {/* Price & Action */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-baseline gap-2">
-            <span className="text-xl sm:text-2xl font-bold text-primary">
-              ${displayPrice}
-            </span>
-            {hasDiscount && (
-              <span className="text-sm text-muted-foreground line-through">
-                ${book.price}
-              </span>
-            )}
+        {/* Rating */}
+        {book.reviews && book.reviews.length > 0 && (
+          <div className="flex items-center gap-1 mb-2">
+            <div className="flex">
+              {[...Array(5)].map((_, i) => (
+                <Star
+                  key={i}
+                  className={`w-3 h-3 ${
+                    i < avgRating ? "fill-yellow-400 text-yellow-400" : "text-gray-300"
+                  }`}
+                />
+              ))}
+            </div>
+            <span className="text-[10px] text-gray-400">({book.reviews.length})</span>
           </div>
+        )}
+
+        {/* Price and Add Button */}
+        <div className="mt-auto flex items-center justify-between">
+          <span className="text-lg font-bold text-primary">{priceDisplay}</span>
           <Button
-            variant="ghost"
             size="sm"
-            className="text-primary hover:text-primary hover:bg-primary/10 font-semibold"
+            className="h-8 w-8 p-0 rounded-lg bg-primary hover:bg-primary/90"
             onClick={handleAddToCart}
           >
             <ShoppingCart className="w-4 h-4" />
-            Add
           </Button>
         </div>
       </div>
