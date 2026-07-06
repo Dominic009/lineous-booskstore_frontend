@@ -12,6 +12,7 @@ import React, {
 import { useLogin, useRegister } from "@/hooks/use-auth";
 import { removeToken, setToken } from "@/lib/api-client";
 import { AuthUser, AuthResponse } from "@/lib/types";
+import { useSocialLogin, type SocialProvider } from "@/hooks/use-social-login";
 
 export interface User extends AuthUser {
   name?: string;
@@ -31,6 +32,14 @@ interface AuthContextType {
   register: (email: string, password: string, name: string) => Promise<AuthResponse>;
   logout: () => void;
   updateProfile: (updates: Partial<User>) => void;
+  socialLogin: (
+    provider: SocialProvider,
+    providerId: string,
+    email: string,
+    firstName: string,
+    lastName: string,
+    avatar?: string,
+  ) => Promise<AuthResponse>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -51,6 +60,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(() => getInitialUser());
   const loginMutation = useLogin();
   const registerMutation = useRegister();
+  const socialLoginMutation = useSocialLogin();
 
   // Save user to localStorage when it changes
   useEffect(() => {
@@ -109,6 +119,37 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     });
   }, []);
 
+  const socialLogin = useCallback(
+    async (
+      provider: SocialProvider,
+      providerId: string,
+      email: string,
+      firstName: string,
+      lastName: string,
+      avatar?: string,
+    ): Promise<AuthResponse> => {
+      const result = await socialLoginMutation.mutateAsync({
+        provider,
+        providerId,
+        email,
+        firstName,
+        lastName,
+        avatar,
+      });
+
+      const userData: User = {
+        ...result.user,
+        name: `${firstName} ${lastName}`,
+        avatar: avatar || result.user.avatar,
+      };
+
+      setUser(userData);
+      setToken(result.accessToken);
+      return result;
+    },
+    [socialLoginMutation],
+  );
+
   return (
     <AuthContext.Provider
       value={{
@@ -118,6 +159,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         register,
         logout,
         updateProfile,
+        socialLogin,
       }}
     >
       {children}

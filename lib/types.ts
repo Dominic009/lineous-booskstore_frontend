@@ -292,6 +292,7 @@ export interface AuthUser {
   id: string;
   email: string;
   role: "USER" | "ADMIN";
+  avatar?: string;
 }
 
 // Auth Response
