@@ -1,6 +1,6 @@
 "use client";
 import { motion } from "framer-motion";
-import { Heart, ShoppingCart, Star, Plus } from "lucide-react";
+import { Heart, ShoppingCart, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useCartContext } from "@/contexts/CartContext";
@@ -17,19 +17,16 @@ const BookCard = ({ book, delay = 0 }: BookCardProps) => {
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    
-    // Get the default paper or first available paper
+
     const defaultPaper = book.papers?.find(p => p.isDefault && p.isInStock) || book.papers?.[0];
     if (defaultPaper) {
       addToCart(book.id, defaultPaper.id, 1);
     }
   };
 
-  // Use priceRange.display for price display
   const priceDisplay = book.priceRange?.display || "Price not available";
   const hasMultiplePapers = book.papers && book.papers.length > 1;
 
-  // Calculate average rating
   const avgRating = book.reviews && book.reviews.length > 0
     ? Math.round(book.reviews.reduce((sum, r) => sum + r.rating, 0) / book.reviews.length)
     : 0;
@@ -40,21 +37,24 @@ const BookCard = ({ book, delay = 0 }: BookCardProps) => {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ delay, duration: 0.4 }}
-      whileHover={{ y: -5 }}
-      className="group bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100"
+      whileHover={{ y: -8 }}
+      className="group relative rounded-2xl overflow-hidden bg-white border border-slate-200 shadow-lg shadow-slate-200/80 transition-all duration-500 hover:shadow-xl hover:shadow-violet-100/80 hover:border-violet-200"
     >
+      <div className="absolute inset-0 bg-gradient-to-br from-violet-50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+
       {/* Image Container */}
-      <div className="relative aspect-[3/4] overflow-hidden bg-gray-50">
+      <div className="relative aspect-[3/4] overflow-hidden bg-slate-100">
         <img
           src={book.thumbnail}
           alt={book.title}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
         />
-        
+        <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent opacity-60" />
+
         {/* Badges */}
-        <div className="absolute top-2 left-2 flex flex-col gap-1">
+        <div className="absolute top-3 left-3 flex flex-col gap-1">
           {hasMultiplePapers && (
-            <Badge className="bg-primary text-primary-foreground text-[10px] font-medium">
+            <Badge className="bg-white border border-slate-200 text-slate-700 text-[10px] font-medium shadow-sm">
               {book.papers.length} variants
             </Badge>
           )}
@@ -62,8 +62,8 @@ const BookCard = ({ book, delay = 0 }: BookCardProps) => {
 
         {/* Subject Badge */}
         {book.subject && (
-          <div className="absolute top-2 right-2">
-            <Badge variant="secondary" className="text-[10px] font-medium bg-white/90 backdrop-blur-sm">
+          <div className="absolute top-3 right-3">
+            <Badge variant="secondary" className="text-[10px] font-medium bg-white border border-slate-200 text-slate-700 shadow-sm">
               {book.subject.name}
             </Badge>
           </div>
@@ -71,54 +71,46 @@ const BookCard = ({ book, delay = 0 }: BookCardProps) => {
       </div>
 
       {/* Content */}
-      <div className="p-3 flex flex-col h-[120px]">
+      <div className="p-4 flex flex-col">
         {/* Title */}
-        <h3 className="font-semibold text-sm text-gray-900 mb-1 line-clamp-2 leading-tight group-hover:text-primary transition-colors">
+        <h3 className="font-semibold text-sm text-slate-900 mb-1 line-clamp-2 leading-tight group-hover:text-violet-700 transition-colors">
           {book.title}
         </h3>
-        
+
         {/* Author */}
-        <p className="text-xs text-gray-500 mb-2 truncate">
+        <p className="text-xs text-slate-500 mb-2 truncate">
           {book.publication?.name || "Unknown Author"}
         </p>
 
         {/* Rating */}
         {book.reviews && book.reviews.length > 0 && (
-          <div className="flex items-center gap-1 mb-2">
+          <div className="flex items-center gap-1 mb-3">
             <div className="flex">
               {[...Array(5)].map((_, i) => (
                 <Star
                   key={i}
                   className={`w-3 h-3 ${
-                    i < avgRating ? "fill-yellow-400 text-yellow-400" : "text-gray-300"
+                    i < avgRating ? "fill-amber-400 text-amber-400" : "text-slate-300"
                   }`}
                 />
               ))}
             </div>
-            <span className="text-[10px] text-gray-400">({book.reviews.length})</span>
+            <span className="text-[10px] text-slate-400">({book.reviews.length})</span>
           </div>
         )}
 
         {/* Price and Add Button */}
         <div className="mt-auto flex items-center justify-between">
-          <span className="text-lg font-bold text-primary">{priceDisplay}</span>
+          <span className="text-lg font-bold text-violet-700">{priceDisplay}</span>
           <Button
             size="sm"
-            className="h-8 w-8 p-0 rounded-lg bg-primary hover:bg-primary/90"
+            className="h-8 w-8 p-0 rounded-lg bg-violet-600 hover:bg-violet-700 text-white shadow-md shadow-violet-200 transition-all duration-300 active:scale-95"
             onClick={handleAddToCart}
           >
             <ShoppingCart className="w-4 h-4" />
           </Button>
         </div>
       </div>
-
-      {/* Animated border on hover */}
-      <motion.div
-        className="absolute inset-0 border-2 border-primary/0 rounded-2xl pointer-events-none"
-        initial={{ borderColor: "hsl(var(--primary) / 0)" }}
-        whileHover={{ borderColor: "hsl(var(--primary) / 0.3)" }}
-        transition={{ duration: 0.3 }}
-      />
     </motion.div>
   );
 };

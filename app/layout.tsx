@@ -1,9 +1,22 @@
 import "./globals.css";
-import { Inter, Playfair_Display } from "next/font/google";
+import { Poppins } from "next/font/google";
 import Providers from "./providers";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-body", display: "swap" });
-const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-display", display: "swap" });
+const poppins = Poppins({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-body",
+  display: "swap",
+});
+
+const poppinsDisplay = Poppins({
+  subsets: ["latin"],
+  weight: ["600", "700"],
+  variable: "--font-display",
+  display: "swap",
+});
 
 export default function RootLayout({
   children,
@@ -11,9 +24,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
+    <html lang="en" className={`${poppins.variable} ${poppinsDisplay.variable}`}>
       <body>
-        <Providers>{children}</Providers>
+        <Providers>
+          <div className="relative min-h-screen bg-white overflow-hidden">
+            <Navbar />
+            <main className=" relative z-10">
+              {children}
+            </main>
+            <Footer />
+          </div>
+        </Providers>
       </body>
     </html>
   );

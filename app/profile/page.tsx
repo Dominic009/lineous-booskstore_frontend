@@ -41,8 +41,6 @@ import {
 import { useAuth } from "../../contexts/AuthContext";
 import { useAddresses, useCreateAddress, useUpdateAddress, useDeleteAddress } from "../../hooks/use-addresses";
 import { Address } from "@/lib/types";
-import Navbar from "../../components/Navbar";
-import Footer from "../../components/Footer";
 import { toast } from "sonner";
 
 const ProfilePage = () => {
@@ -161,87 +159,108 @@ const ProfilePage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
-
-      <main className="pt-24 pb-16">
+    <div className="relative min-h-screen bg-white overflow-hidden">
+      <main className="pt-24 pb-16 relative z-10">
         <div className="container mx-auto px-4 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="max-w-4xl mx-auto"
+            className="max-w-5xl mx-auto"
           >
-            {/* Header */}
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
-              <div className="flex items-center gap-4">
-                <Avatar className="w-16 h-16 sm:w-20 sm:h-20 border-4 border-primary/20">
-                  <AvatarImage src={user?.avatar} alt={user?.name} />
-                  <AvatarFallback className="text-xl sm:text-2xl font-display">
-                    {user?.name?.charAt(0)}
-                  </AvatarFallback>
-                </Avatar>
-                <div>
-                  <h1 className="font-display text-2xl sm:text-3xl font-bold text-foreground">
-                    {user?.name}
-                  </h1>
-                  <p className="text-muted-foreground text-sm sm:text-base">
-                    {user?.email}
-                  </p>
+            {/* Profile Hero Card */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="relative rounded-3xl overflow-hidden bg-white border border-slate-200 shadow-xl shadow-slate-200/80 mb-8"
+            >
+              <div className="absolute inset-0 bg-gradient-to-br from-violet-50 via-white to-white rounded-3xl pointer-events-none" />
+
+              <div className="relative p-8 lg:p-10">
+                <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
+                  <Avatar className="w-24 h-24 lg:w-32 lg:h-32 border-4 border-violet-200 shadow-lg">
+                    <AvatarImage src={user?.avatar} alt={user?.name} />
+                    <AvatarFallback className="text-3xl lg:text-4xl font-display text-violet-700 bg-violet-50">
+                      {user?.name?.charAt(0)}
+                    </AvatarFallback>
+                  </Avatar>
+
+                  <div className="flex-1 min-w-0">
+                    <h1 className="font-display text-2xl lg:text-4xl font-bold text-slate-900 mb-1 tracking-tight">
+                      {user?.name}
+                    </h1>
+                    <p className="text-slate-500 text-base lg:text-lg mb-3">
+                      {user?.email}
+                    </p>
+                    <div className="flex flex-wrap items-center gap-3">
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-violet-50 border border-violet-200 text-violet-700 text-xs font-medium">
+                        <User className="w-3.5 h-3.5" />
+                        Member
+                      </span>
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-50 border border-slate-200 text-slate-600 text-xs font-medium">
+                        <Mail className="w-3.5 h-3.5" />
+                        Verified
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-3 shrink-0">
+                    {isEditing ? (
+                      <Button
+                        onClick={handleSave}
+                        className="active:scale-95 transition-transform bg-gradient-to-r from-violet-600 via-indigo-600 to-violet-600 hover:from-violet-500 hover:via-indigo-500 hover:to-violet-500 text-white border border-violet-500/20 shadow-lg shadow-violet-100"
+                      >
+                        <Save className="w-4 h-4 mr-2" />
+                        Save Changes
+                      </Button>
+                    ) : (
+                      <Button
+                        variant="outline"
+                        onClick={() => setIsEditing(true)}
+                        className="active:scale-95 transition-transform bg-white border-slate-200 text-slate-700 hover:bg-slate-50 hover:border-slate-300"
+                      >
+                        <Edit2 className="w-4 h-4 mr-2" />
+                        Edit Profile
+                      </Button>
+                    )}
+                  </div>
                 </div>
               </div>
-              <div className="flex flex-wrap gap-2">
-                {isEditing ? (
-                  <Button
-                    onClick={handleSave}
-                    className="active:scale-95 transition-transform"
-                  >
-                    <Save className="w-4 h-4 mr-2" />
-                    Save Changes
-                  </Button>
-                ) : (
-                  <Button
-                    variant="outline"
-                    onClick={() => setIsEditing(true)}
-                    className="active:scale-95 transition-transform"
-                  >
-                    <Edit2 className="w-4 h-4 mr-2" />
-                    Edit Profile
-                  </Button>
-                )}
-                <Button
-                  variant="ghost"
-                  onClick={handleLogout}
-                  className="text-destructive hover:text-destructive active:scale-95 transition-transform"
-                >
-                  <LogOut className="w-4 h-4 mr-2" />
-                  Logout
-                </Button>
-              </div>
-            </div>
+            </motion.div>
 
             <div className="grid lg:grid-cols-3 gap-8">
-              {/* Sidebar */}
+              {/* Quick Nav */}
               <div className="lg:col-span-1">
                 <motion.div
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.1 }}
-                  className="bg-card rounded-xl p-4 shadow-warm"
+                  className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm"
                 >
-                  <nav className="space-y-1">
+                  <nav className="space-y-2">
                     {menuItems.map((item) => (
                       <Link
                         key={item.label}
                         href={item.href}
-                        className="flex items-center justify-between p-3 rounded-lg text-foreground hover:bg-muted transition-colors group"
+                        className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-700 hover:bg-violet-50 hover:text-violet-700 transition-all group"
                       >
-                        <div className="flex items-center gap-3">
-                          <item.icon className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" />
-                          <span>{item.label}</span>
+                        <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-slate-50 group-hover:bg-violet-100 transition-colors">
+                          <item.icon className="w-5 h-5 text-slate-400 group-hover:text-violet-600 transition-colors" />
                         </div>
-                        <ChevronRight className="w-4 h-4 text-muted-foreground" />
+                        <span className="font-medium text-sm">{item.label}</span>
+                        <ChevronRight className="w-4 h-4 text-slate-400 ml-auto" />
                       </Link>
                     ))}
+                    <div className="pt-2 mt-2 border-t border-slate-100">
+                      <button
+                        onClick={handleLogout}
+                        className="flex items-center gap-3 px-4 py-3 rounded-xl text-red-600 hover:bg-red-50 transition-all w-full"
+                      >
+                        <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-red-50">
+                          <LogOut className="w-5 h-5" />
+                        </div>
+                        <span className="font-medium text-sm">Logout</span>
+                      </button>
+                    </div>
                   </nav>
                 </motion.div>
               </div>
@@ -254,16 +273,21 @@ const ProfilePage = () => {
                 className="lg:col-span-2 space-y-8"
               >
                 {/* Personal Information */}
-                <div className="bg-card rounded-xl p-6 shadow-warm">
-                  <h2 className="font-display text-xl font-semibold mb-6">
-                    Personal Information
-                  </h2>
+                <div className="bg-white rounded-2xl p-6 lg:p-8 border border-slate-200 shadow-sm">
+                  <div className="flex items-center justify-between mb-6">
+                    <h2 className="font-display text-xl font-semibold text-slate-900">
+                      Personal Information
+                    </h2>
+                    {!isEditing && (
+                      <span className="text-xs text-slate-400 font-medium uppercase tracking-wider">Read Only</span>
+                    )}
+                  </div>
 
                   <div className="grid sm:grid-cols-2 gap-5">
                     <div className="space-y-2">
-                      <Label htmlFor="name">Full Name</Label>
+                      <Label htmlFor="name" className="text-slate-700 text-sm font-medium">Full Name</Label>
                       <div className="relative">
-                        <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                        <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                         <Input
                           id="name"
                           value={formData.name}
@@ -271,15 +295,15 @@ const ProfilePage = () => {
                             setFormData({ ...formData, name: e.target.value })
                           }
                           disabled={!isEditing}
-                          className="pl-10"
+                          className="pl-10 bg-white border-slate-200 text-slate-900 focus:border-violet-500/50 focus:ring-2 focus:ring-violet-500/20"
                         />
                       </div>
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="email">Email</Label>
+                      <Label htmlFor="email" className="text-slate-700 text-sm font-medium">Email</Label>
                       <div className="relative">
-                        <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                        <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                         <Input
                           id="email"
                           type="email"
@@ -288,15 +312,15 @@ const ProfilePage = () => {
                             setFormData({ ...formData, email: e.target.value })
                           }
                           disabled={!isEditing}
-                          className="pl-10"
+                          className="pl-10 bg-white border-slate-200 text-slate-900 focus:border-violet-500/50 focus:ring-2 focus:ring-violet-500/20"
                         />
                       </div>
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="phone">Phone</Label>
+                      <Label htmlFor="phone" className="text-slate-700 text-sm font-medium">Phone</Label>
                       <div className="relative">
-                        <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                        <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                         <Input
                           id="phone"
                           type="tel"
@@ -306,15 +330,15 @@ const ProfilePage = () => {
                             setFormData({ ...formData, phone: e.target.value })
                           }
                           disabled={!isEditing}
-                          className="pl-10"
+                          className="pl-10 bg-white border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-violet-500/50 focus:ring-2 focus:ring-violet-500/20"
                         />
                       </div>
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="city">City</Label>
+                      <Label htmlFor="city" className="text-slate-700 text-sm font-medium">City</Label>
                       <div className="relative">
-                        <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                        <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                         <Input
                           id="city"
                           placeholder="Add city"
@@ -323,13 +347,13 @@ const ProfilePage = () => {
                             setFormData({ ...formData, city: e.target.value })
                           }
                           disabled={!isEditing}
-                          className="pl-10"
+                          className="pl-10 bg-white border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-violet-500/50 focus:ring-2 focus:ring-violet-500/20"
                         />
                       </div>
                     </div>
 
                     <div className="sm:col-span-2 space-y-2">
-                      <Label htmlFor="address">Address</Label>
+                      <Label htmlFor="address" className="text-slate-700 text-sm font-medium">Address</Label>
                       <Input
                         id="address"
                         placeholder="Add your address"
@@ -338,11 +362,12 @@ const ProfilePage = () => {
                           setFormData({ ...formData, address: e.target.value })
                         }
                         disabled={!isEditing}
+                        className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-violet-500/50 focus:ring-2 focus:ring-violet-500/20"
                       />
                     </div>
 
                     <div className="sm:col-span-2 space-y-2">
-                      <Label htmlFor="bio">Bio</Label>
+                      <Label htmlFor="bio" className="text-slate-700 text-sm font-medium">Bio</Label>
                       <Textarea
                         id="bio"
                         placeholder="Tell us about yourself..."
@@ -352,21 +377,22 @@ const ProfilePage = () => {
                         }
                         disabled={!isEditing}
                         rows={4}
+                        className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-violet-500/50 focus:ring-2 focus:ring-violet-500/20"
                       />
                     </div>
                   </div>
                 </div>
 
                 {/* Saved Addresses */}
-                <div className="bg-card rounded-xl p-6 shadow-warm">
+                <div className="bg-white rounded-2xl p-6 lg:p-8 border border-slate-200 shadow-sm">
                   <div className="flex items-center justify-between mb-6">
-                    <h2 className="font-display text-xl font-semibold">
+                    <h2 className="font-display text-xl font-semibold text-slate-900">
                       Saved Addresses
                     </h2>
                     <Button
                       size="sm"
                       onClick={() => openAddressDialog()}
-                      className="active:scale-95 transition-transform"
+                      className="active:scale-95 transition-transform bg-gradient-to-r from-violet-600 via-indigo-600 to-violet-600 hover:from-violet-500 hover:via-indigo-500 hover:to-violet-500 text-white border border-violet-500/20 shadow-lg shadow-violet-100"
                     >
                       <Plus className="w-4 h-4 mr-2" />
                       Add Address
@@ -374,55 +400,70 @@ const ProfilePage = () => {
                   </div>
 
                   {addressesLoading ? (
-                    <p className="text-muted-foreground">Loading addresses...</p>
-                  ) : addresses.length === 0 ? (
-                    <p className="text-muted-foreground">
-                      No saved addresses. Add one for faster checkout.
-                    </p>
-                  ) : (
-                    <div className="space-y-4">
-                      {addresses.map((addr) => (
-                        <div
-                          key={addr.id}
-                          className="flex items-start justify-between p-4 border rounded-lg"
-                        >
-                          <div>
-                            <p className="font-medium">{addr.name}</p>
-                            <p className="text-sm text-muted-foreground">
-                              {addr.addressLine}
-                            </p>
-                            <p className="text-sm text-muted-foreground">
-                               {addr.district}
-                               {addr.area && `, ${addr.area}`}
-                             </p>
-                             {addr.country && (
-                               <p className="text-sm text-muted-foreground">
-                                 {addr.country}
-                                 {addr.postalCode && ` ${addr.postalCode}`}
-                               </p>
-                             )}
-                            <p className="text-sm text-muted-foreground">
-                              Phone: {addr.phone}
-                            </p>
-                          </div>
-                          <div className="flex gap-2">
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              onClick={() => openAddressDialog(addr)}
-                            >
-                              <Pencil className="w-4 h-4" />
-                            </Button>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              onClick={() => handleDeleteAddress(addr.id)}
-                              disabled={deleteAddressMutation.isPending}
-                            >
-                              <Trash2 className="w-4 h-4 text-destructive" />
-                            </Button>
-                          </div>
+                    <div className="space-y-3">
+                      {[...Array(2)].map((_, i) => (
+                        <div key={i} className="animate-pulse">
+                          <div className="h-6 bg-slate-200 rounded w-1/3 mb-2" />
+                          <div className="h-4 bg-slate-100 rounded w-2/3" />
                         </div>
+                      ))}
+                    </div>
+                  ) : addresses.length === 0 ? (
+                    <div className="text-center py-12 rounded-xl border-2 border-dashed border-slate-200">
+                      <MapPin className="w-12 h-12 text-slate-300 mx-auto mb-3" />
+                      <p className="text-slate-500 mb-1">No saved addresses yet</p>
+                      <p className="text-sm text-slate-400">Add an address for faster checkout</p>
+                    </div>
+                  ) : (
+                    <div className="grid sm:grid-cols-2 gap-4">
+                      {addresses.map((addr) => (
+                        <motion.div
+                          key={addr.id}
+                          whileHover={{ y: -2 }}
+                          className="relative p-5 rounded-2xl border border-slate-200 bg-white hover:border-violet-200 hover:shadow-md transition-all group"
+                        >
+                          <div className="flex items-start justify-between mb-3">
+                            <div className="flex items-center gap-2">
+                              <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-violet-50 text-violet-700">
+                                <MapPin className="w-4 h-4" />
+                              </div>
+                              <p className="font-semibold text-slate-900">{addr.name}</p>
+                            </div>
+                            <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => openAddressDialog(addr)}
+                                className="h-8 w-8 border border-slate-200 hover:bg-violet-50 hover:text-violet-700"
+                              >
+                                <Pencil className="w-3.5 h-3.5" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => handleDeleteAddress(addr.id)}
+                                disabled={deleteAddressMutation.isPending}
+                                className="h-8 w-8 border border-slate-200 hover:bg-red-50 hover:text-red-700"
+                              >
+                                <Trash2 className="w-3.5 h-3.5 text-red-500" />
+                              </Button>
+                            </div>
+                          </div>
+                          <div className="space-y-1 text-sm text-slate-500">
+                            <p>{addr.addressLine}</p>
+                            <p>
+                              {addr.district}
+                              {addr.area && `, ${addr.area}`}
+                            </p>
+                            {addr.country && (
+                              <p>
+                                {addr.country}
+                                {addr.postalCode && ` ${addr.postalCode}`}
+                              </p>
+                            )}
+                            <p className="text-slate-400">Phone: {addr.phone}</p>
+                          </div>
+                        </motion.div>
                       ))}
                     </div>
                   )}
@@ -434,126 +475,6 @@ const ProfilePage = () => {
       </main>
 
       {/* Address Dialog */}
-      <Dialog open={isAddressDialogOpen} onOpenChange={setIsAddressDialogOpen}>
-        <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>
-              {editingAddress ? "Edit Address" : "Add New Address"}
-            </DialogTitle>
-            <DialogDescription>
-              {editingAddress
-                ? "Update your delivery address details."
-                : "Add a new delivery address for faster checkout."}
-            </DialogDescription>
-          </DialogHeader>
-
-          <div className="grid sm:grid-cols-2 gap-4 py-4">
-            <div className="space-y-2">
-              <Label htmlFor="addr-name">Full Name</Label>
-              <Input
-                id="addr-name"
-                value={addressForm.name}
-                onChange={(e) =>
-                  setAddressForm({ ...addressForm, name: e.target.value })
-                }
-                required
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="addr-phone">Phone</Label>
-              <Input
-                id="addr-phone"
-                value={addressForm.phone}
-                onChange={(e) =>
-                  setAddressForm({ ...addressForm, phone: e.target.value })
-                }
-                required
-              />
-            </div>
-            <div className="sm:col-span-2 space-y-2">
-              <Label htmlFor="addr-line">Address Line</Label>
-              <Input
-                id="addr-line"
-                value={addressForm.addressLine}
-                onChange={(e) =>
-                  setAddressForm({ ...addressForm, addressLine: e.target.value })
-                }
-                required
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="addr-area">Area / City</Label>
-              <Input
-                id="addr-area"
-                value={addressForm.area}
-                onChange={(e) =>
-                  setAddressForm({ ...addressForm, area: e.target.value })
-                }
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="addr-district">District</Label>
-              <Input
-                id="addr-district"
-                value={addressForm.district}
-                onChange={(e) =>
-                  setAddressForm({ ...addressForm, district: e.target.value })
-                }
-                required
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="addr-division">Division</Label>
-              <Input
-                id="addr-division"
-                value={addressForm.division}
-                onChange={(e) =>
-                  setAddressForm({ ...addressForm, division: e.target.value })
-                }
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="addr-country">Country</Label>
-              <Input
-                id="addr-country"
-                value={addressForm.country}
-                onChange={(e) =>
-                  setAddressForm({ ...addressForm, country: e.target.value })
-                }
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="addr-postal">Postal Code</Label>
-              <Input
-                id="addr-postal"
-                value={addressForm.postalCode}
-                onChange={(e) =>
-                  setAddressForm({ ...addressForm, postalCode: e.target.value })
-                }
-              />
-            </div>
-          </div>
-
-          <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => setIsAddressDialogOpen(false)}
-            >
-              Cancel
-            </Button>
-            <Button
-              onClick={handleAddressSubmit}
-              disabled={
-                createAddressMutation.isPending || updateAddressMutation.isPending
-              }
-            >
-              {editingAddress ? "Update" : "Save"} Address
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      <Footer />
     </div>
   );
 };

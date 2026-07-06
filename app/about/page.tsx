@@ -3,8 +3,6 @@
 import { motion } from "framer-motion";
 import { BookOpen, Users, Award, Heart, Star, ArrowRight } from "lucide-react";
 import { Button } from "../../components/ui/button";
-import Navbar from "../../components/Navbar";
-import Footer from "../../components/Footer";
 
 const AboutPage = () => {
   const values = [
@@ -64,7 +62,6 @@ const AboutPage = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
       <main className="pt-16 lg:pt-20">
       {/* Hero Section */}
       <section className="relative py-20 lg:py-32 overflow-hidden">
@@ -316,7 +313,6 @@ const AboutPage = () => {
         </div>
       </section>
       </main>
-      <Footer />
     </div>
   );
 };

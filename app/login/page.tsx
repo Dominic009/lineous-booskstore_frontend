@@ -85,17 +85,17 @@ const LoginPage = () => {
   }));
 
   return (
-    <div className="relative min-h-screen w-full overflow-hidden bg-[#0a0a0f] flex flex-col lg:flex-row">
+    <div className="relative min-h-screen w-full overflow-hidden bg-white flex flex-col lg:flex-row">
       {/* Ambient Background */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {/* Gradient orbs */}
-        <div className="absolute top-[-10%] left-[-10%] w-[600px] h-[600px] rounded-full bg-violet-600/10 blur-[120px] animate-pulse" />
+        {/* Gradient orbs - soft light versions */}
+        <div className="absolute top-[-10%] left-[-10%] w-[600px] h-[600px] rounded-full bg-violet-200/30 blur-[120px]" />
         <div
-          className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] rounded-full bg-amber-500/8 blur-[100px] animate-pulse"
+          className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] rounded-full bg-amber-200/20 blur-[100px]"
           style={{ animationDelay: "2s" }}
         />
         <div
-          className="absolute top-[40%] left-[30%] w-[300px] h-[300px] rounded-full bg-indigo-500/8 blur-[80px] animate-pulse"
+          className="absolute top-[40%] left-[30%] w-[300px] h-[300px] rounded-full bg-indigo-200/20 blur-[80px]"
           style={{ animationDelay: "4s" }}
         />
 
@@ -103,7 +103,7 @@ const LoginPage = () => {
         {particles.map((p) => (
           <motion.div
             key={p.id}
-            className="absolute rounded-full bg-white/[0.03]"
+            className="absolute rounded-full bg-slate-300/40"
             style={{
               left: `${p.x}%`,
               top: `${p.y}%`,
@@ -112,7 +112,7 @@ const LoginPage = () => {
             }}
             animate={{
               y: [0, -30, 0],
-              opacity: [0.1, 0.4, 0.1],
+              opacity: [0.2, 0.6, 0.2],
             }}
             transition={{
               duration: p.duration,
@@ -125,9 +125,9 @@ const LoginPage = () => {
 
         {/* Subtle grid pattern */}
         <div
-          className="absolute inset-0 opacity-[0.02]"
+          className="absolute inset-0 opacity-[0.03]"
           style={{
-            backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
+            backgroundImage: `linear-gradient(rgba(0,0,0,0.15) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.15) 1px, transparent 1px)`,
             backgroundSize: "60px 60px",
           }}
         />
@@ -149,9 +149,9 @@ const LoginPage = () => {
           >
             <Link
               href="/"
-              className="group inline-flex items-center gap-2 text-zinc-500 hover:text-zinc-300 transition-all duration-300 mb-10"
+              className="group inline-flex items-center gap-2 text-slate-500 hover:text-slate-700 transition-all duration-300 mb-10"
             >
-              <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-zinc-800/50 border border-zinc-700/50 group-hover:border-zinc-600 group-hover:bg-zinc-700/50 transition-all duration-300">
+              <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-white border border-slate-200 group-hover:border-slate-300 group-hover:bg-slate-50 transition-all duration-300 shadow-sm">
                 <ArrowLeft className="w-4 h-4" />
               </div>
               <span className="text-sm font-medium">Back to Home</span>
@@ -165,34 +165,24 @@ const LoginPage = () => {
             transition={{ delay: 0.4, duration: 0.6 }}
             className="mb-10"
           >
-            {/* <div className="flex items-center gap-3 mb-6">
-              <div className="flex items-center justify-center w-11 h-11 rounded-xl bg-gradient-to-br from-violet-500/20 to-indigo-500/20 border border-violet-500/20">
-                <BookOpen className="w-5 h-5 text-violet-400" />
-              </div>
-              <div className="h-6 w-px bg-zinc-700/50" />
-              <span className="text-sm font-medium text-zinc-500 tracking-wide uppercase">
-                BookHaven
-              </span>
-            </div> */}
-
-            <h1 className="text-4xl lg:text-[2.75rem] font-bold text-white tracking-tight leading-[1.1] mb-3">
+            <h1 className="text-4xl lg:text-[2.75rem] font-bold text-slate-900 tracking-tight leading-[1.1] mb-3">
               {isLogin ? (
                 <>
                   Welcome{" "}
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 via-indigo-400 to-amber-400">
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-600 via-indigo-600 to-amber-600">
                     back
                   </span>
                 </>
               ) : (
                 <>
                   Start your{" "}
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 via-indigo-400 to-amber-400">
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-600 via-indigo-600 to-amber-600">
                     journey
                   </span>
                 </>
               )}
             </h1>
-            <p className="text-zinc-300 text-base leading-relaxed">
+            <p className="text-slate-600 text-base leading-relaxed">
               {isLogin
                 ? "Sign in to access your curated library and continue exploring worlds within pages."
                 : "Join thousands of readers. Your next favorite story is waiting to be discovered."}
@@ -219,10 +209,10 @@ const LoginPage = () => {
             className="relative mb-8"
           >
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full h-px bg-gradient-to-r from-transparent via-zinc-700/50 to-transparent" />
+              <div className="w-full h-px bg-gradient-to-r from-transparent via-slate-300 to-transparent" />
             </div>
             <div className="relative flex justify-center">
-              <span className="bg-[#0a0a0f] px-4 text-xs font-medium text-zinc-500 tracking-widest uppercase">
+              <span className="bg-white px-4 text-xs font-medium text-slate-500 tracking-widest uppercase">
                 Or continue with email
               </span>
             </div>
@@ -247,7 +237,7 @@ const LoginPage = () => {
                 >
                   <Label
                     htmlFor="name"
-                    className="text-sm font-medium text-zinc-300 ml-1"
+                    className="text-sm font-medium text-slate-700 ml-1"
                   >
                     Full Name
                   </Label>
@@ -257,7 +247,7 @@ const LoginPage = () => {
                     />
                     <div className="relative flex items-center">
                       <User
-                        className={`absolute left-4 w-[18px] h-[18px] transition-colors duration-300 ${focusedField === "name" ? "text-violet-400" : "text-zinc-500"}`}
+                        className={`absolute left-4 w-[18px] h-[18px] transition-colors duration-300 ${focusedField === "name" ? "text-violet-600" : "text-slate-400"}`}
                       />
                       <Input
                         id="name"
@@ -269,7 +259,7 @@ const LoginPage = () => {
                         }
                         onFocus={() => setFocusedField("name")}
                         onBlur={() => setFocusedField(null)}
-                        className="pl-11 pr-4 h-12 bg-zinc-900/60 border-zinc-700/50 text-white placeholder:text-zinc-600 rounded-xl focus:border-violet-500/50 focus:ring-2 focus:ring-violet-500/20 transition-all duration-300"
+                        className="pl-11 pr-4 h-12 bg-white border-slate-200 text-slate-900 placeholder:text-slate-400 rounded-xl focus:border-violet-500/50 focus:ring-2 focus:ring-violet-500/20 transition-all duration-300"
                         required={!isLogin}
                       />
                     </div>
@@ -281,7 +271,7 @@ const LoginPage = () => {
             <div className="space-y-2">
               <Label
                 htmlFor="email"
-                className="text-sm font-medium text-zinc-300 ml-1"
+                className="text-sm font-medium text-slate-700 ml-1"
               >
                 Email Address
               </Label>
@@ -291,7 +281,7 @@ const LoginPage = () => {
                 />
                 <div className="relative flex items-center">
                   <Mail
-                    className={`absolute left-4 w-[18px] h-[18px] transition-colors duration-300 ${focusedField === "email" ? "text-violet-400" : "text-zinc-500"}`}
+                    className={`absolute left-4 w-[18px] h-[18px] transition-colors duration-300 ${focusedField === "email" ? "text-violet-600" : "text-slate-400"}`}
                   />
                   <Input
                     id="email"
@@ -303,7 +293,7 @@ const LoginPage = () => {
                     }
                     onFocus={() => setFocusedField("email")}
                     onBlur={() => setFocusedField(null)}
-                    className="pl-11 pr-4 h-12 bg-zinc-900/60 border-zinc-700/50 text-white placeholder:text-zinc-600 rounded-xl focus:border-violet-500/50 focus:ring-2 focus:ring-violet-500/20 transition-all duration-300"
+                    className="pl-11 pr-4 h-12 bg-white border-slate-200 text-slate-900 placeholder:text-slate-400 rounded-xl focus:border-violet-500/50 focus:ring-2 focus:ring-violet-500/20 transition-all duration-300"
                     required
                   />
                 </div>
@@ -313,7 +303,7 @@ const LoginPage = () => {
             <div className="space-y-2">
               <Label
                 htmlFor="password"
-                className="text-sm font-medium text-zinc-300 ml-1"
+                className="text-sm font-medium text-slate-700 ml-1"
               >
                 Password
               </Label>
@@ -323,7 +313,7 @@ const LoginPage = () => {
                 />
                 <div className="relative flex items-center">
                   <Lock
-                    className={`absolute left-4 w-[18px] h-[18px] transition-colors duration-300 ${focusedField === "password" ? "text-violet-400" : "text-zinc-500"}`}
+                    className={`absolute left-4 w-[18px] h-[18px] transition-colors duration-300 ${focusedField === "password" ? "text-violet-600" : "text-slate-400"}`}
                   />
                   <Input
                     id="password"
@@ -335,13 +325,13 @@ const LoginPage = () => {
                     }
                     onFocus={() => setFocusedField("password")}
                     onBlur={() => setFocusedField(null)}
-                    className="pl-11 pr-12 h-12 bg-zinc-900/60 border-zinc-700/50 text-white placeholder:text-zinc-600 rounded-xl focus:border-violet-500/50 focus:ring-2 focus:ring-violet-500/20 transition-all duration-300"
+                    className="pl-11 pr-12 h-12 bg-white border-slate-200 text-slate-900 placeholder:text-slate-400 rounded-xl focus:border-violet-500/50 focus:ring-2 focus:ring-violet-500/20 transition-all duration-300"
                     required
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300 transition-colors duration-200 p-1"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors duration-200 p-1"
                   >
                     {showPassword ? (
                       <EyeOff className="w-[18px] h-[18px]" />
@@ -364,7 +354,7 @@ const LoginPage = () => {
                 >
                   <Label
                     htmlFor="confirmPassword"
-                    className="text-sm font-medium text-zinc-300 ml-1"
+                    className="text-sm font-medium text-slate-700 ml-1"
                   >
                     Confirm Password
                   </Label>
@@ -374,7 +364,7 @@ const LoginPage = () => {
                     />
                     <div className="relative flex items-center">
                       <Lock
-                        className={`absolute left-4 w-[18px] h-[18px] transition-colors duration-300 ${focusedField === "confirmPassword" ? "text-violet-400" : "text-zinc-500"}`}
+                        className={`absolute left-4 w-[18px] h-[18px] transition-colors duration-300 ${focusedField === "confirmPassword" ? "text-violet-600" : "text-slate-400"}`}
                       />
                       <Input
                         id="confirmPassword"
@@ -389,7 +379,7 @@ const LoginPage = () => {
                         }
                         onFocus={() => setFocusedField("confirmPassword")}
                         onBlur={() => setFocusedField(null)}
-                        className="pl-11 pr-4 h-12 bg-zinc-900/60 border-zinc-700/50 text-white placeholder:text-zinc-600 rounded-xl focus:border-violet-500/50 focus:ring-2 focus:ring-violet-500/20 transition-all duration-300"
+                        className="pl-11 pr-4 h-12 bg-white border-slate-200 text-slate-900 placeholder:text-slate-400 rounded-xl focus:border-violet-500/50 focus:ring-2 focus:ring-violet-500/20 transition-all duration-300"
                         required={!isLogin}
                       />
                     </div>
@@ -407,7 +397,7 @@ const LoginPage = () => {
               >
                 <button
                   type="button"
-                  className="text-sm text-zinc-400 hover:text-violet-400 transition-colors duration-300 font-medium"
+                  className="text-sm text-slate-500 hover:text-violet-600 transition-colors duration-300 font-medium"
                 >
                   Forgot password?
                 </button>
@@ -422,9 +412,9 @@ const LoginPage = () => {
               <Button
                 type="submit"
                 disabled={isLoading}
-                className="relative w-full h-12 bg-gradient-to-r from-violet-500 via-indigo-500 to-violet-500 hover:from-violet-400 hover:via-indigo-400 hover:to-violet-400 text-white font-semibold rounded-xl transition-all duration-500 border border-violet-400/20 shadow-xl shadow-violet-900/40 hover:shadow-violet-900/60 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100 overflow-hidden group"
+                className="relative w-full h-12 bg-gradient-to-r from-violet-600 via-indigo-600 to-violet-600 hover:from-violet-500 hover:via-indigo-500 hover:to-violet-500 text-white font-semibold rounded-xl transition-all duration-500 border border-violet-500/20 shadow-lg shadow-violet-900/15 hover:shadow-xl hover:shadow-violet-900/25 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100 overflow-hidden group"
               >
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
                 <span className="relative flex items-center justify-center gap-2">
                   {isLoading ? (
                     <>
@@ -457,15 +447,15 @@ const LoginPage = () => {
             transition={{ delay: 1 }}
             className="mt-8 text-center"
           >
-            <p className="text-zinc-500 text-sm">
+            <p className="text-slate-500 text-sm">
               {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
               <button
                 type="button"
                 onClick={() => setIsLogin(!isLogin)}
-                className="text-violet-400 hover:text-violet-300 font-semibold transition-colors duration-300 relative group"
+                className="text-violet-600 hover:text-violet-700 font-semibold transition-colors duration-300 relative group"
               >
                 {isLogin ? "Sign up" : "Sign in"}
-                <span className="absolute bottom-0 left-0 w-0 h-px bg-violet-400 group-hover:w-full transition-all duration-300" />
+                <span className="absolute bottom-0 left-0 w-0 h-px bg-violet-600 group-hover:w-full transition-all duration-300" />
               </button>
             </p>
           </motion.div>
@@ -486,9 +476,9 @@ const LoginPage = () => {
           className="absolute inset-0 w-full h-full object-cover"
         />
 
-        {/* Dark overlay with gradient */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0f] via-[#0a0a0f]/60 to-[#0a0a0f]/30" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0f] via-transparent to-transparent" />
+        {/* Light overlay with gradient */}
+        <div className="absolute inset-0 bg-gradient-to-t from-white via-white/80 to-white/60" />
+        <div className="absolute inset-0 bg-gradient-to-r from-white via-transparent to-transparent" />
 
         {/* Glassmorphism Quote Card */}
         <div className="absolute bottom-12 left-12 right-12">
@@ -501,8 +491,8 @@ const LoginPage = () => {
             {/* Glass card */}
             <div className="relative p-8 rounded-2xl overflow-hidden">
               {/* Glass effect layers */}
-              <div className="absolute inset-0 bg-white/[0.03] backdrop-blur-xl border border-white/[0.08] rounded-2xl" />
-              <div className="absolute inset-0 bg-gradient-to-br from-violet-500/[0.05] to-transparent rounded-2xl" />
+              <div className="absolute inset-0 bg-white/80 backdrop-blur-xl border border-slate-200/60 rounded-2xl shadow-xl" />
+              <div className="absolute inset-0 bg-gradient-to-br from-violet-100/60 to-transparent rounded-2xl" />
 
               {/* Content */}
               <div className="relative z-10">
@@ -513,7 +503,7 @@ const LoginPage = () => {
                       height="32"
                       viewBox="0 0 32 32"
                       fill="none"
-                      className="text-violet-400/60"
+                      className="text-violet-500/70"
                     >
                       <path
                         d="M10 18c-2.2 0-4-1.8-4-4s1.8-4 4-4c.6 0 1.2.1 1.7.4C11.2 7.6 9.2 6 7 6v-2c4.4 0 8 3.6 8 8v6h-5zm14 0c-2.2 0-4-1.8-4-4s1.8-4 4-4c.6 0 1.2.1 1.7.4C25.2 7.6 23.2 6 21 6v-2c4.4 0 8 3.6 8 8v6h-5z"
@@ -522,13 +512,13 @@ const LoginPage = () => {
                     </svg>
                   </div>
                   <div>
-                    <p className="text-lg lg:text-xl text-zinc-200 font-light leading-relaxed italic mb-4">
+                    <p className="text-lg lg:text-xl text-slate-700 font-light leading-relaxed italic mb-4">
                       A reader lives a thousand lives before he dies. The man
                       who never reads lives only one.
                     </p>
                     <footer className="flex items-center gap-3">
-                      <div className="h-px w-8 bg-gradient-to-r from-violet-400/60 to-transparent" />
-                      <span className="text-sm font-medium text-violet-300/80 tracking-wide">
+                      <div className="h-px w-8 bg-gradient-to-r from-violet-500/70 to-transparent" />
+                      <span className="text-sm font-medium text-violet-600/90 tracking-wide">
                         George R.R. Martin
                       </span>
                     </footer>
@@ -540,8 +530,8 @@ const LoginPage = () => {
         </div>
 
         {/* Decorative corner elements */}
-        <div className="absolute top-8 right-8 w-20 h-20 border-t border-r border-white/[0.06] rounded-tr-2xl" />
-        <div className="absolute bottom-8 left-8 w-20 h-20 border-b border-l border-white/[0.06] rounded-bl-2xl" />
+        <div className="absolute top-8 right-8 w-20 h-20 border-t border-r border-slate-300/60 rounded-tr-2xl" />
+        <div className="absolute bottom-8 left-8 w-20 h-20 border-b border-l border-slate-300/60 rounded-bl-2xl" />
       </motion.div>
     </div>
   );

@@ -5,8 +5,6 @@ import { motion } from "framer-motion";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import BookCard from "@/components/BookCard";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import { useBooks } from "@/hooks/use-books";
 import { useSubjects } from "@/hooks/use-subjects";
 import { Book } from "@/lib/types";
@@ -34,7 +32,6 @@ const BooksContent = () => {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-background">
-        <Navbar />
         <main className="pt-24 pb-16">
           <div className="container mx-auto px-4 lg:px-8">
             <div className="animate-pulse">
@@ -48,7 +45,6 @@ const BooksContent = () => {
             </div>
           </div>
         </main>
-        <Footer />
       </div>
     );
   }
@@ -56,7 +52,6 @@ const BooksContent = () => {
   if (error) {
     return (
       <div className="min-h-screen bg-background">
-        <Navbar />
         <main className="pt-24 pb-16">
           <div className="container mx-auto px-4 lg:px-8 text-center">
             <h1 className="font-display text-2xl font-bold mb-4">Error Loading Books</h1>
@@ -64,7 +59,6 @@ const BooksContent = () => {
             <Button onClick={() => router.push("/")}>Go Home</Button>
           </div>
         </main>
-        <Footer />
       </div>
     );
   }
@@ -73,8 +67,6 @@ const BooksContent = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
-
       <main className="pt-24 pb-16">
         <div className="container mx-auto px-4 lg:px-8">
           {/* Header */}
@@ -166,8 +158,6 @@ const BooksContent = () => {
           )}
         </div>
       </main>
-
-      <Footer />
     </div>
   );
 };
@@ -176,7 +166,6 @@ const BooksPage = () => {
   return (
     <Suspense fallback={
       <div className="min-h-screen bg-background">
-        <Navbar />
         <main className="pt-24 pb-16">
           <div className="container mx-auto px-4 lg:px-8">
             <div className="animate-pulse">
@@ -190,7 +179,6 @@ const BooksPage = () => {
             </div>
           </div>
         </main>
-        <Footer />
       </div>
     }>
       <BooksContent />

@@ -17,8 +17,6 @@ import {
 import { useState, useEffect, useRef } from "react";
 import { Badge } from "../../../components/ui/badge";
 import { Button } from "../../../components/ui/button";
-import Navbar from "../../../components/Navbar";
-import Footer from "../../../components/Footer";
 import { useCartContext } from "../../../contexts/CartContext";
 import { useBook } from "../../../hooks/use-books";
 
@@ -125,40 +123,36 @@ const BookDetailsPage = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-background">
-        <Navbar />
-        <main className="pt-24 pb-16">
+      <div className="relative min-h-screen bg-white overflow-hidden">
+        <main className="pt-24 pb-16 relative z-10">
           <div className="container mx-auto px-4 lg:px-8">
             <div className="animate-pulse">
-              <div className="h-8 bg-muted rounded mb-4" />
+              <div className="h-8 bg-slate-200 rounded mb-4 w-40" />
               <div className="grid md:grid-cols-2 gap-8">
-                <div className="h-96 bg-muted rounded-xl" />
+                <div className="h-96 bg-slate-200 rounded-2xl" />
                 <div className="space-y-4">
-                  <div className="h-12 bg-muted rounded" />
-                  <div className="h-6 bg-muted rounded w-3/4" />
-                  <div className="h-8 bg-muted rounded w-1/2" />
+                  <div className="h-12 bg-slate-200 rounded-xl" />
+                  <div className="h-6 bg-slate-200 rounded-xl w-3/4" />
+                  <div className="h-8 bg-slate-200 rounded-xl w-1/2" />
                 </div>
               </div>
             </div>
           </div>
         </main>
-        <Footer />
       </div>
     );
   }
 
   if (error || !book) {
     return (
-      <div className="min-h-screen bg-background">
-        <Navbar />
-        <main className="pt-24 pb-16">
+      <div className="relative min-h-screen bg-white">
+        <main className="pt-24 pb-16 relative z-10">
           <div className="container mx-auto px-4 lg:px-8 text-center">
-            <h1 className="font-display text-2xl font-bold mb-4">Book not found</h1>
-            <p className="text-muted-foreground mb-6">The book you are looking for doesnt exist or is not available.</p>
+            <h1 className="font-display text-2xl font-bold mb-4 text-slate-900">Book not found</h1>
+            <p className="text-slate-500 mb-6">The book you are looking for doesnt exist or is not available.</p>
             <Button onClick={() => router.push("/")}>Browse Books</Button>
           </div>
         </main>
-        <Footer />
       </div>
     );
   }
@@ -167,10 +161,8 @@ const BookDetailsPage = () => {
   const thumbnail = selectedPaper?.thumbnail || book.thumbnail;
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
-
-      <main className="pt-24 pb-16">
+    <div className="relative min-h-screen bg-white overflow-hidden">
+      <main className="pt-24 pb-16 relative z-10">
         <div className="container mx-auto px-4 lg:px-8">
           {/* Breadcrumb */}
           <motion.div
@@ -180,7 +172,7 @@ const BookDetailsPage = () => {
           >
             <Link
               href="/"
-              className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors"
+              className="inline-flex items-center gap-2 text-slate-500 hover:text-violet-600 transition-colors"
             >
               <ArrowLeft className="w-4 h-4" />
               Back to Store
@@ -196,17 +188,18 @@ const BookDetailsPage = () => {
               transition={{ duration: 0.5 }}
               className="relative"
             >
-              <div className="aspect-[3/4] rounded-2xl overflow-hidden bg-muted shadow-warm-hover">
+              <div className="relative aspect-[3/4] rounded-2xl overflow-hidden bg-white border border-slate-200 shadow-xl shadow-slate-200/80">
                 <img
                   src={thumbnail}
                   alt={book.title}
                   className="w-full h-full object-cover"
                 />
+                <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent opacity-40" />
               </div>
               {/* Badges */}
               <div className="absolute top-4 left-4 flex flex-col gap-2">
                 {priceInfo.discount > 0 && (
-                  <Badge className="bg-primary text-primary-foreground">
+                  <Badge className="bg-violet-600 text-white border border-violet-500/30 shadow-lg shadow-violet-200">
                     -{priceInfo.discount}% OFF
                   </Badge>
                 )}
@@ -220,15 +213,15 @@ const BookDetailsPage = () => {
               transition={{ duration: 0.5, delay: 0.1 }}
               className="flex flex-col"
             >
-              <Badge variant="outline" className="w-fit mb-4">
+              <Badge variant="outline" className="w-fit mb-4 bg-white border-slate-200 text-slate-700">
                 {book.subject?.name || "Uncategorized"}
               </Badge>
 
-              <h1 className="font-display text-2xl sm:text-3xl lg:text-5xl font-bold text-foreground mb-2">
+              <h1 className="font-display text-2xl sm:text-3xl lg:text-5xl font-bold text-slate-900 mb-2 tracking-tight">
                 {book.title}
               </h1>
 
-              <p className="text-xl text-muted-foreground mb-4">
+              <p className="text-lg text-slate-500 mb-4">
                 by {book.publication?.name || "Unknown Author"}
               </p>
 
@@ -241,13 +234,13 @@ const BookDetailsPage = () => {
                         key={i}
                         className={`w-5 h-5 ${
                           i < Math.round(book.reviews.reduce((sum, r) => sum + r.rating, 0) / book.reviews.length)
-                            ? "fill-gold text-gold"
-                            : "text-muted-foreground/30"
+                            ? "fill-amber-400 text-amber-400"
+                            : "text-slate-300"
                         }`}
                       />
                     ))}
                   </div>
-                  <span className="text-muted-foreground">
+                  <span className="text-slate-500">
                     ({book.reviews.length} reviews)
                   </span>
                 </div>
@@ -256,7 +249,7 @@ const BookDetailsPage = () => {
               {/* Paper Selection */}
               {book.papers && book.papers.length > 0 && (
                 <div className="mb-6">
-                  <h3 className="font-semibold mb-3">Select Paper</h3>
+                  <h3 className="font-semibold mb-3 text-slate-900">Select Paper</h3>
                   <div className="flex flex-wrap gap-2">
                     {book.papers
                       .filter(p => p.status === "PUBLISHED")
@@ -264,14 +257,14 @@ const BookDetailsPage = () => {
                       <button
                         key={paper.id}
                         onClick={() => setSelectedPaperId(paper.id)}
-                        className={`px-4 py-2 rounded-lg border transition-all ${
+                        className={`px-4 py-2 rounded-xl border transition-all duration-300 ${
                           selectedPaperId === paper.id
-                            ? "border-primary bg-primary/10 text-primary"
-                            : "border-border hover:border-primary"
+                            ? "border-violet-500/50 bg-violet-50 text-violet-700 shadow-md shadow-violet-100"
+                            : "border-slate-200 hover:border-violet-200 text-slate-600 hover:text-slate-900"
                         }`}
                       >
                         <div className="text-sm font-medium">{paper.name}</div>
-                        <div className="text-xs text-muted-foreground">
+                        <div className="text-xs text-slate-500">
                           ৳{getEffectivePrice(paper)}
                         </div>
                       </button>
@@ -282,54 +275,54 @@ const BookDetailsPage = () => {
 
               {/* Price */}
               <div className="flex items-baseline gap-3 mb-6">
-                <span className="text-2xl sm:text-4xl font-bold text-primary">
+                <span className="text-2xl sm:text-4xl font-bold text-violet-700">
                   ৳{priceInfo.price}
                 </span>
                 {priceInfo.originalPrice && (
-                  <span className="text-xl text-muted-foreground line-through">
+                  <span className="text-xl text-slate-500 line-through">
                     ৳{priceInfo.originalPrice}
                   </span>
                 )}
               </div>
 
               {/* Description */}
-              <p className="text-foreground/80 leading-relaxed mb-8">
+              <p className="text-slate-600/90 leading-relaxed mb-8">
                 {book.description}
               </p>
 
               {/* Book Info */}
-              <div className="grid grid-cols-2 gap-4 mb-8 p-4 bg-muted/50 rounded-xl">
+              <div className="grid grid-cols-2 gap-4 mb-8 p-4 bg-slate-50 rounded-xl border border-slate-100">
                 <div>
-                  <p className="text-sm text-muted-foreground">Pages</p>
-                  <p className="font-semibold">{selectedPaper?.pageCount || book.edition}</p>
+                  <p className="text-sm text-slate-500">Pages</p>
+                  <p className="font-semibold text-slate-900">{selectedPaper?.pageCount || book.edition}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground">Published</p>
-                  <p className="font-semibold">{book.publicationDate}</p>
+                  <p className="text-sm text-slate-500">Published</p>
+                  <p className="font-semibold text-slate-900">{book.publicationDate}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground">ISBN</p>
-                  <p className="font-semibold">{book.isbn}</p>
+                  <p className="text-sm text-slate-500">ISBN</p>
+                  <p className="font-semibold text-slate-900">{book.isbn}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground">Language</p>
-                  <p className="font-semibold">{book.language}</p>
+                  <p className="text-sm text-slate-500">Language</p>
+                  <p className="font-semibold text-slate-900">{book.language}</p>
                 </div>
               </div>
 
               {/* Quantity & Add to Cart */}
               <div className="flex flex-col sm:flex-row gap-4 mb-8">
-                <div className="flex items-center border border-border rounded-lg">
+                <div className="flex items-center border border-slate-200 rounded-xl bg-white shadow-sm">
                   <button
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className="p-3 hover:bg-muted transition-colors active:scale-95"
+                    className="p-3 hover:bg-slate-50 transition-colors active:scale-95 text-slate-600"
                   >
                     <Minus className="w-4 h-4" />
                   </button>
-                  <span className="px-6 font-semibold">{quantity}</span>
+                  <span className="px-6 font-semibold text-slate-900">{quantity}</span>
                   <button
                     onClick={() => setQuantity(quantity + 1)}
-                    className="p-3 hover:bg-muted transition-colors active:scale-95"
+                    className="p-3 hover:bg-slate-50 transition-colors active:scale-95 text-slate-600"
                   >
                     <Plus className="w-4 h-4" />
                   </button>
@@ -337,7 +330,7 @@ const BookDetailsPage = () => {
 
                 <Button
                   size="lg"
-                  className="flex-1 active:scale-95 transition-transform py-3"
+                  className="flex-1 active:scale-95 transition-transform py-3 bg-gradient-to-r from-violet-600 via-indigo-600 to-violet-600 hover:from-violet-500 hover:via-indigo-500 hover:to-violet-500 text-white font-semibold rounded-xl border border-violet-500/20 shadow-lg shadow-violet-100 hover:shadow-xl hover:shadow-violet-200"
                   onClick={handleAddToCart}
                 >
                   <ShoppingCart className="w-5 h-5 mr-2" />
@@ -347,7 +340,7 @@ const BookDetailsPage = () => {
                 <Button
                   variant="outline"
                   size="lg"
-                  className="active:scale-95 transition-transform"
+                  className="active:scale-95 transition-transform bg-white border-slate-200 text-slate-600 hover:bg-slate-50 hover:border-slate-300"
                 >
                   <Heart className="w-5 h-5" />
                 </Button>
@@ -358,29 +351,17 @@ const BookDetailsPage = () => {
                 {features.map((feature) => (
                   <div
                     key={feature.text}
-                    className="flex items-center gap-2 text-sm text-muted-foreground"
+                    className="flex items-center gap-2 text-sm text-slate-500"
                   >
-                    <feature.icon className="w-4 h-4 text-primary" />
+                    <feature.icon className="w-4 h-4 text-violet-600" />
                     {feature.text}
                   </div>
                 ))}
               </div>
             </motion.div>
           </div>
-
-          {/* Related Books Section - Placeholder */}
-          <section>
-            <h2 className="font-display text-2xl font-bold mb-8">
-              You May Also Like
-            </h2>
-            <p className="text-muted-foreground">
-              Related books will appear here once data is added.
-            </p>
-          </section>
         </div>
       </main>
-
-      <Footer />
     </div>
   );
 };

@@ -37,7 +37,7 @@ export default function FacebookButton({
       type="button"
       onClick={handleClick}
       disabled={isLoading}
-      className={`w-full h-12 rounded-xl bg-white/[0.03] border border-white/[0.08] backdrop-blur-md text-white hover:bg-white/[0.08] hover:border-white/[0.15] transition-all duration-300 flex items-center justify-center gap-3 disabled:opacity-60 disabled:cursor-not-allowed ${className}`}
+      className={`w-full h-12 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition-all duration-300 flex items-center justify-center gap-3 shadow-sm hover:shadow-md disabled:opacity-60 disabled:cursor-not-allowed ${className}`}
     >
       <FacebookIcon className="w-5 h-5" />
       {isLoading ? "Signing in..." : "Continue with Facebook"}
