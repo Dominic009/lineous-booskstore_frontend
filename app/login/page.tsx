@@ -12,6 +12,7 @@ import {
   ArrowLeft,
   BookOpen,
   Sparkles,
+  Home,
 } from "lucide-react";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
@@ -44,9 +45,7 @@ const LoginPage = () => {
     try {
       if (isLogin) {
         await login(formData.email, formData.password);
-        toast.success("Welcome back!", {
-          description: "You've successfully logged in.",
-        });
+        toast.success("Welcome back!");
         router.push("/");
       } else {
         if (formData.password !== formData.confirmPassword) {
@@ -67,7 +66,7 @@ const LoginPage = () => {
       toast.error(
         error instanceof Error
           ? error.message
-          : "Something went wrong. Please try again.",
+          : "Something went wrong. Please try again."
       );
     } finally {
       setIsLoading(false);
@@ -152,9 +151,9 @@ const LoginPage = () => {
               className="group inline-flex items-center gap-2 text-slate-500 hover:text-slate-700 transition-all duration-300 mb-10"
             >
               <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-white border border-slate-200 group-hover:border-slate-300 group-hover:bg-slate-50 transition-all duration-300 shadow-sm">
-                <ArrowLeft className="w-4 h-4" />
+                <Home className="w-4 h-4" />
               </div>
-              <span className="text-sm font-medium">Back to Home</span>
+              {/* <span className="text-sm font-medium">Back to Home</span> */}
             </Link>
           </motion.div>
 
@@ -169,7 +168,7 @@ const LoginPage = () => {
               {isLogin ? (
                 <>
                   Welcome{" "}
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-600 via-indigo-600 to-amber-600">
+                  <span className="">
                     back
                   </span>
                 </>
@@ -243,11 +242,17 @@ const LoginPage = () => {
                   </Label>
                   <div className="relative group">
                     <div
-                      className={`absolute inset-0 rounded-xl bg-gradient-to-r from-violet-500/20 to-indigo-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm ${focusedField === "name" ? "opacity-100" : ""}`}
+                      className={`absolute inset-0 rounded-xl bg-gradient-to-r from-violet-500/20 to-indigo-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm ${
+                        focusedField === "name" ? "opacity-100" : ""
+                      }`}
                     />
                     <div className="relative flex items-center">
                       <User
-                        className={`absolute left-4 w-[18px] h-[18px] transition-colors duration-300 ${focusedField === "name" ? "text-violet-600" : "text-slate-400"}`}
+                        className={`absolute left-4 w-[18px] h-[18px] transition-colors duration-300 ${
+                          focusedField === "name"
+                            ? "text-violet-600"
+                            : "text-slate-400"
+                        }`}
                       />
                       <Input
                         id="name"
@@ -277,11 +282,17 @@ const LoginPage = () => {
               </Label>
               <div className="relative group">
                 <div
-                  className={`absolute inset-0 rounded-xl bg-gradient-to-r from-violet-500/20 to-indigo-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm ${focusedField === "email" ? "opacity-100" : ""}`}
+                  className={`absolute inset-0 rounded-xl bg-gradient-to-r from-violet-500/20 to-indigo-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm ${
+                    focusedField === "email" ? "opacity-100" : ""
+                  }`}
                 />
                 <div className="relative flex items-center">
                   <Mail
-                    className={`absolute left-4 w-[18px] h-[18px] transition-colors duration-300 ${focusedField === "email" ? "text-violet-600" : "text-slate-400"}`}
+                    className={`absolute left-4 w-[18px] h-[18px] transition-colors duration-300 ${
+                      focusedField === "email"
+                        ? "text-violet-600"
+                        : "text-slate-400"
+                    }`}
                   />
                   <Input
                     id="email"
@@ -309,11 +320,17 @@ const LoginPage = () => {
               </Label>
               <div className="relative group">
                 <div
-                  className={`absolute inset-0 rounded-xl bg-gradient-to-r from-violet-500/20 to-indigo-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm ${focusedField === "password" ? "opacity-100" : ""}`}
+                  className={`absolute inset-0 rounded-xl bg-gradient-to-r from-violet-500/20 to-indigo-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm ${
+                    focusedField === "password" ? "opacity-100" : ""
+                  }`}
                 />
                 <div className="relative flex items-center">
                   <Lock
-                    className={`absolute left-4 w-[18px] h-[18px] transition-colors duration-300 ${focusedField === "password" ? "text-violet-600" : "text-slate-400"}`}
+                    className={`absolute left-4 w-[18px] h-[18px] transition-colors duration-300 ${
+                      focusedField === "password"
+                        ? "text-violet-600"
+                        : "text-slate-400"
+                    }`}
                   />
                   <Input
                     id="password"
@@ -360,11 +377,17 @@ const LoginPage = () => {
                   </Label>
                   <div className="relative group">
                     <div
-                      className={`absolute inset-0 rounded-xl bg-gradient-to-r from-violet-500/20 to-indigo-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm ${focusedField === "confirmPassword" ? "opacity-100" : ""}`}
+                      className={`absolute inset-0 rounded-xl bg-gradient-to-r from-violet-500/20 to-indigo-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm ${
+                        focusedField === "confirmPassword" ? "opacity-100" : ""
+                      }`}
                     />
                     <div className="relative flex items-center">
                       <Lock
-                        className={`absolute left-4 w-[18px] h-[18px] transition-colors duration-300 ${focusedField === "confirmPassword" ? "text-violet-600" : "text-slate-400"}`}
+                        className={`absolute left-4 w-[18px] h-[18px] transition-colors duration-300 ${
+                          focusedField === "confirmPassword"
+                            ? "text-violet-600"
+                            : "text-slate-400"
+                        }`}
                       />
                       <Input
                         id="confirmPassword"
@@ -477,8 +500,8 @@ const LoginPage = () => {
         />
 
         {/* Light overlay with gradient */}
-        <div className="absolute inset-0 bg-gradient-to-t from-white via-white/80 to-white/60" />
-        <div className="absolute inset-0 bg-gradient-to-r from-white via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/30" />
+        {/* <div className="absolute inset-0 bg-gradient-to-r from-black via-transparent to-transparent" /> */}
 
         {/* Glassmorphism Quote Card */}
         <div className="absolute bottom-12 left-12 right-12">
@@ -489,12 +512,12 @@ const LoginPage = () => {
             className="relative"
           >
             {/* Glass card */}
-            <div className="relative p-8 rounded-2xl overflow-hidden">
-              {/* Glass effect layers */}
+            {/* <div className="relative p-8 rounded-2xl overflow-hidden">
+              Glass effect layers
               <div className="absolute inset-0 bg-white/80 backdrop-blur-xl border border-slate-200/60 rounded-2xl shadow-xl" />
               <div className="absolute inset-0 bg-gradient-to-br from-violet-100/60 to-transparent rounded-2xl" />
 
-              {/* Content */}
+              Content
               <div className="relative z-10">
                 <div className="flex items-start gap-4">
                   <div className="flex-shrink-0 mt-1">
@@ -525,7 +548,7 @@ const LoginPage = () => {
                   </div>
                 </div>
               </div>
-            </div>
+            </div> */}
           </motion.div>
         </div>
 

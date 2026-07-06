@@ -17,7 +17,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useCartContext } from "@/contexts/CartContext";
 import { useAuth } from "@/contexts/AuthContext";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import { useBookTree } from "@/hooks/use-book-tree";
 
@@ -150,7 +150,7 @@ const MenuItem = ({
                           toggleMobile={toggleMobile}
                           mobileOpen={mobileOpen}
                         />
-                      ),
+                      )
                     )
                   )}
                 </div>
@@ -203,19 +203,19 @@ const MenuItem = ({
       {hasChildren && (
         <AnimatePresence>
           {isOpen && (
-              <motion.div
-                initial={{ opacity: 0, y: -8 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }}
-                transition={{ duration: 0.15, ease: "easeOut" }}
-                className="absolute top-full left-1/2 -translate-x-1/2 mt-2 rounded-xl shadow-xl border border-slate-200 bg-white/95 backdrop-blur-md z-50 p-6 min-w-[640px] min-h-[300px] overflow-hidden"
-                onMouseEnter={() => setSubMenuHovered(true)}
-                onMouseLeave={() => {
-                  setSubMenuHovered(false);
-                  setActiveChildIndex(null);
-                  setActiveGrandchildIndex(null);
-                }}
-              >
+            <motion.div
+              initial={{ opacity: 0, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.15, ease: "easeOut" }}
+              className="absolute top-full left-1/2 -translate-x-1/2 mt-2 rounded-xl shadow-xl border border-slate-200 bg-white/95 backdrop-blur-md z-50 p-6 min-w-[640px] min-h-[300px] overflow-hidden"
+              onMouseEnter={() => setSubMenuHovered(true)}
+              onMouseLeave={() => {
+                setSubMenuHovered(false);
+                setActiveChildIndex(null);
+                setActiveGrandchildIndex(null);
+              }}
+            >
               <div className="flex">
                 {isLoading ? (
                   <div className="flex items-center justify-center w-full p-8">
@@ -240,9 +240,9 @@ const MenuItem = ({
                           const isActive = activeChildIndex === idx;
 
                           return (
-                              <div
-                                key={idx}
-                                className={`
+                            <div
+                              key={idx}
+                              className={`
                                   flex items-center justify-between cursor-pointer py-2.5 px-3 rounded-lg transition-colors duration-150
                                   ${
                                     isActive
@@ -250,155 +250,155 @@ const MenuItem = ({
                                       : "text-slate-700 hover:text-violet-600 hover:bg-slate-50"
                                   }
                                 `}
-                                onMouseEnter={() => {
-                                  setActiveChildIndex(idx);
-                                  setActiveGrandchildIndex(null);
-                                }}
-                              >
-                                <span className="text-[13px] font-medium tracking-wide">
-                                  {childItem.name}
-                                </span>
-                                {childHasChildren && (
-                                  <ChevronDown className="w-3.5 h-3.5 -rotate-90 text-slate-400" />
-                                )}
-                              </div>
-                           );
-                         },
+                              onMouseEnter={() => {
+                                setActiveChildIndex(idx);
+                                setActiveGrandchildIndex(null);
+                              }}
+                            >
+                              <span className="text-[13px] font-medium tracking-wide">
+                                {childItem.name}
+                              </span>
+                              {childHasChildren && (
+                                <ChevronDown className="w-3.5 h-3.5 -rotate-90 text-slate-400" />
+                              )}
+                            </div>
+                          );
+                        }
                       )}
                     </div>
 
-                     {/* Level 2: Subjects */}
-                     <div className="relative w-[200px] border-l border-slate-200">
-                       <AnimatePresence initial={false}>
-                         {activeChild &&
-                         activeChild.children &&
-                         activeChild.children.length > 0 ? (
-                           <motion.div
-                             key={activeChild.name + "-children"}
-                             initial={{ opacity: 0 }}
-                             animate={{ opacity: 1 }}
-                             exit={{ opacity: 0 }}
-                             transition={{ duration: 0.1 }}
-                             className="pl-3 pr-1 py-1 rounded-lg"
-                           >
-                             <h3 className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-2 px-3 pt-1">
-                               {/* {activeChild.name} */}
-                             </h3>
-                             <div className="space-y-0.5 max-h-[300px] overflow-y-auto">
-                               {activeChild.children!.map(
-                                 (
-                                   child: MenuItemProps | string,
-                                   idx: number,
-                                 ) => {
-                                   const childItem =
-                                     typeof child === "string"
-                                       ? { name: child, children: [] }
-                                       : child;
-                                   const childHasChildren =
-                                     childItem.children &&
-                                     childItem.children.length > 0;
-                                   const isActive =
-                                     activeGrandchildIndex === idx;
+                    {/* Level 2: Subjects */}
+                    <div className="relative w-[200px] border-l border-slate-200">
+                      <AnimatePresence initial={false}>
+                        {activeChild &&
+                        activeChild.children &&
+                        activeChild.children.length > 0 ? (
+                          <motion.div
+                            key={activeChild.name + "-children"}
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 0.1 }}
+                            className="pl-3 pr-1 py-1 rounded-lg"
+                          >
+                            <h3 className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-2 px-3 pt-1">
+                              {/* {activeChild.name} */}
+                            </h3>
+                            <div className="space-y-0.5 max-h-[300px] overflow-y-auto">
+                              {activeChild.children!.map(
+                                (
+                                  child: MenuItemProps | string,
+                                  idx: number
+                                ) => {
+                                  const childItem =
+                                    typeof child === "string"
+                                      ? { name: child, children: [] }
+                                      : child;
+                                  const childHasChildren =
+                                    childItem.children &&
+                                    childItem.children.length > 0;
+                                  const isActive =
+                                    activeGrandchildIndex === idx;
 
-                                   return (
-                                     <div
-                                       key={idx}
-                                       className="flex items-center justify-between cursor-pointer py-2 px-3 rounded-lg transition-colors duration-150"
-                                       onMouseEnter={() => {
-                                         setActiveGrandchildIndex(idx);
-                                       }}
-                                       onClick={() => {
-                                         if (childItem.href) {
-                                           router.push(childItem.href);
-                                         }
-                                       }}
-                                     >
-                                       <span
-                                         className={`text-[13px] font-medium ${
-                                           isActive
-                                             ? "bg-violet-50 text-violet-700"
-                                             : "text-slate-700 hover:text-violet-600 hover:bg-slate-50"
-                                         } rounded-md px-2 py-0.5`}
-                                       >
-                                         {childItem.name}
-                                       </span>
-                                       {childHasChildren && (
-                                         <ChevronDown className="w-3.5 h-3.5 -rotate-90 text-slate-400" />
-                                       )}
-                                     </div>
-                                   );
-                                 },
-                               )}
-                             </div>
-                           </motion.div>
-                         ) : (
-                           <motion.div
-                             key="empty"
-                             initial={{ opacity: 0 }}
-                             animate={{ opacity: 1 }}
-                             exit={{ opacity: 0 }}
-                             className="absolute inset-0 flex items-center justify-center"
-                           >
-                             <span className="text-xs text-slate-300">
-                               Select a category
-                             </span>
-                           </motion.div>
-                         )}
-                       </AnimatePresence>
-                     </div>
+                                  return (
+                                    <div
+                                      key={idx}
+                                      className="flex items-center justify-between cursor-pointer py-2 px-3 rounded-lg transition-colors duration-150"
+                                      onMouseEnter={() => {
+                                        setActiveGrandchildIndex(idx);
+                                      }}
+                                      onClick={() => {
+                                        if (childItem.href) {
+                                          router.push(childItem.href);
+                                        }
+                                      }}
+                                    >
+                                      <span
+                                        className={`text-[13px] font-medium ${
+                                          isActive
+                                            ? "bg-violet-50 text-violet-700"
+                                            : "text-slate-700 hover:text-violet-600 hover:bg-slate-50"
+                                        } rounded-md px-2 py-0.5`}
+                                      >
+                                        {childItem.name}
+                                      </span>
+                                      {childHasChildren && (
+                                        <ChevronDown className="w-3.5 h-3.5 -rotate-90 text-slate-400" />
+                                      )}
+                                    </div>
+                                  );
+                                }
+                              )}
+                            </div>
+                          </motion.div>
+                        ) : (
+                          <motion.div
+                            key="empty"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            className="absolute inset-0 flex items-center justify-center"
+                          >
+                            <span className="text-xs text-slate-300">
+                              Select a category
+                            </span>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
 
-                     {/* Level 3: Books */}
-                     <div className="relative w-[240px] border-l border-slate-200">
-                       <AnimatePresence initial={false}>
-                         {activeGrandchild &&
-                         activeGrandchild.children &&
-                         activeGrandchild.children.length > 0 ? (
-                           <motion.div
-                             key={
-                               activeChild?.name + "-" + activeGrandchild.name
-                             }
-                             initial={{ opacity: 0, x: 10 }}
-                             animate={{ opacity: 1, x: 0 }}
-                             exit={{ opacity: 0, x: -10 }}
-                             transition={{ duration: 0.12 }}
-                             className="pl-3 pr-1 py-1 rounded-r-lg"
-                           >
-                             <h3 className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-2 px-3 pt-1">
-                               {/* {activeGrandchild.name} */}
-                             </h3>
-                             <div className="space-y-0.5 max-h-[300px] overflow-y-auto">
-                               {activeGrandchild.children!.map(
-                                 (
-                                   child: MenuItemProps | string,
-                                   idx: number,
-                                 ) => {
-                                   const childItem =
-                                     typeof child === "string"
-                                       ? { name: child, children: [] }
-                                       : child;
+                    {/* Level 3: Books */}
+                    <div className="relative w-[240px] border-l border-slate-200">
+                      <AnimatePresence initial={false}>
+                        {activeGrandchild &&
+                        activeGrandchild.children &&
+                        activeGrandchild.children.length > 0 ? (
+                          <motion.div
+                            key={
+                              activeChild?.name + "-" + activeGrandchild.name
+                            }
+                            initial={{ opacity: 0, x: 10 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            exit={{ opacity: 0, x: -10 }}
+                            transition={{ duration: 0.12 }}
+                            className="pl-3 pr-1 py-1 rounded-r-lg"
+                          >
+                            <h3 className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-2 px-3 pt-1">
+                              {/* {activeGrandchild.name} */}
+                            </h3>
+                            <div className="space-y-0.5 max-h-[300px] overflow-y-auto">
+                              {activeGrandchild.children!.map(
+                                (
+                                  child: MenuItemProps | string,
+                                  idx: number
+                                ) => {
+                                  const childItem =
+                                    typeof child === "string"
+                                      ? { name: child, children: [] }
+                                      : child;
 
-                                   return (
-                                     <div
-                                       key={idx}
-                                       className="cursor-pointer py-2 px-3 rounded-lg text-slate-700 hover:text-violet-600 hover:bg-slate-50 transition-colors duration-150"
-                                       onClick={() => {
-                                         if (childItem.href) {
-                                           router.push(childItem.href);
-                                         }
-                                       }}
-                                     >
-                                       <span className="text-[13px] font-medium">
-                                         {childItem.name}
-                                       </span>
-                                     </div>
-                                   );
-                                 },
-                               )}
-                             </div>
-                           </motion.div>
-                         ) : null}
-                       </AnimatePresence>
-                     </div>
+                                  return (
+                                    <div
+                                      key={idx}
+                                      className="cursor-pointer py-2 px-3 rounded-lg text-slate-700 hover:text-violet-600 hover:bg-slate-50 transition-colors duration-150"
+                                      onClick={() => {
+                                        if (childItem.href) {
+                                          router.push(childItem.href);
+                                        }
+                                      }}
+                                    >
+                                      <span className="text-[13px] font-medium">
+                                        {childItem.name}
+                                      </span>
+                                    </div>
+                                  );
+                                }
+                              )}
+                            </div>
+                          </motion.div>
+                        ) : null}
+                      </AnimatePresence>
+                    </div>
                   </>
                 )}
               </div>
@@ -449,37 +449,47 @@ const MobileSubItem = ({
           <div className="ml-4 mt-1 space-y-1 border-l border-slate-200 pl-3">
             {item.children!.map(
               (child: MenuItemProps | string, idx: number) => {
-                const childItem = typeof child === "string" ? { name: child, children: [] } : child;
-                const hasGrandchildren = childItem.children && childItem.children.length > 0;
+                const childItem =
+                  typeof child === "string"
+                    ? { name: child, children: [] }
+                    : child;
+                const hasGrandchildren =
+                  childItem.children && childItem.children.length > 0;
                 return (
                   <div key={idx} className="space-y-1">
-                     <div
-                       className="py-2 px-3 rounded-lg text-slate-700 hover:text-violet-600 hover:bg-slate-50 transition-colors duration-200 cursor-pointer text-[13px] font-medium"
-                       onClick={() => {
-                         if (childItem.href) {
-                           router.push(childItem.href);
-                         }
-                       }}
-                     >
-                       {childItem.name}
-                     </div>
+                    <div
+                      className="py-2 px-3 rounded-lg text-slate-700 hover:text-violet-600 hover:bg-slate-50 transition-colors duration-200 cursor-pointer text-[13px] font-medium"
+                      onClick={() => {
+                        if (childItem.href) {
+                          router.push(childItem.href);
+                        }
+                      }}
+                    >
+                      {childItem.name}
+                    </div>
                     {hasGrandchildren && (
                       <div className="ml-2 space-y-1 border-l border-border/40 pl-3">
                         {childItem.children!.map(
-                          (grandchild: MenuItemProps | string, gIdx: number) => {
-                            const grandchildItem = typeof grandchild === "string" ? { name: grandchild, children: [] } : grandchild;
+                          (
+                            grandchild: MenuItemProps | string,
+                            gIdx: number
+                          ) => {
+                            const grandchildItem =
+                              typeof grandchild === "string"
+                                ? { name: grandchild, children: [] }
+                                : grandchild;
                             return (
-                               <div
-                                 key={gIdx}
-                                 className="py-1.5 px-2 rounded-lg text-slate-600 hover:text-violet-600 hover:bg-slate-50 transition-colors duration-200 cursor-pointer text-[12px]"
-                                 onClick={() => {
-                                   if (grandchildItem.href) {
-                                     router.push(grandchildItem.href);
-                                   }
-                                 }}
-                               >
-                                 {grandchildItem.name}
-                               </div>
+                              <div
+                                key={gIdx}
+                                className="py-1.5 px-2 rounded-lg text-slate-600 hover:text-violet-600 hover:bg-slate-50 transition-colors duration-200 cursor-pointer text-[12px]"
+                                onClick={() => {
+                                  if (grandchildItem.href) {
+                                    router.push(grandchildItem.href);
+                                  }
+                                }}
+                              >
+                                {grandchildItem.name}
+                              </div>
                             );
                           }
                         )}
@@ -487,7 +497,7 @@ const MobileSubItem = ({
                     )}
                   </div>
                 );
-              },
+              }
             )}
           </div>
         )}
@@ -496,16 +506,16 @@ const MobileSubItem = ({
   }
 
   return (
-        <div
-          className="flex justify-between items-center cursor-pointer py-2 px-3 rounded-lg text-slate-700 hover:text-violet-600 hover:bg-slate-50 transition-colors duration-200"
-          onClick={() => {
-            if (item.href) {
-              router.push(item.href);
-            }
-          }}
-        >
-          {item.name}
-        </div>
+    <div
+      className="flex justify-between items-center cursor-pointer py-2 px-3 rounded-lg text-slate-700 hover:text-violet-600 hover:bg-slate-50 transition-colors duration-200"
+      onClick={() => {
+        if (item.href) {
+          router.push(item.href);
+        }
+      }}
+    >
+      {item.name}
+    </div>
   );
 };
 
@@ -515,6 +525,7 @@ const Navbar = () => {
   const { totalItems, setIsCartOpen } = useCartContext();
   const { isAuthenticated } = useAuth();
   const navigate = useRouter();
+  const pathname = usePathname();
   const { data: bookTree = [], isLoading, error } = useBookTree();
 
   // Build 3-layer menu: Publication > Subject > Book
@@ -550,6 +561,8 @@ const Navbar = () => {
       [key]: prev[key] ? false : true,
     }));
   };
+
+  if (pathname === "/login") return null;
 
   return (
     <motion.nav
@@ -621,7 +634,7 @@ const Navbar = () => {
             ) : (
               <Button
                 size="sm"
-                 className="h-9 px-5 text-[13px] font-medium rounded-full bg-violet-600 hover:bg-violet-500 text-white shadow-sm shadow-violet-200 transition-colors"
+                className="h-9 px-5 text-[13px] font-medium rounded-full bg-violet-600 hover:bg-violet-500 text-white shadow-sm shadow-violet-200 transition-colors"
                 onClick={() => navigate.push("/login")}
               >
                 Sign In
@@ -671,20 +684,20 @@ const Navbar = () => {
                     My Profile
                   </Button>
                 ) : (
-                 <>
-                   <Button
-                     className="flex-1 h-10 rounded-full text-[13px] font-medium bg-violet-600 hover:bg-violet-500 text-white transition-colors"
-                     onClick={() => navigate.push("/login")}
-                   >
-                     Sign In
-                   </Button>
-                   <Button
-                     variant="outline"
-                     className="flex-1 h-10 rounded-full text-[13px] font-medium border-slate-200 hover:bg-slate-50 text-slate-700 transition-colors"
-                   >
-                     Join
-                   </Button>
-                 </>
+                  <>
+                    <Button
+                      className="flex-1 h-10 rounded-full text-[13px] font-medium bg-violet-600 hover:bg-violet-500 text-white transition-colors"
+                      onClick={() => navigate.push("/login")}
+                    >
+                      Sign In
+                    </Button>
+                    <Button
+                      variant="outline"
+                      className="flex-1 h-10 rounded-full text-[13px] font-medium border-slate-200 hover:bg-slate-50 text-slate-700 transition-colors"
+                    >
+                      Join
+                    </Button>
+                  </>
                 )}
               </div>
             </div>

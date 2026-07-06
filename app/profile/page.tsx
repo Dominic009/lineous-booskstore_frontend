@@ -42,10 +42,12 @@ import { useAuth } from "../../contexts/AuthContext";
 import { useAddresses, useCreateAddress, useUpdateAddress, useDeleteAddress } from "../../hooks/use-addresses";
 import { Address } from "@/lib/types";
 import { toast } from "sonner";
+import LogoutLoader from "@/components/LogoutLoader";
 
 const ProfilePage = () => {
   const { user, updateProfile, logout, isAuthenticated } = useAuth();
   const router = useRouter();
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
     name: user?.name || "",
@@ -76,7 +78,7 @@ const ProfilePage = () => {
     isDefault: false,
   });
 
-  if (!isAuthenticated) {
+  if (!isAuthenticated && !isLoggingOut) {
     router.push("/login");
     return null;
   }
@@ -90,11 +92,16 @@ const ProfilePage = () => {
   };
 
   const handleLogout = () => {
+    setIsLoggingOut(true);
     logout();
     toast.success("Logged out", {
       description: "You've been successfully logged out.",
     });
-    router.push("/");
+    // Keep the page mounted (and footer in place) while the loader shows,
+    // then redirect home so the layout doesn't collapse.
+    setTimeout(() => {
+      router.push("/");
+    }, 900);
   };
 
   const openAddressDialog = (address?: Address) => {
@@ -475,6 +482,8 @@ const ProfilePage = () => {
       </main>
 
       {/* Address Dialog */}
+
+      {isLoggingOut && <LogoutLoader />}
     </div>
   );
 };

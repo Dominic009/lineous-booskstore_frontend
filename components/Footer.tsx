@@ -1,13 +1,28 @@
-"use client"
+"use client";
 import { motion } from "framer-motion";
 import { Send, MapPin, Phone, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { usePathname } from "next/navigation";
 
 const Footer = () => {
+  const pathname = usePathname();
+
   const footerLinks = {
-    "Quick Links": ["Home", "New Releases", "Bestsellers", "Coming Soon", "Deals"],
-    "Categories": ["Fiction", "Non-Fiction", "Children", "Biography", "Self-Help"],
-    "Help": ["FAQ", "Shipping", "Returns", "Track Order", "Contact Us"],
+    "Quick Links": [
+      "Home",
+      "New Releases",
+      "Bestsellers",
+      "Coming Soon",
+      "Deals",
+    ],
+    Categories: [
+      "Fiction",
+      "Non-Fiction",
+      "Children",
+      "Biography",
+      "Self-Help",
+    ],
+    Help: ["FAQ", "Shipping", "Returns", "Track Order", "Contact Us"],
   };
 
   // const socialLinks = [
@@ -16,6 +31,8 @@ const Footer = () => {
   //   { icon: Instagram, href: "#" },
   //   { icon: Youtube, href: "#" },
   // ];
+
+  if (pathname === "/login") return null;
 
   return (
     <footer className="bg-slate-900 text-white">
@@ -33,7 +50,8 @@ const Footer = () => {
                 Join Our Reading Community
               </h3>
               <p className="text-white/70">
-                Subscribe for exclusive deals, new releases, and reading recommendations.
+                Subscribe for exclusive deals, new releases, and reading
+                recommendations.
               </p>
             </div>
             <div className="flex flex-col md:flex-row w-full max-w-md gap-3">
@@ -42,7 +60,11 @@ const Footer = () => {
                 placeholder="Enter your email"
                 className="flex-1 px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder:text-white/50 focus:outline-none focus:border-violet-400 transition-colors"
               />
-              <Button variant="default" size="lg" className="shrink-0 bg-violet-600 hover:bg-violet-500 text-white">
+              <Button
+                variant="default"
+                size="lg"
+                className="shrink-0 bg-violet-600 hover:bg-violet-500 text-white"
+              >
                 <Send className="w-4 h-4" />
                 Subscribe
               </Button>
@@ -62,16 +84,23 @@ const Footer = () => {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
-              <img src="/logowtext.png" alt="" className="w-24 h-24 lg:w-32 lg:h-32 invert" />
+              <img
+                src="/logowtext.png"
+                alt=""
+                className="w-24 h-24 lg:w-32 lg:h-32 invert"
+              />
             </motion.a>
             <p className="text-white/70 mb-4 lg:mb-6 max-w-sm text-sm lg:text-base">
-              Your destination for exceptional books. Discover stories that inspire,
-              educate, and transform. Premium reading experiences since 2020.
+              Your destination for exceptional books. Discover stories that
+              inspire, educate, and transform. Premium reading experiences since
+              2020.
             </p>
             <div className="space-y-2 text-sm text-white/70">
               <div className="flex items-center gap-2">
                 <MapPin className="w-4 h-4 shrink-0" />
-                <span className="hidden sm:inline">123 Book Street, Literary Lane, NY 10001</span>
+                <span className="hidden sm:inline">
+                  123 Book Street, Literary Lane, NY 10001
+                </span>
                 <span className="sm:hidden">123 Book Street, NY 10001</span>
               </div>
               <div className="flex items-center gap-2">
