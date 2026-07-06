@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { motion } from "framer-motion";
 import { Heart, ShoppingCart, Star, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -11,10 +11,7 @@ interface BookCardProps {
   delay?: number;
 }
 
-const BookCard = ({
-  book,
-  delay = 0,
-}: BookCardProps) => {
+const BookCard = ({ book, delay = 0 }: BookCardProps) => {
   const { addToCart } = useCartContext();
 
   const handleAddToCart = (e: React.MouseEvent) => {
@@ -114,6 +111,14 @@ const BookCard = ({
           </Button>
         </div>
       </div>
+
+      {/* Animated border on hover */}
+      <motion.div
+        className="absolute inset-0 border-2 border-primary/0 rounded-2xl pointer-events-none"
+        initial={{ borderColor: "hsl(var(--primary) / 0)" }}
+        whileHover={{ borderColor: "hsl(var(--primary) / 0.3)" }}
+        transition={{ duration: 0.3 }}
+      />
     </motion.div>
   );
 };
