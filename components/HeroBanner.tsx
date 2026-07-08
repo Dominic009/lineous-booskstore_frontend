@@ -55,7 +55,7 @@ export default function HeroBanner() {
             backgroundPosition: "center",
           }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-charcoal/70 via-charcoal/50 to-charcoal/70" />
+        <div className="absolute inset-0 bg-black/60 backdrop-blur-xs" />
       </motion.div>
 
       {/* ── Decorative Blobs ── */}
@@ -76,7 +76,7 @@ export default function HeroBanner() {
           {/* ── Left Column: Text ── */}
           <motion.div style={{ opacity }} className="max-w-xl">
             {/* Badge */}
-            <motion.div
+            {/* <motion.div
               initial={{ opacity: 0, x: -30, scale: 0.9 }}
               animate={{ opacity: 1, x: 0, scale: 1 }}
               transition={{ delay: 0.2, duration: 0.6, ease: "easeOut" }}
@@ -86,7 +86,7 @@ export default function HeroBanner() {
               <span className="text-sm font-bold">
                 New Collection Available
               </span>
-            </motion.div>
+            </motion.div> */}
 
             {/* Headline */}
             <motion.h1
@@ -97,11 +97,11 @@ export default function HeroBanner() {
                 duration: 0.8,
                 ease: [0.25, 0.46, 0.45, 0.94] as const,
               }}
-              className="text-5xl md:text-6xl lg:text-7xl font-bold text-ivory leading-[1.1] mb-6"
+              className="text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-[1.1] mb-6"
             >
               Discover Your Next{" "}
               <span className="relative inline-block">
-                <span className="relative z-10 text-primary italic font-serif">
+                <span className="relative z-10 text-accent italic font-serif">
                   Literary
                 </span>
                 <motion.svg
@@ -131,7 +131,7 @@ export default function HeroBanner() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6, duration: 0.7 }}
-              className="text-lg md:text-xl text-ivory/80 leading-relaxed mb-10 max-w-lg"
+              className="text-lg md:text-xl text-gray-300 leading-relaxed mb-10 max-w-lg"
             >
               Explore our curated collection of bestsellers, hidden gems, and
               timeless classics. Every book tells a story worth experiencing.
