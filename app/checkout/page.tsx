@@ -97,9 +97,8 @@ const CheckoutPage = () => {
   });
 
   const shippingCost =
-    shippingMethod === "express" ? 9.99 : totalPrice > 35 ? 0 : 4.99;
-  const tax = totalPrice * 0.08;
-  const finalTotal = totalPrice + shippingCost + tax;
+    shippingMethod === "express" ? 80 : totalPrice > 1500 ? 0 : 40;
+  const finalTotal = totalPrice + shippingCost;
 
   if (items.length === 0) {
     return (
@@ -144,6 +143,7 @@ const CheckoutPage = () => {
 
       await createOrderMutation.mutateAsync({
         addressId,
+        discount: 0,
         shipping: shippingCost,
         paymentMethod,
         notes: "",
@@ -420,7 +420,7 @@ const CheckoutPage = () => {
                         </div>
                       </div>
                       <span className="font-semibold text-violet-300">
-                        {totalPrice > 35 ? "Free" : "৳4.99"}
+                        {totalPrice > 1500 ? "Free" : "৳40"}
                       </span>
                     </label>
                     <label className="flex items-center justify-between p-4 border rounded-xl cursor-pointer hover:border-violet-500/30 transition-colors bg-white/[0.02] border-white/[0.08]">
@@ -433,7 +433,7 @@ const CheckoutPage = () => {
                           </p>
                         </div>
                       </div>
-                      <span className="font-semibold text-violet-300">৳9.99</span>
+                      <span className="font-semibold text-violet-300">৳80</span>
                     </label>
                   </RadioGroup>
 
@@ -619,10 +619,6 @@ const CheckoutPage = () => {
                     <span className="font-medium text-zinc-200">
                       {shippingCost === 0 ? "Free" : `৳${shippingCost}`}
                     </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-zinc-400">Tax</span>
-                    <span className="font-medium text-zinc-200">৳{tax.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between text-lg font-bold">
                     <span className="text-zinc-200">Total</span>

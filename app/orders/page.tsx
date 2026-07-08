@@ -12,13 +12,14 @@ import {
   Truck,
   CreditCard,
   Calendar,
+  Download,
 } from "lucide-react";
 import { Button } from "../../components/ui/button";
 import { Badge } from "../../components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card";
 import { Separator } from "../../components/ui/separator";
 import { useAuth } from "../../contexts/AuthContext";
-import { useOrders } from "../../hooks/use-orders";
+import { useOrders, useDownloadReceipt } from "../../hooks/use-orders";
 
 const ORDERS_PER_PAGE = 10;
 
@@ -33,12 +34,16 @@ const getStatusColor = (status: string) => {
       return "bg-amber-100 text-amber-800 border-amber-200";
     case "CONFIRMED":
       return "bg-blue-100 text-blue-800 border-blue-200";
+    case "PROCESSING":
+      return "bg-indigo-100 text-indigo-800 border-indigo-200";
     case "SHIPPED":
       return "bg-purple-100 text-purple-800 border-purple-200";
     case "DELIVERED":
       return "bg-green-100 text-green-800 border-green-200";
     case "CANCELLED":
       return "bg-red-100 text-red-800 border-red-200";
+    case "RETURNED":
+      return "bg-orange-100 text-orange-800 border-orange-200";
     default:
       return "bg-muted text-muted-foreground";
   }
@@ -61,6 +66,7 @@ const OrdersPage = () => {
   const { isAuthenticated } = useAuth();
   const router = useRouter();
   const { data: orders = [], isLoading } = useOrders();
+  const { mutate: downloadReceipt, isPending: isDownloading } = useDownloadReceipt();
 
   if (!isAuthenticated) {
     router.push("/login");
@@ -263,10 +269,6 @@ const OrdersPage = () => {
                             <span className="text-slate-500">Shipping:</span>
                             <span className="font-medium text-slate-900">৳{parsePrice(order.shipping).toFixed(2)}</span>
                           </div>
-                          <div className="flex justify-end items-center gap-2 text-sm">
-                            <span className="text-slate-500">Discount:</span>
-                            <span className="font-medium text-green-600">-৳{parsePrice(order.discount).toFixed(2)}</span>
-                          </div>
                           <div className="h-px bg-slate-200 my-2" />
                           <div className="flex justify-end items-center gap-2">
                             <span className="text-lg font-bold text-slate-900">
@@ -274,6 +276,27 @@ const OrdersPage = () => {
                             </span>
                           </div>
                         </div>
+                      </div>
+
+                      <div className="h-px bg-slate-200 my-6" />
+
+                      <div className="flex flex-wrap items-center gap-3">
+                        <Link
+                          href={`/orders/${order.id}`}
+                          className="inline-flex items-center gap-2 text-sm font-medium text-violet-700 hover:text-violet-800 transition-colors"
+                        >
+                          <Eye className="w-4 h-4" />
+                          View Details
+                        </Link>
+                        <button
+                          type="button"
+                          onClick={() => downloadReceipt(order.id)}
+                          disabled={isDownloading}
+                          className="inline-flex items-center gap-2 text-sm font-medium text-slate-600 hover:text-violet-700 transition-colors disabled:opacity-50"
+                        >
+                          <Download className="w-4 h-4" />
+                          {isDownloading ? "Preparing..." : "Download Receipt"}
+                        </button>
                       </div>
                     </div>
                   </div>

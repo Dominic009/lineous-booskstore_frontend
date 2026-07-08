@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, ReactNode } from "react";
-import { useOrders, useCreateOrder } from "@/hooks/use-orders";
+import { useOrders, useCreateOrder, useDownloadReceipt } from "@/hooks/use-orders";
 import { Order } from "@/lib/types";
 
 interface OrderContextType {
@@ -9,6 +9,8 @@ interface OrderContextType {
   isLoading: boolean;
   createOrder: (data: { addressId: string; discount?: number; shipping?: number; paymentMethod?: string; notes?: string }) => void;
   isCreating: boolean;
+  downloadReceipt: (orderId: string) => void;
+  isDownloading: boolean;
 }
 
 const OrderContext = createContext<OrderContextType | undefined>(undefined);
@@ -16,9 +18,14 @@ const OrderContext = createContext<OrderContextType | undefined>(undefined);
 export const OrderProvider = ({ children }: { children: ReactNode }) => {
   const { data: orders = [], isLoading } = useOrders();
   const { mutate: createOrderMutate, isPending: isCreating } = useCreateOrder();
+  const { mutate: downloadReceiptMutate, isPending: isDownloading } = useDownloadReceipt();
 
   const createOrder = (data: { addressId: string; discount?: number; shipping?: number; paymentMethod?: string; notes?: string }) => {
     createOrderMutate(data);
+  };
+
+  const downloadReceipt = (orderId: string) => {
+    downloadReceiptMutate(orderId);
   };
 
   return (
@@ -28,6 +35,8 @@ export const OrderProvider = ({ children }: { children: ReactNode }) => {
         isLoading,
         createOrder,
         isCreating,
+        downloadReceipt,
+        isDownloading,
       }}
     >
       {children}
