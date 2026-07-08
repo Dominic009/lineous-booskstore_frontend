@@ -55,7 +55,7 @@ export default function HeroBanner() {
             backgroundPosition: "center",
           }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-charcoal/70 via-charcoal/50 to-charcoal/70" />
+        <div className="absolute inset-0 bg-black/60 backdrop-blur-xs" />
       </motion.div>
 
       {/* ── Decorative Blobs ── */}
@@ -76,7 +76,7 @@ export default function HeroBanner() {
           {/* ── Left Column: Text ── */}
           <motion.div style={{ opacity }} className="max-w-xl">
             {/* Badge */}
-            <motion.div
+            {/* <motion.div
               initial={{ opacity: 0, x: -30, scale: 0.9 }}
               animate={{ opacity: 1, x: 0, scale: 1 }}
               transition={{ delay: 0.2, duration: 0.6, ease: "easeOut" }}
@@ -86,7 +86,7 @@ export default function HeroBanner() {
               <span className="text-sm font-bold">
                 New Collection Available
               </span>
-            </motion.div>
+            </motion.div> */}
 
             {/* Headline */}
             <motion.h1
