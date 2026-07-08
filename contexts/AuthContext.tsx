@@ -8,6 +8,7 @@ import React, {
   useRef,
   ReactNode,
   useCallback,
+  useSyncExternalStore,
 } from "react";
 import { useLogin, useRegister } from "@/hooks/use-auth";
 import { removeToken, setToken } from "@/lib/api-client";
@@ -28,6 +29,7 @@ export interface User extends AuthUser {
 interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
+  mounted: boolean;
   login: (email: string, password: string) => Promise<AuthResponse>;
   register: (email: string, password: string, name: string) => Promise<AuthResponse>;
   logout: () => void;
@@ -54,6 +56,11 @@ const getInitialUser = (): User | null => {
     return null;
   }
 };
+
+// useSyncExternalStore for hydration-safe mounted state
+const subscribe = () => () => {};
+const getSnapshot = () => true;
+const getServerSnapshot = () => false;
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   // Use lazy initializer to set initial state from localStorage
@@ -150,11 +157,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     [socialLoginMutation],
   );
 
+  // useSyncExternalStore ensures consistent value between server and client during hydration
+  const mounted = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+
   return (
     <AuthContext.Provider
       value={{
         user,
         isAuthenticated: !!user,
+        mounted,
         login,
         register,
         logout,

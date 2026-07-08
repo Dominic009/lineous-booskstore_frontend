@@ -523,7 +523,7 @@ const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState<Record<string, boolean>>({});
   const { totalItems, setIsCartOpen } = useCartContext();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, mounted } = useAuth();
   const navigate = useRouter();
   const pathname = usePathname();
   const { data: bookTree = [], isLoading, error } = useBookTree();
@@ -609,10 +609,10 @@ const Navbar = () => {
           </div>
 
           <div className="flex items-center gap-1.5">
-            {isAuthenticated ? (
+            {mounted && isAuthenticated ? (
               <>
                 <IconButton
-                  icon={<Search className="w-[18px] h-[18px]" />}
+                  icon={<Search className="w-4.5 h-4.5" />}
                   onClick={() => {}}
                 />
                 <IconButton
@@ -676,7 +676,7 @@ const Navbar = () => {
               ))}
 
               <div className="pt-4 flex gap-2 border-t border-slate-200 mt-4">
-                {isAuthenticated ? (
+                {mounted && isAuthenticated ? (
                   <Button
                     className="flex-1 h-10 rounded-full text-[13px] font-medium"
                     onClick={() => navigate.push("/profile")}
