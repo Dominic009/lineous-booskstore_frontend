@@ -58,7 +58,7 @@ const CartDrawer = () => {
             >
               <div className="p-6 w-full h-full overflow-y-auto">
                 <div className="flex items-center gap-2 font-display text-2xl text-slate-900">
-                  <ShoppingBag className="w-6 h-6 text-violet-600" />
+                  <ShoppingBag className="w-6 h-6 text-primary" />
                   Loading...
                 </div>
               </div>
@@ -103,7 +103,7 @@ const CartDrawer = () => {
                 className="flex items-center justify-between mb-6"
               >
                 <h2 className="flex items-center gap-2 font-display text-2xl text-slate-900">
-                  <ShoppingBag className="w-6 h-6 text-violet-600" />
+                  <ShoppingBag className="w-6 h-6 text-primary" />
                   Your Cart ({totalItems})
                 </h2>
                 <button
@@ -136,9 +136,9 @@ const CartDrawer = () => {
                   <p className="text-slate-500 mb-6">
                     Looks like you havent added any books yet.
                   </p>
-                  <Button onClick={() => setIsCartOpen(false)} asChild className="bg-violet-600 hover:bg-violet-500 text-white">
-                    <Link href="/">Start Shopping</Link>
-                  </Button>
+                   <Button onClick={() => setIsCartOpen(false)} asChild className="bg-primary hover:bg-primary-hover text-white">
+                     <Link href="/">Start Shopping</Link>
+                   </Button>
                 </motion.div>
               ) : (
                 <>
@@ -173,12 +173,12 @@ const CartDrawer = () => {
                             <Link
                               href={`/book/${item.book.id}`}
                               onClick={() => setIsCartOpen(false)}
-                              className="font-medium line-clamp-2 text-slate-900 hover:text-violet-700 transition-colors"
+                              className="font-medium line-clamp-2 text-slate-900 hover:text-primary transition-colors"
                             >
                               {item.book.title}
                             </Link>
                             {item.paper && (
-                              <p className="text-sm text-violet-700 font-medium mb-1">
+                              <p className="text-sm text-primary font-medium mb-1">
                                 {item.paper.name}
                               </p>
                             )}
@@ -203,7 +203,7 @@ const CartDrawer = () => {
                                   <Plus className="w-3 h-3" />
                                 </button>
                               </div>
-                              <span className="font-semibold text-violet-700">
+                              <span className="font-semibold text-primary">
                                 ৳{getEffectivePrice(item.paper) * item.quantity}
                               </span>
                             </div>
@@ -236,7 +236,7 @@ const CartDrawer = () => {
                     </p>
                     <div className="space-y-3">
                       <Button
-                        className="w-full active:scale-95 transition-transform bg-gradient-to-r from-violet-600 via-indigo-600 to-violet-600 hover:from-violet-500 hover:via-indigo-500 hover:to-violet-500 text-white font-semibold rounded-xl border border-violet-500/20 shadow-lg shadow-violet-100 hover:shadow-xl hover:shadow-violet-200"
+                        className="w-full active:scale-95 transition-transform bg-gradient-to-r from-primary via-accent to-primary hover:from-primary-hover hover:via-accent-hover hover:to-primary-hover text-white font-semibold rounded-xl border border-primary/20 shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30"
                         size="lg"
                         asChild
                         onClick={() => setIsCartOpen(false)}

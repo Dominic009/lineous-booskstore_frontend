@@ -180,15 +180,15 @@ const ProfilePage = () => {
               animate={{ opacity: 1, y: 0 }}
               className="relative rounded-3xl overflow-hidden bg-white border border-slate-200 shadow-xl shadow-slate-200/80 mb-8"
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-violet-50 via-white to-white rounded-3xl pointer-events-none" />
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-white to-white rounded-3xl pointer-events-none" />
 
               <div className="relative p-8 lg:p-10">
                 <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
-                  <Avatar className="w-24 h-24 lg:w-32 lg:h-32 border-4 border-violet-200 shadow-lg">
-                    <AvatarImage src={user?.avatar} alt={user?.name} />
-                    <AvatarFallback className="text-3xl lg:text-4xl font-display text-violet-700 bg-violet-50">
-                      {user?.name?.charAt(0)}
-                    </AvatarFallback>
+                 <Avatar className="w-24 h-24 lg:w-32 lg:h-32 border-4 border-primary/20 shadow-lg">
+                   <AvatarImage src={user?.avatar} alt={user?.name} />
+                   <AvatarFallback className="text-3xl lg:text-4xl font-display text-primary bg-primary/5">
+                     {user?.name?.charAt(0)}
+                   </AvatarFallback>
                   </Avatar>
 
                   <div className="flex-1 min-w-0">
@@ -199,7 +199,7 @@ const ProfilePage = () => {
                       {user?.email}
                     </p>
                     <div className="flex flex-wrap items-center gap-3">
-                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-violet-50 border border-violet-200 text-violet-700 text-xs font-medium">
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/5 border border-primary/20 text-primary text-xs font-medium">
                         <User className="w-3.5 h-3.5" />
                         Member
                       </span>
@@ -214,7 +214,7 @@ const ProfilePage = () => {
                     {isEditing ? (
                       <Button
                         onClick={handleSave}
-                        className="active:scale-95 transition-transform bg-gradient-to-r from-violet-600 via-indigo-600 to-violet-600 hover:from-violet-500 hover:via-indigo-500 hover:to-violet-500 text-white border border-violet-500/20 shadow-lg shadow-violet-100"
+                        className="active:scale-95 transition-transform bg-gradient-to-r from-primary via-accent to-primary hover:from-primary-hover hover:via-accent-hover hover:to-primary-hover text-white border border-primary/20 shadow-lg shadow-primary/20"
                       >
                         <Save className="w-4 h-4 mr-2" />
                         Save Changes
@@ -248,10 +248,10 @@ const ProfilePage = () => {
                       <Link
                         key={item.label}
                         href={item.href}
-                        className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-700 hover:bg-violet-50 hover:text-violet-700 transition-all group"
+                        className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-700 hover:bg-primary/5 hover:text-primary transition-all group"
                       >
-                        <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-slate-50 group-hover:bg-violet-100 transition-colors">
-                          <item.icon className="w-5 h-5 text-slate-400 group-hover:text-violet-600 transition-colors" />
+                        <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-slate-50 group-hover:bg-primary/10 transition-colors">
+                          <item.icon className="w-5 h-5 text-slate-400 group-hover:text-primary transition-colors" />
                         </div>
                         <span className="font-medium text-sm">{item.label}</span>
                         <ChevronRight className="w-4 h-4 text-slate-400 ml-auto" />
@@ -302,7 +302,7 @@ const ProfilePage = () => {
                             setFormData({ ...formData, name: e.target.value })
                           }
                           disabled={!isEditing}
-                          className="pl-10 bg-white border-slate-200 text-slate-900 focus:border-violet-500/50 focus:ring-2 focus:ring-violet-500/20"
+                          className="pl-10 bg-white border-slate-200 text-slate-900 focus:border-primary/50 focus:ring-2 focus:ring-primary/20"
                         />
                       </div>
                     </div>
@@ -319,7 +319,7 @@ const ProfilePage = () => {
                             setFormData({ ...formData, email: e.target.value })
                           }
                           disabled={!isEditing}
-                          className="pl-10 bg-white border-slate-200 text-slate-900 focus:border-violet-500/50 focus:ring-2 focus:ring-violet-500/20"
+                          className="pl-10 bg-white border-slate-200 text-slate-900 focus:border-primary/50 focus:ring-2 focus:ring-primary/20"
                         />
                       </div>
                     </div>
@@ -337,7 +337,7 @@ const ProfilePage = () => {
                             setFormData({ ...formData, phone: e.target.value })
                           }
                           disabled={!isEditing}
-                          className="pl-10 bg-white border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-violet-500/50 focus:ring-2 focus:ring-violet-500/20"
+                          className="pl-10 bg-white border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-primary/50 focus:ring-2 focus:ring-primary/20"
                         />
                       </div>
                     </div>
@@ -354,7 +354,7 @@ const ProfilePage = () => {
                             setFormData({ ...formData, city: e.target.value })
                           }
                           disabled={!isEditing}
-                          className="pl-10 bg-white border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-violet-500/50 focus:ring-2 focus:ring-violet-500/20"
+                          className="pl-10 bg-white border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-primary/50 focus:ring-2 focus:ring-primary/20"
                         />
                       </div>
                     </div>
@@ -369,7 +369,7 @@ const ProfilePage = () => {
                           setFormData({ ...formData, address: e.target.value })
                         }
                         disabled={!isEditing}
-                        className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-violet-500/50 focus:ring-2 focus:ring-violet-500/20"
+                        className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-primary/50 focus:ring-2 focus:ring-primary/20"
                       />
                     </div>
 
@@ -384,7 +384,7 @@ const ProfilePage = () => {
                         }
                         disabled={!isEditing}
                         rows={4}
-                        className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-violet-500/50 focus:ring-2 focus:ring-violet-500/20"
+                        className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-primary/50 focus:ring-2 focus:ring-primary/20"
                       />
                     </div>
                   </div>
@@ -399,7 +399,7 @@ const ProfilePage = () => {
                     <Button
                       size="sm"
                       onClick={() => openAddressDialog()}
-                      className="active:scale-95 transition-transform bg-gradient-to-r from-violet-600 via-indigo-600 to-violet-600 hover:from-violet-500 hover:via-indigo-500 hover:to-violet-500 text-white border border-violet-500/20 shadow-lg shadow-violet-100"
+                        className="active:scale-95 transition-transform bg-gradient-to-r from-primary via-accent to-primary hover:from-primary-hover hover:via-accent-hover hover:to-primary-hover text-white border border-primary/20 shadow-lg shadow-primary/20"
                     >
                       <Plus className="w-4 h-4 mr-2" />
                       Add Address
@@ -427,11 +427,11 @@ const ProfilePage = () => {
                         <motion.div
                           key={addr.id}
                           whileHover={{ y: -2 }}
-                          className="relative p-5 rounded-2xl border border-slate-200 bg-white hover:border-violet-200 hover:shadow-md transition-all group"
+                          className="relative p-5 rounded-2xl border border-slate-200 bg-white hover:border-primary/20 hover:shadow-md transition-all group"
                         >
                           <div className="flex items-start justify-between mb-3">
                             <div className="flex items-center gap-2">
-                              <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-violet-50 text-violet-700">
+                              <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary/5 text-primary">
                                 <MapPin className="w-4 h-4" />
                               </div>
                               <p className="font-semibold text-slate-900">{addr.name}</p>
@@ -441,7 +441,7 @@ const ProfilePage = () => {
                                 variant="ghost"
                                 size="icon"
                                 onClick={() => openAddressDialog(addr)}
-                                className="h-8 w-8 border border-slate-200 hover:bg-violet-50 hover:text-violet-700"
+                                className="h-8 w-8 border border-slate-200 hover:bg-primary/5 hover:text-primary"
                               >
                                 <Pencil className="w-3.5 h-3.5" />
                               </Button>

@@ -20,18 +20,18 @@ const LogoutLoader = ({
       <div className="relative flex items-center justify-center">
         {/* Soft pulsing halo */}
         <motion.span
-          className="absolute h-20 w-20 rounded-full bg-violet-200/50"
+          className="absolute h-20 w-20 rounded-full bg-primary/15"
           animate={{ scale: [1, 1.35, 1], opacity: [0.5, 0, 0.5] }}
           transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
         />
         {/* Gradient spinning ring */}
         <motion.span
-          className="h-14 w-14 rounded-full border-[3px] border-transparent border-t-violet-600 border-r-indigo-500"
+          className="h-14 w-14 rounded-full border-[3px] border-transparent border-t-primary border-r-accent"
           animate={{ rotate: 360 }}
           transition={{ duration: 0.9, repeat: Infinity, ease: "linear" }}
         />
         {/* Center dot */}
-        <span className="absolute h-2.5 w-2.5 rounded-full bg-violet-600" />
+        <span className="absolute h-2.5 w-2.5 rounded-full bg-primary" />
       </div>
 
       <motion.p

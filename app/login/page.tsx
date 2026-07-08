@@ -88,13 +88,13 @@ const LoginPage = () => {
       {/* Ambient Background */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {/* Gradient orbs - soft light versions */}
-        <div className="absolute top-[-10%] left-[-10%] w-[600px] h-[600px] rounded-full bg-violet-200/30 blur-[120px]" />
+        <div className="absolute top-[-10%] left-[-10%] w-[600px] h-[600px] rounded-full bg-primary/15 blur-[120px]" />
         <div
           className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] rounded-full bg-amber-200/20 blur-[100px]"
           style={{ animationDelay: "2s" }}
         />
         <div
-          className="absolute top-[40%] left-[30%] w-[300px] h-[300px] rounded-full bg-indigo-200/20 blur-[80px]"
+          className="absolute top-[40%] left-[30%] w-[300px] h-[300px] rounded-full bg-accent/15 blur-[80px]"
           style={{ animationDelay: "4s" }}
         />
 
@@ -175,7 +175,7 @@ const LoginPage = () => {
               ) : (
                 <>
                   Start your{" "}
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-600 via-indigo-600 to-amber-600">
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-accent to-accent">
                     journey
                   </span>
                 </>
@@ -242,7 +242,7 @@ const LoginPage = () => {
                   </Label>
                   <div className="relative group">
                     <div
-                      className={`absolute inset-0 rounded-xl bg-gradient-to-r from-violet-500/20 to-indigo-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm ${
+                      className={`absolute inset-0 rounded-xl bg-gradient-to-r from-primary/20 to-accent/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm ${
                         focusedField === "name" ? "opacity-100" : ""
                       }`}
                     />
@@ -250,8 +250,8 @@ const LoginPage = () => {
                       <User
                         className={`absolute left-4 w-[18px] h-[18px] transition-colors duration-300 ${
                           focusedField === "name"
-                            ? "text-violet-600"
-                            : "text-slate-400"
+                        ? "text-primary"
+                        : "text-slate-400"
                         }`}
                       />
                       <Input
@@ -264,7 +264,7 @@ const LoginPage = () => {
                         }
                         onFocus={() => setFocusedField("name")}
                         onBlur={() => setFocusedField(null)}
-                        className="pl-11 pr-4 h-12 bg-white border-slate-200 text-slate-900 placeholder:text-slate-400 rounded-xl focus:border-violet-500/50 focus:ring-2 focus:ring-violet-500/20 transition-all duration-300"
+                        className="pl-11 pr-4 h-12 bg-white border-slate-200 text-slate-900 placeholder:text-slate-400 rounded-xl focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-300"
                         required={!isLogin}
                       />
                     </div>
@@ -282,7 +282,7 @@ const LoginPage = () => {
               </Label>
               <div className="relative group">
                 <div
-                  className={`absolute inset-0 rounded-xl bg-gradient-to-r from-violet-500/20 to-indigo-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm ${
+                  className={`absolute inset-0 rounded-xl bg-gradient-to-r from-primary/20 to-accent/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm ${
                     focusedField === "email" ? "opacity-100" : ""
                   }`}
                 />
@@ -290,7 +290,7 @@ const LoginPage = () => {
                   <Mail
                     className={`absolute left-4 w-[18px] h-[18px] transition-colors duration-300 ${
                       focusedField === "email"
-                        ? "text-violet-600"
+                        ? "text-primary"
                         : "text-slate-400"
                     }`}
                   />
@@ -304,7 +304,7 @@ const LoginPage = () => {
                     }
                     onFocus={() => setFocusedField("email")}
                     onBlur={() => setFocusedField(null)}
-                    className="pl-11 pr-4 h-12 bg-white border-slate-200 text-slate-900 placeholder:text-slate-400 rounded-xl focus:border-violet-500/50 focus:ring-2 focus:ring-violet-500/20 transition-all duration-300"
+                    className="pl-11 pr-4 h-12 bg-white border-slate-200 text-slate-900 placeholder:text-slate-400 rounded-xl focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-300"
                     required
                   />
                 </div>
@@ -320,7 +320,7 @@ const LoginPage = () => {
               </Label>
               <div className="relative group">
                 <div
-                  className={`absolute inset-0 rounded-xl bg-gradient-to-r from-violet-500/20 to-indigo-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm ${
+                  className={`absolute inset-0 rounded-xl bg-gradient-to-r from-primary/20 to-accent/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm ${
                     focusedField === "password" ? "opacity-100" : ""
                   }`}
                 />
@@ -328,7 +328,7 @@ const LoginPage = () => {
                   <Lock
                     className={`absolute left-4 w-[18px] h-[18px] transition-colors duration-300 ${
                       focusedField === "password"
-                        ? "text-violet-600"
+                        ? "text-primary"
                         : "text-slate-400"
                     }`}
                   />
@@ -342,7 +342,7 @@ const LoginPage = () => {
                     }
                     onFocus={() => setFocusedField("password")}
                     onBlur={() => setFocusedField(null)}
-                    className="pl-11 pr-12 h-12 bg-white border-slate-200 text-slate-900 placeholder:text-slate-400 rounded-xl focus:border-violet-500/50 focus:ring-2 focus:ring-violet-500/20 transition-all duration-300"
+                    className="pl-11 pr-12 h-12 bg-white border-slate-200 text-slate-900 placeholder:text-slate-400 rounded-xl focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-300"
                     required
                   />
                   <button
@@ -377,7 +377,7 @@ const LoginPage = () => {
                   </Label>
                   <div className="relative group">
                     <div
-                      className={`absolute inset-0 rounded-xl bg-gradient-to-r from-violet-500/20 to-indigo-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm ${
+                      className={`absolute inset-0 rounded-xl bg-gradient-to-r from-primary/20 to-accent/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm ${
                         focusedField === "confirmPassword" ? "opacity-100" : ""
                       }`}
                     />
@@ -385,8 +385,8 @@ const LoginPage = () => {
                       <Lock
                         className={`absolute left-4 w-[18px] h-[18px] transition-colors duration-300 ${
                           focusedField === "confirmPassword"
-                            ? "text-violet-600"
-                            : "text-slate-400"
+                        ? "text-primary"
+                        : "text-slate-400"
                         }`}
                       />
                       <Input
@@ -402,7 +402,7 @@ const LoginPage = () => {
                         }
                         onFocus={() => setFocusedField("confirmPassword")}
                         onBlur={() => setFocusedField(null)}
-                        className="pl-11 pr-4 h-12 bg-white border-slate-200 text-slate-900 placeholder:text-slate-400 rounded-xl focus:border-violet-500/50 focus:ring-2 focus:ring-violet-500/20 transition-all duration-300"
+                        className="pl-11 pr-4 h-12 bg-white border-slate-200 text-slate-900 placeholder:text-slate-400 rounded-xl focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-300"
                         required={!isLogin}
                       />
                     </div>
@@ -420,7 +420,7 @@ const LoginPage = () => {
               >
                 <button
                   type="button"
-                  className="text-sm text-slate-500 hover:text-violet-600 transition-colors duration-300 font-medium"
+                  className="text-sm text-slate-500 hover:text-primary transition-colors duration-300 font-medium"
                 >
                   Forgot password?
                 </button>
@@ -435,7 +435,7 @@ const LoginPage = () => {
               <Button
                 type="submit"
                 disabled={isLoading}
-                className="relative w-full h-12 bg-gradient-to-r from-violet-600 via-indigo-600 to-violet-600 hover:from-violet-500 hover:via-indigo-500 hover:to-violet-500 text-white font-semibold rounded-xl transition-all duration-500 border border-violet-500/20 shadow-lg shadow-violet-900/15 hover:shadow-xl hover:shadow-violet-900/25 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100 overflow-hidden group"
+                className="relative w-full h-12 bg-gradient-to-r from-primary via-accent to-primary hover:from-primary-hover hover:via-accent-hover hover:to-primary-hover text-white font-semibold rounded-xl transition-all duration-500 border border-primary/20 shadow-lg shadow-primary/15 hover:shadow-xl hover:shadow-primary/25 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100 overflow-hidden group"
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
                 <span className="relative flex items-center justify-center gap-2">
@@ -475,10 +475,10 @@ const LoginPage = () => {
               <button
                 type="button"
                 onClick={() => setIsLogin(!isLogin)}
-                className="text-violet-600 hover:text-violet-700 font-semibold transition-colors duration-300 relative group"
+                className="text-primary hover:text-primary-hover font-semibold transition-colors duration-300 relative group"
               >
                 {isLogin ? "Sign up" : "Sign in"}
-                <span className="absolute bottom-0 left-0 w-0 h-px bg-violet-600 group-hover:w-full transition-all duration-300" />
+                <span className="absolute bottom-0 left-0 w-0 h-px bg-primary group-hover:w-full transition-all duration-300" />
               </button>
             </p>
           </motion.div>
@@ -515,7 +515,7 @@ const LoginPage = () => {
             {/* <div className="relative p-8 rounded-2xl overflow-hidden">
               Glass effect layers
               <div className="absolute inset-0 bg-white/80 backdrop-blur-xl border border-slate-200/60 rounded-2xl shadow-xl" />
-              <div className="absolute inset-0 bg-gradient-to-br from-violet-100/60 to-transparent rounded-2xl" />
+               <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent rounded-2xl" />
 
               Content
               <div className="relative z-10">
@@ -526,7 +526,7 @@ const LoginPage = () => {
                       height="32"
                       viewBox="0 0 32 32"
                       fill="none"
-                      className="text-violet-500/70"
+                      className="text-primary/70"
                     >
                       <path
                         d="M10 18c-2.2 0-4-1.8-4-4s1.8-4 4-4c.6 0 1.2.1 1.7.4C11.2 7.6 9.2 6 7 6v-2c4.4 0 8 3.6 8 8v6h-5zm14 0c-2.2 0-4-1.8-4-4s1.8-4 4-4c.6 0 1.2.1 1.7.4C25.2 7.6 23.2 6 21 6v-2c4.4 0 8 3.6 8 8v6h-5z"
@@ -540,8 +540,8 @@ const LoginPage = () => {
                       who never reads lives only one.
                     </p>
                     <footer className="flex items-center gap-3">
-                      <div className="h-px w-8 bg-gradient-to-r from-violet-500/70 to-transparent" />
-                      <span className="text-sm font-medium text-violet-600/90 tracking-wide">
+                      <div className="h-px w-8 bg-gradient-to-r from-primary/70 to-transparent" />
+                      <span className="text-sm font-medium text-primary/90 tracking-wide">
                         George R.R. Martin
                       </span>
                     </footer>

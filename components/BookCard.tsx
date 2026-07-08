@@ -38,9 +38,9 @@ const BookCard = ({ book, delay = 0 }: BookCardProps) => {
       viewport={{ once: true }}
       transition={{ delay, duration: 0.4 }}
       whileHover={{ y: -8 }}
-      className="group relative rounded-2xl overflow-hidden bg-white border border-slate-200 shadow-lg shadow-slate-200/80 transition-all duration-500 hover:shadow-xl hover:shadow-violet-100/80 hover:border-violet-200"
+      className="group relative rounded-2xl overflow-hidden bg-white border border-slate-200 shadow-lg shadow-slate-200/80 transition-all duration-500 hover:shadow-xl hover:shadow-primary/10 hover:border-primary/20"
     >
-      <div className="absolute inset-0 bg-gradient-to-br from-violet-50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
 
       {/* Image Container */}
       <div className="relative aspect-[3/4] overflow-hidden bg-slate-100">
@@ -73,7 +73,7 @@ const BookCard = ({ book, delay = 0 }: BookCardProps) => {
       {/* Content */}
       <div className="p-4 flex flex-col">
         {/* Title */}
-        <h3 className="font-semibold text-sm text-slate-900 mb-1 line-clamp-2 leading-tight group-hover:text-violet-700 transition-colors">
+        <h3 className="font-semibold text-sm text-slate-900 mb-1 line-clamp-2 leading-tight group-hover:text-primary transition-colors">
           {book.title}
         </h3>
 
@@ -101,10 +101,10 @@ const BookCard = ({ book, delay = 0 }: BookCardProps) => {
 
         {/* Price and Add Button */}
         <div className="mt-auto flex items-center justify-between">
-          <span className="text-lg font-bold text-violet-700">{priceDisplay}</span>
+          <span className="text-lg font-bold text-primary">{priceDisplay}</span>
           <Button
             size="sm"
-            className="h-8 w-8 p-0 rounded-lg bg-violet-600 hover:bg-violet-700 text-white shadow-md shadow-violet-200 transition-all duration-300 active:scale-95"
+            className="h-8 w-8 p-0 rounded-lg bg-primary hover:bg-primary-hover text-white shadow-md shadow-primary/20 transition-all duration-300 active:scale-95"
             onClick={handleAddToCart}
           >
             <ShoppingCart className="w-4 h-4" />

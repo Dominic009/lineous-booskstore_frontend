@@ -172,7 +172,7 @@ const BookDetailsPage = () => {
           >
             <Link
               href="/"
-              className="inline-flex items-center gap-2 text-slate-500 hover:text-violet-600 transition-colors"
+              className="inline-flex items-center gap-2 text-slate-500 hover:text-primary transition-colors"
             >
               <ArrowLeft className="w-4 h-4" />
               Back to Store
@@ -199,7 +199,7 @@ const BookDetailsPage = () => {
               {/* Badges */}
               <div className="absolute top-4 left-4 flex flex-col gap-2">
                 {priceInfo.discount > 0 && (
-                  <Badge className="bg-violet-600 text-white border border-violet-500/30 shadow-lg shadow-violet-200">
+                  <Badge className="bg-primary text-white border border-primary-hover/30 shadow-lg shadow-primary/20">
                     -{priceInfo.discount}% OFF
                   </Badge>
                 )}
@@ -259,8 +259,8 @@ const BookDetailsPage = () => {
                         onClick={() => setSelectedPaperId(paper.id)}
                         className={`px-4 py-2 rounded-xl border transition-all duration-300 ${
                           selectedPaperId === paper.id
-                            ? "border-violet-500/50 bg-violet-50 text-violet-700 shadow-md shadow-violet-100"
-                            : "border-slate-200 hover:border-violet-200 text-slate-600 hover:text-slate-900"
+                            ? "border-primary/50 bg-primary/5 text-primary shadow-md shadow-primary/10"
+                            : "border-slate-200 hover:border-primary/20 text-slate-600 hover:text-slate-900"
                         }`}
                       >
                         <div className="text-sm font-medium">{paper.name}</div>
@@ -275,7 +275,7 @@ const BookDetailsPage = () => {
 
               {/* Price */}
               <div className="flex items-baseline gap-3 mb-6">
-                <span className="text-2xl sm:text-4xl font-bold text-violet-700">
+                <span className="text-2xl sm:text-4xl font-bold text-primary">
                   ৳{priceInfo.price}
                 </span>
                 {priceInfo.originalPrice && (
@@ -330,7 +330,7 @@ const BookDetailsPage = () => {
 
                 <Button
                   size="lg"
-                  className="flex-1 active:scale-95 transition-transform py-3 bg-gradient-to-r from-violet-600 via-indigo-600 to-violet-600 hover:from-violet-500 hover:via-indigo-500 hover:to-violet-500 text-white font-semibold rounded-xl border border-violet-500/20 shadow-lg shadow-violet-100 hover:shadow-xl hover:shadow-violet-200"
+                  className="flex-1 active:scale-95 transition-transform py-3 bg-gradient-to-r from-primary via-accent to-primary hover:from-primary-hover hover:via-accent-hover hover:to-primary-hover text-white font-semibold rounded-xl border border-primary/20 shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30"
                   onClick={handleAddToCart}
                 >
                   <ShoppingCart className="w-5 h-5 mr-2" />
@@ -353,7 +353,7 @@ const BookDetailsPage = () => {
                     key={feature.text}
                     className="flex items-center gap-2 text-sm text-slate-500"
                   >
-                    <feature.icon className="w-4 h-4 text-violet-600" />
+                    <feature.icon className="w-4 h-4 text-primary" />
                     {feature.text}
                   </div>
                 ))}

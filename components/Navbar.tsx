@@ -99,9 +99,9 @@ const MenuItem = ({
             ${
               hasChildren
                 ? isOpen
-                  ? "bg-violet-50 text-violet-700"
-                  : "text-slate-700 hover:text-violet-600 hover:bg-slate-50"
-                : "text-slate-700 hover:text-violet-600 hover:bg-slate-50"
+                  ? "bg-primary/5 text-primary"
+                  : "text-slate-700 hover:text-primary hover:bg-slate-50"
+                : "text-slate-700 hover:text-primary hover:bg-slate-50"
             }
           `}
           onClick={() => hasChildren && toggleMobile?.(item.name)}
@@ -179,9 +179,9 @@ const MenuItem = ({
           ${
             hasChildren
               ? isOpen
-                ? "bg-violet-50 text-violet-700"
-                : "text-slate-700 hover:text-violet-600 hover:bg-slate-50"
-              : "text-slate-700 hover:text-violet-600 hover:bg-slate-50"
+                  ? "bg-primary/5 text-primary"
+                  : "text-slate-700 hover:text-primary hover:bg-slate-50"
+                : "text-slate-700 hover:text-primary hover:bg-slate-50"
           }
         `}
       >
@@ -245,9 +245,9 @@ const MenuItem = ({
                               className={`
                                   flex items-center justify-between cursor-pointer py-2.5 px-3 rounded-lg transition-colors duration-150
                                   ${
-                                    isActive
-                                      ? "bg-violet-50 text-violet-700"
-                                      : "text-slate-700 hover:text-violet-600 hover:bg-slate-50"
+                                      isActive
+                                       ? "bg-primary/5 text-primary"
+                                       : "text-slate-700 hover:text-primary hover:bg-slate-50"
                                   }
                                 `}
                               onMouseEnter={() => {
@@ -315,9 +315,9 @@ const MenuItem = ({
                                     >
                                       <span
                                         className={`text-[13px] font-medium ${
-                                          isActive
-                                            ? "bg-violet-50 text-violet-700"
-                                            : "text-slate-700 hover:text-violet-600 hover:bg-slate-50"
+                                      isActive
+                                       ? "bg-primary/5 text-primary"
+                                       : "text-slate-700 hover:text-primary hover:bg-slate-50"
                                         } rounded-md px-2 py-0.5`}
                                       >
                                         {childItem.name}
@@ -380,7 +380,7 @@ const MenuItem = ({
                                   return (
                                     <div
                                       key={idx}
-                                      className="cursor-pointer py-2 px-3 rounded-lg text-slate-700 hover:text-violet-600 hover:bg-slate-50 transition-colors duration-150"
+                                      className="cursor-pointer py-2 px-3 rounded-lg text-slate-700 hover:text-primary hover:bg-slate-50 transition-colors duration-150"
                                       onClick={() => {
                                         if (childItem.href) {
                                           router.push(childItem.href);
@@ -427,7 +427,7 @@ const MobileSubItem = ({
     return (
       <div>
         <div
-          className="flex justify-between items-center cursor-pointer py-2 px-3 rounded-lg text-slate-700 hover:text-violet-600 hover:bg-slate-50 transition-colors duration-200"
+          className="flex justify-between items-center cursor-pointer py-2 px-3 rounded-lg text-slate-700 hover:text-primary hover:bg-slate-50 transition-colors duration-200"
           onClick={() => {
             if (item.href) {
               router.push(item.href);
@@ -458,7 +458,7 @@ const MobileSubItem = ({
                 return (
                   <div key={idx} className="space-y-1">
                     <div
-                      className="py-2 px-3 rounded-lg text-slate-700 hover:text-violet-600 hover:bg-slate-50 transition-colors duration-200 cursor-pointer text-[13px] font-medium"
+                      className="py-2 px-3 rounded-lg text-slate-700 hover:text-primary hover:bg-slate-50 transition-colors duration-200 cursor-pointer text-[13px] font-medium"
                       onClick={() => {
                         if (childItem.href) {
                           router.push(childItem.href);
@@ -481,7 +481,7 @@ const MobileSubItem = ({
                             return (
                               <div
                                 key={gIdx}
-                                className="py-1.5 px-2 rounded-lg text-slate-600 hover:text-violet-600 hover:bg-slate-50 transition-colors duration-200 cursor-pointer text-[12px]"
+                                className="py-1.5 px-2 rounded-lg text-slate-600 hover:text-primary hover:bg-slate-50 transition-colors duration-200 cursor-pointer text-[12px]"
                                 onClick={() => {
                                   if (grandchildItem.href) {
                                     router.push(grandchildItem.href);
@@ -507,7 +507,7 @@ const MobileSubItem = ({
 
   return (
     <div
-      className="flex justify-between items-center cursor-pointer py-2 px-3 rounded-lg text-slate-700 hover:text-violet-600 hover:bg-slate-50 transition-colors duration-200"
+      className="flex justify-between items-center cursor-pointer py-2 px-3 rounded-lg text-slate-700 hover:text-primary hover:bg-slate-50 transition-colors duration-200"
       onClick={() => {
         if (item.href) {
           router.push(item.href);
@@ -634,7 +634,7 @@ const Navbar = () => {
             ) : (
               <Button
                 size="sm"
-                className="h-9 px-5 text-[13px] font-medium rounded-full bg-violet-600 hover:bg-violet-500 text-white shadow-sm shadow-violet-200 transition-colors"
+                className="h-9 px-5 text-[13px] font-medium rounded-full bg-primary hover:bg-primary-hover text-white shadow-sm shadow-primary/20 transition-colors"
                 onClick={() => navigate.push("/login")}
               >
                 Sign In
@@ -686,7 +686,7 @@ const Navbar = () => {
                 ) : (
                   <>
                     <Button
-                      className="flex-1 h-10 rounded-full text-[13px] font-medium bg-violet-600 hover:bg-violet-500 text-white transition-colors"
+                      className="flex-1 h-10 rounded-full text-[13px] font-medium bg-primary hover:bg-primary-hover text-white transition-colors"
                       onClick={() => navigate.push("/login")}
                     >
                       Sign In
@@ -722,7 +722,7 @@ const IconButton = ({
   <button
     onClick={onClick}
     className={`
-      relative h-9 w-9 flex items-center justify-center rounded-full hover:bg-slate-100 text-slate-600 hover:text-violet-600 transition-all duration-200
+      relative h-9 w-9 flex items-center justify-center rounded-full hover:bg-slate-100 text-slate-600 hover:text-primary transition-all duration-200
       ${className}
     `}
   >

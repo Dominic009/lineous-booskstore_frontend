@@ -114,7 +114,7 @@ export default function HeroBanner() {
                 >
                   <motion.path
                     d="M2 8C50 2 150 2 198 8"
-                    stroke="hsl(var(--primary))"
+                    stroke="var(--color-primary)"
                     strokeWidth="4"
                     strokeLinecap="round"
                     initial={{ pathLength: 0 }}

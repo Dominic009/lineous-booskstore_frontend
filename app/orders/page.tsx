@@ -89,14 +89,14 @@ const OrdersPage = () => {
           >
             <Link
               href="/"
-              className="inline-flex items-center gap-2 text-slate-500 hover:text-violet-600 transition-colors mb-4"
+              className="inline-flex items-center gap-2 text-slate-500 hover:text-primary transition-colors mb-4"
             >
               <ArrowLeft className="w-4 h-4" />
               Continue Shopping
             </Link>
             <div className="flex items-center gap-4">
-              <div className="p-3 bg-violet-50 rounded-xl">
-                <Package className="w-8 h-8 text-violet-600" />
+              <div className="p-3 bg-primary/5 rounded-xl">
+                <Package className="w-8 h-8 text-primary" />
               </div>
               <div>
                 <h1 className="font-display text-3xl lg:text-4xl font-bold text-slate-900">
@@ -156,7 +156,7 @@ const OrdersPage = () => {
               <Button
                 onClick={() => router.push("/")}
                 size="lg"
-                className="active:scale-95 transition-transform bg-gradient-to-r from-violet-600 via-indigo-600 to-violet-600 hover:from-violet-500 hover:via-indigo-500 hover:to-violet-500 text-white border border-violet-500/20 shadow-lg shadow-violet-100"
+                className="active:scale-95 transition-transform bg-gradient-to-r from-primary via-accent to-primary hover:from-primary-hover hover:via-accent-hover hover:to-primary-hover text-white border border-primary/20 shadow-lg shadow-primary/20"
               >
                 <ShoppingBag className="w-5 h-5 mr-2" />
                 Start Shopping
@@ -176,9 +176,9 @@ const OrdersPage = () => {
                   transition={{ delay: index * 0.1 }}
                   whileHover={{ y: -2 }}
                 >
-                  <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden hover:shadow-xl hover:shadow-violet-100/80 hover:border-violet-200 transition-all duration-300">
+                  <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden hover:shadow-xl hover:shadow-primary/10 hover:border-primary/20 transition-all duration-300">
                     {/* Order Header */}
-                    <div className="bg-gradient-to-r from-violet-50 via-white to-white p-6">
+                    <div className="bg-gradient-to-r from-primary/5 via-white to-white p-6">
                       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                         <div>
                           <h3 className="font-display text-xl font-bold text-slate-900">
@@ -213,7 +213,7 @@ const OrdersPage = () => {
                             <div className="flex-1">
                               <p className="font-medium text-slate-900">{item.bookTitle}</p>
                               {item.paperName && (
-                                <p className="text-sm text-violet-700 font-medium mt-1">
+                                <p className="text-sm text-primary font-medium mt-1">
                                   {item.paperName}
                                 </p>
                               )}
@@ -222,7 +222,7 @@ const OrdersPage = () => {
                               </p>
                             </div>
                             <div className="text-right">
-                              <p className="font-semibold text-violet-700 text-lg">
+                              <p className="font-semibold text-primary text-lg">
                                 ৳{parsePrice(item.subtotal).toFixed(2)}
                               </p>
                               <p className="text-sm text-slate-500">
