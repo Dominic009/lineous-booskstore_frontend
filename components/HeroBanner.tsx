@@ -60,12 +60,12 @@ export default function HeroBanner() {
 
       {/* ── Decorative Blobs ── */}
       <motion.div
-        className="absolute top-20 right-[15%] w-[500px] h-[500px] rounded-full bg-primary/20 blur-[100px] z-0"
+        className="absolute top-20 right-[15%] w-125 h-125 rounded-full bg-primary/20 blur-[100px] z-0"
         animate={{ scale: [1, 1.2, 1], x: [0, 30, 0] }}
         transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
       />
       <motion.div
-        className="absolute bottom-0 left-[10%] w-[400px] h-[400px] rounded-full bg-accent/20 blur-[80px] z-0"
+        className="absolute bottom-0 left-[10%] w-100 h-[400px] rounded-full bg-accent/20 blur-[80px] z-0"
         animate={{ scale: [1, 1.15, 1], y: [0, -20, 0] }}
         transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
       />
