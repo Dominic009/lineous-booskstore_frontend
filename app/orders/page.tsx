@@ -84,8 +84,8 @@ const OrdersPage = () => {
   };
 
   return (
-    <div className="relative min-h-screen bg-white overflow-hidden">
-      <main className="pt-24 pb-16 relative z-10 h-screen">
+    <div className="relative bg-white ">
+      <main className="pt-24 pb-16 relative z-10">
         <div className="container mx-auto px-4 lg:px-8 max-w-5xl">
           {/* Header */}
           <motion.div

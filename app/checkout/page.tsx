@@ -141,7 +141,7 @@ const CheckoutPage = () => {
         addressId = savedAddress.id;
       }
 
-      await createOrderMutation.mutateAsync({
+      const order = await createOrderMutation.mutateAsync({
         addressId,
         discount: 0,
         shipping: shippingCost,
@@ -150,7 +150,7 @@ const CheckoutPage = () => {
       });
 
       clearCart();
-      router.push("/");
+      router.push(`/orders/success?orderId=${order.id}`);
     } finally {
       setIsProcessing(false);
     }

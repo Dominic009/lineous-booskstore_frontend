@@ -64,7 +64,9 @@ export const useVerifyReceipt = (receiptNumber: string) => {
   });
 };
 
-// Download receipt PDF (auth required, 302 redirect to Cloudinary)
+// Download receipt PDF (auth required). The token-bearing fetch receives the
+// PDF bytes; we turn that into a client-side download so no second (token-less)
+// browser navigation is made.
 export const useDownloadReceipt = () => {
   return useMutation<void, ApiError, string>({
     mutationFn: async (orderId: string) => {
@@ -84,10 +86,15 @@ export const useDownloadReceipt = () => {
         );
       }
 
-      const pdfUrl = response.url;
-      if (pdfUrl) {
-        window.open(pdfUrl, "_blank");
-      }
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `receipt-${orderId}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
     },
     onError: (error) => {
       if (error instanceof ApiError) {
@@ -96,5 +103,33 @@ export const useDownloadReceipt = () => {
         toast.error("Failed to download receipt");
       }
     },
+  });
+};
+
+// Load receipt PDF as a client-side object URL for inline preview (auth required).
+export const useReceiptPreview = (orderId: string | null) => {
+  return useQuery<string, ApiError>({
+    queryKey: ["receipt-preview", orderId],
+    queryFn: async () => {
+      const token = getToken();
+      const response = await fetch(`${BASE_URL}/orders/${orderId}/receipt`, {
+        method: "GET",
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+        redirect: "follow",
+      });
+
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}));
+        throw new ApiError(
+          data.message || "Failed to load receipt",
+          response.status,
+          data.errors
+        );
+      }
+
+      const blob = await response.blob();
+      return window.URL.createObjectURL(blob);
+    },
+    enabled: !!orderId,
   });
 };
