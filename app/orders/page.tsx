@@ -156,7 +156,7 @@ const OrdersPage = () => {
               <Button
                 onClick={() => router.push("/")}
                 size="lg"
-                className="active:scale-95 transition-transform bg-gradient-to-r from-primary via-accent to-primary hover:from-primary-hover hover:via-accent-hover hover:to-primary-hover text-white border border-primary/20 shadow-lg shadow-primary/20"
+                className="active:scale-95 transition-transform bg-orange-500 hover:bg-orange-600 text-white border border-primary/20 shadow-lg shadow-primary/20"
               >
                 <ShoppingBag className="w-5 h-5 mr-2" />
                 Start Shopping

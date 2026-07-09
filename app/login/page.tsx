@@ -435,7 +435,7 @@ const LoginPage = () => {
               <Button
                 type="submit"
                 disabled={isLoading}
-                className="relative w-full h-12 bg-gradient-to-r from-primary via-accent to-primary hover:from-primary-hover hover:via-accent-hover hover:to-primary-hover text-white font-semibold rounded-xl transition-all duration-500 border border-primary/20 shadow-lg shadow-primary/15 hover:shadow-xl hover:shadow-primary/25 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100 overflow-hidden group"
+                className="relative w-full h-12 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-xl transition-all duration-500 border border-primary/20 shadow-lg shadow-primary/15 hover:shadow-xl hover:shadow-primary/25 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100 overflow-hidden group"
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
                 <span className="relative flex items-center justify-center gap-2">

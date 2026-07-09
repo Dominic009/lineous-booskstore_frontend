@@ -97,11 +97,11 @@ export default function HeroBanner() {
                 duration: 0.8,
                 ease: [0.25, 0.46, 0.45, 0.94] as const,
               }}
-              className="text-5xl md:text-6xl lg:text-7xl font-bold text-ivory leading-[1.1] mb-6"
+              className="text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-[1.1] mb-6"
             >
               Discover Your Next{" "}
               <span className="relative inline-block">
-                <span className="relative z-10 text-primary italic font-serif">
+                <span className="relative z-10 text-orange-500 italic font-serif">
                   Literary
                 </span>
                 <motion.svg
@@ -114,7 +114,7 @@ export default function HeroBanner() {
                 >
                   <motion.path
                     d="M2 8C50 2 150 2 198 8"
-                    stroke="var(--color-primary)"
+                    stroke="var(--color-accent)"
                     strokeWidth="4"
                     strokeLinecap="round"
                     initial={{ pathLength: 0 }}
@@ -131,7 +131,7 @@ export default function HeroBanner() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6, duration: 0.7 }}
-              className="text-lg md:text-xl text-ivory/80 leading-relaxed mb-10 max-w-lg"
+              className="text-lg md:text-xl text-gray-300 leading-relaxed mb-10 max-w-lg"
             >
               Explore our curated collection of bestsellers, hidden gems, and
               timeless classics. Every book tells a story worth experiencing.

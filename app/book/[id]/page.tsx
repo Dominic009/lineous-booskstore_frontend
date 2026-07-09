@@ -330,7 +330,7 @@ const BookDetailsPage = () => {
 
                 <Button
                   size="lg"
-                  className="flex-1 active:scale-95 transition-transform py-3 bg-gradient-to-r from-primary via-accent to-primary hover:from-primary-hover hover:via-accent-hover hover:to-primary-hover text-white font-semibold rounded-xl border border-primary/20 shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30"
+                  className="flex-1 active:scale-95 transition-transform py-3 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-xl border border-primary/20 shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30"
                   onClick={handleAddToCart}
                 >
                   <ShoppingCart className="w-5 h-5 mr-2" />

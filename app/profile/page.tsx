@@ -214,7 +214,7 @@ const ProfilePage = () => {
                     {isEditing ? (
                       <Button
                         onClick={handleSave}
-                        className="active:scale-95 transition-transform bg-gradient-to-r from-primary via-accent to-primary hover:from-primary-hover hover:via-accent-hover hover:to-primary-hover text-white border border-primary/20 shadow-lg shadow-primary/20"
+                        className="active:scale-95 transition-transform bg-orange-500 hover:bg-orange-600 text-white border border-primary/20 shadow-lg shadow-primary/20"
                       >
                         <Save className="w-4 h-4 mr-2" />
                         Save Changes
@@ -399,7 +399,7 @@ const ProfilePage = () => {
                     <Button
                       size="sm"
                       onClick={() => openAddressDialog()}
-                        className="active:scale-95 transition-transform bg-gradient-to-r from-primary via-accent to-primary hover:from-primary-hover hover:via-accent-hover hover:to-primary-hover text-white border border-primary/20 shadow-lg shadow-primary/20"
+                        className="active:scale-95 transition-transform bg-orange-500 hover:bg-orange-600 text-white border border-primary/20 shadow-lg shadow-primary/20"
                     >
                       <Plus className="w-4 h-4 mr-2" />
                       Add Address
