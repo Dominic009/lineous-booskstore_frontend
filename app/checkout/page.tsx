@@ -97,9 +97,8 @@ const CheckoutPage = () => {
   });
 
   const shippingCost =
-    shippingMethod === "express" ? 9.99 : totalPrice > 35 ? 0 : 4.99;
-  const tax = totalPrice * 0.08;
-  const finalTotal = totalPrice + shippingCost + tax;
+    shippingMethod === "express" ? 80 : totalPrice > 1500 ? 0 : 40;
+  const finalTotal = totalPrice + shippingCost;
 
   if (items.length === 0) {
     return (
@@ -142,15 +141,16 @@ const CheckoutPage = () => {
         addressId = savedAddress.id;
       }
 
-      await createOrderMutation.mutateAsync({
+      const order = await createOrderMutation.mutateAsync({
         addressId,
+        discount: 0,
         shipping: shippingCost,
         paymentMethod,
         notes: "",
       });
 
       clearCart();
-      router.push("/");
+      router.push(`/orders/success?orderId=${order.id}`);
     } finally {
       setIsProcessing(false);
     }
@@ -223,6 +223,7 @@ const CheckoutPage = () => {
                   {s.label}
                 </span>
                 {i < steps.length - 1 && (
+                  <ChevronRight className="w-4 h-4 mx-2 text-slate-400 flex-shrink-0" />
                   <ChevronRight className="w-4 h-4 mx-2 text-slate-400 flex-shrink-0" />
                 )}
               </div>

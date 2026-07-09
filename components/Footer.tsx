@@ -37,7 +37,7 @@ const Footer = () => {
   return (
     <footer className="bg-slate-900 text-white">
       {/* Newsletter */}
-      <motion.div
+      {/* <motion.div
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
@@ -71,7 +71,7 @@ const Footer = () => {
             </div>
           </div>
         </div>
-      </motion.div>
+      </motion.div> */}
 
       {/* Main Footer */}
       <div className="container mx-auto px-4 lg:px-8 py-8 lg:py-12">
@@ -90,11 +90,7 @@ const Footer = () => {
                 className="w-24 h-24 lg:w-32 lg:h-32 invert"
               />
             </motion.a>
-            <p className="text-white/70 mb-4 lg:mb-6 max-w-sm text-sm lg:text-base">
-              Your destination for exceptional books. Discover stories that
-              inspire, educate, and transform. Premium reading experiences since
-              2020.
-            </p>
+         
             <div className="space-y-2 text-sm text-white/70">
               <div className="flex items-center gap-2">
                 <MapPin className="w-4 h-4 shrink-0" />
@@ -115,7 +111,7 @@ const Footer = () => {
           </div>
 
           {/* Links */}
-          {Object.entries(footerLinks).map(([title, links], index) => (
+          {/* {Object.entries(footerLinks).map(([title, links], index) => (
             <motion.div
               key={title}
               initial={{ opacity: 0, y: 20 }}
@@ -137,7 +133,7 @@ const Footer = () => {
                 ))}
               </ul>
             </motion.div>
-          ))}
+          ))} */}
         </div>
       </div>
 

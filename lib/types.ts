@@ -236,9 +236,9 @@ export interface Address {
 // Order Item
 export interface OrderItem {
   id: string;
-  orderId: string;
-  bookId: string;
-  paperId: string | null;
+  orderId?: string;
+  bookId?: string | null;
+  paperId?: string | null;
   bookTitle: string;
   paperName: string | null;
   paperPrice: string | number;
@@ -254,28 +254,54 @@ export interface Payment {
   gateway: "COD" | "CARD" | "BANK_TRANSFER" | "MOBILE_BANKING";
   amount: number;
   currency: string;
-  status: "PENDING" | "COMPLETED" | "FAILED";
+  status: "PENDING" | "COMPLETED" | "FAILED" | "REFUNDED";
   createdAt: string;
 }
 
 // Order
 export interface Order {
   id: string;
-  userId: string;
-  addressId: string;
+  userId?: string;
+  addressId?: string;
   orderNumber: string;
   subtotal: string | number;
   discount: string | number;
   shipping: string | number;
   total: string | number;
-  status: "PENDING" | "CONFIRMED" | "SHIPPED" | "DELIVERED" | "CANCELLED";
-  paymentStatus: "PENDING" | "PAID" | "FAILED";
+  status: "PENDING" | "CONFIRMED" | "PROCESSING" | "SHIPPED" | "DELIVERED" | "CANCELLED" | "RETURNED";
+  paymentStatus: "PENDING" | "COMPLETED" | "FAILED" | "REFUNDED";
   paymentMethod: "COD" | "CARD" | "BANK_TRANSFER" | "MOBILE_BANKING";
-  notes: string;
+  notes?: string;
   createdAt: string;
-  updatedAt: string;
+  updatedAt?: string;
   orderItems: OrderItem[];
   payments: Payment[];
+  address?: OrderAddress;
+}
+
+// Order Address (nested in order detail response)
+export interface OrderAddress {
+  id: string;
+  name: string;
+  phone: string;
+  district: string;
+  addressLine: string;
+}
+
+// Receipt (returned by verify endpoint)
+export interface Receipt {
+  id: string;
+  orderId: string;
+  receiptNumber: string;
+  pdfUrl: string;
+  qrCodeUrl: string;
+  generatedAt: string;
+  order: {
+    orderNumber: string;
+    total: string | number;
+    status: string;
+    orderItems: OrderItem[];
+  };
 }
 
 // Setting

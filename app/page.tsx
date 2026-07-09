@@ -15,7 +15,7 @@ const HomePage = () => {
         <NewReleases />
         <Featured />
         <WhyChooseUs />
-        <DealOfTheDay />
+        {/* <DealOfTheDay /> */}
         <SiteStats />
         <PopularBooks />
         <CommunityCTA />
