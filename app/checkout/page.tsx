@@ -224,7 +224,6 @@ const CheckoutPage = () => {
                 </span>
                 {i < steps.length - 1 && (
                   <ChevronRight className="w-4 h-4 mx-2 text-slate-400 flex-shrink-0" />
-                  <ChevronRight className="w-4 h-4 mx-2 text-slate-400 flex-shrink-0" />
                 )}
               </div>
             ))}
@@ -621,10 +620,10 @@ const CheckoutPage = () => {
                       {shippingCost === 0 ? "Free" : `৳${shippingCost}`}
                     </span>
                   </div>
-                  <div className="flex justify-between">
+                  {/* <div className="flex justify-between">
                     <span className="text-muted-foreground">Tax</span>
                     <span className="font-medium text-foreground">৳{tax.toFixed(2)}</span>
-                  </div>
+                  </div> */}
                   <div className="flex justify-between text-lg font-bold">
                     <span className="text-foreground">Total</span>
                     <span className="text-primary">
