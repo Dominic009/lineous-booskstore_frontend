@@ -330,7 +330,7 @@ const BookDetailsPage = () => {
 
                 <Button
                   size="lg"
-                  className="flex-1 active:scale-95 transition-transform py-3 bg-gradient-to-r from-violet-600 via-indigo-600 to-violet-600 hover:from-violet-500 hover:via-indigo-500 hover:to-violet-500 text-white font-semibold rounded-xl border border-violet-500/20 shadow-lg shadow-violet-100 hover:shadow-xl hover:shadow-violet-200"
+                  className="flex-1 active:scale-95 transition-transform py-3 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-xl border border-violet-500/20 shadow-lg shadow-violet-100 hover:shadow-xl hover:shadow-violet-200"
                   onClick={handleAddToCart}
                 >
                   <ShoppingCart className="w-5 h-5 mr-2" />

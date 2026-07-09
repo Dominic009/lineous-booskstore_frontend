@@ -146,9 +146,12 @@ function OrderSuccessContent() {
             className="flex flex-col sm:flex-row gap-3"
           >
             <Button
-              onClick={() => orderId && downloadReceipt(orderId)}
+              onClick={() =>
+                orderId &&
+                downloadReceipt({ orderId, orderNumber: order?.orderNumber })
+              }
               disabled={isDownloading || !orderId}
-              className="flex-1 active:scale-95 transition-transform bg-gradient-to-r from-violet-600 via-indigo-600 to-violet-600 hover:from-violet-500 hover:via-indigo-500 hover:to-violet-500 text-white border border-violet-500/20 shadow-lg shadow-violet-100"
+              className="flex-1 active:scale-95 transition-transform bg-orange-500 hover:bg-orange-600 text-white border border-orange-500/20 shadow-lg shadow-orange-100"
             >
               <Download className="w-4 h-4 mr-2" />
               {isDownloading ? "Preparing..." : "Download Receipt"}

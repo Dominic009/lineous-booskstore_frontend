@@ -104,7 +104,7 @@ const BookCard = ({ book, delay = 0 }: BookCardProps) => {
           <span className="text-lg font-bold text-violet-700">{priceDisplay}</span>
           <Button
             size="sm"
-            className="h-8 w-8 p-0 rounded-lg bg-violet-600 hover:bg-violet-700 text-white shadow-md shadow-violet-200 transition-all duration-300 active:scale-95"
+            className="h-8 w-8 p-0 rounded-lg bg-orange-500 hover:bg-orange-600 text-white shadow-md shadow-violet-200 transition-all duration-300 active:scale-95"
             onClick={handleAddToCart}
           >
             <ShoppingCart className="w-4 h-4" />

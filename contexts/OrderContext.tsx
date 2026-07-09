@@ -9,7 +9,7 @@ interface OrderContextType {
   isLoading: boolean;
   createOrder: (data: { addressId: string; discount?: number; shipping?: number; paymentMethod?: string; notes?: string }) => void;
   isCreating: boolean;
-  downloadReceipt: (orderId: string) => void;
+  downloadReceipt: (orderId: string, orderNumber?: string) => void;
   isDownloading: boolean;
 }
 
@@ -24,8 +24,8 @@ export const OrderProvider = ({ children }: { children: ReactNode }) => {
     createOrderMutate(data);
   };
 
-  const downloadReceipt = (orderId: string) => {
-    downloadReceiptMutate(orderId);
+  const downloadReceipt = (orderId: string, orderNumber?: string) => {
+    downloadReceiptMutate({ orderId, orderNumber });
   };
 
   return (

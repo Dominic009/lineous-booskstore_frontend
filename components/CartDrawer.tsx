@@ -236,7 +236,7 @@ const CartDrawer = () => {
                     </p>
                     <div className="space-y-3">
                       <Button
-                        className="w-full active:scale-95 transition-transform bg-gradient-to-r from-violet-600 via-indigo-600 to-violet-600 hover:from-violet-500 hover:via-indigo-500 hover:to-violet-500 text-white font-semibold rounded-xl border border-violet-500/20 shadow-lg shadow-violet-100 hover:shadow-xl hover:shadow-violet-200"
+                        className="w-full active:scale-95 transition-transform bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-xl border border-orange-500/20 shadow-lg shadow-orange-100 hover:shadow-xl hover:shadow-orange-200"
                         size="lg"
                         asChild
                         onClick={() => setIsCartOpen(false)}

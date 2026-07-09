@@ -120,7 +120,7 @@ const OrderDetailPage = () => {
             <Button
               onClick={() => router.push("/orders")}
               size="lg"
-              className="active:scale-95 transition-transform bg-gradient-to-r from-violet-600 via-indigo-600 to-violet-600 hover:from-violet-500 hover:via-indigo-500 hover:to-violet-500 text-white border border-violet-500/20 shadow-lg shadow-violet-100"
+              className="active:scale-95 transition-transform bg-orange-500 hover:bg-orange-600 text-white border border-orange-500/20 shadow-lg shadow-orange-100"
             >
               <ShoppingBag className="w-5 h-5 mr-2" />
               Back to Orders
@@ -164,9 +164,9 @@ const OrderDetailPage = () => {
                 </div>
               </div>
               <Button
-                onClick={() => downloadReceipt(order.id)}
+                onClick={() => downloadReceipt(order.id, order.orderNumber)}
                 disabled={isDownloading}
-                className="active:scale-95 transition-transform bg-gradient-to-r from-violet-600 via-indigo-600 to-violet-600 hover:from-violet-500 hover:via-indigo-500 hover:to-violet-500 text-white border border-violet-500/20 shadow-lg shadow-violet-100"
+                className="active:scale-95 transition-transform bg-orange-500 hover:bg-orange-600 text-white border border-orange-500/20 shadow-lg shadow-orange-100"
               >
                 <Download className="w-4 h-4 mr-2" />
                 {isDownloading ? "Preparing..." : "Download Receipt"}

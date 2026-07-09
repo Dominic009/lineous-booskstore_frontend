@@ -68,8 +68,12 @@ export const useVerifyReceipt = (receiptNumber: string) => {
 // PDF bytes; we turn that into a client-side download so no second (token-less)
 // browser navigation is made.
 export const useDownloadReceipt = () => {
-  return useMutation<void, ApiError, string>({
-    mutationFn: async (orderId: string) => {
+  return useMutation<
+    void,
+    ApiError,
+    { orderId: string; orderNumber?: string }
+  >({
+    mutationFn: async ({ orderId, orderNumber }) => {
       const token = getToken();
       const response = await fetch(`${BASE_URL}/orders/${orderId}/receipt`, {
         method: "GET",
@@ -88,9 +92,10 @@ export const useDownloadReceipt = () => {
 
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
+      const baseName = (orderNumber || orderId).replace(/^ORD-/, "");
       const a = document.createElement("a");
       a.href = url;
-      a.download = `receipt-${orderId}.pdf`;
+      a.download = `CLC-ORD-${baseName}.pdf`;
       document.body.appendChild(a);
       a.click();
       a.remove();
