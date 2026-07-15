@@ -65,7 +65,7 @@ export default function HeroBanner() {
         transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
       />
       <motion.div
-        className="absolute bottom-0 left-[10%] w-100 h-[400px] rounded-full bg-accent/20 blur-[80px] z-0"
+        className="absolute bottom-0 left-[10%] w-100 h-100 rounded-full bg-accent/20 blur-[80px] z-0"
         animate={{ scale: [1, 1.15, 1], y: [0, -20, 0] }}
         transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
       />
@@ -169,7 +169,7 @@ export default function HeroBanner() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5, duration: 1 }}
-            className="relative hidden lg:block h-[600px]"
+            className="relative hidden lg:block h-150"
           >
             {/* Main featured book */}
             <motion.div
@@ -203,7 +203,7 @@ export default function HeroBanner() {
                 alt="Featured book"
                 className="w-full h-full object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-charcoal/60 to-transparent" />
+              <div className="absolute inset-0 bg-linear-to-t from-charcoal/60 to-transparent" />
               <div className="absolute bottom-6 left-6 right-6">
                 <div className="flex items-center gap-1 text-primary mb-2">
                   {[...Array(5)].map((_, i) => (
@@ -242,12 +242,12 @@ export default function HeroBanner() {
 
             {/* Decorative rings */}
             <motion.div
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] rounded-full border-2 border-primary/20 z-0"
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-100 h-100 rounded-full border-2 border-primary/20 z-0"
               animate={{ rotate: 360 }}
               transition={{ duration: 70, repeat: Infinity, ease: "linear" }}
             />
             <motion.div
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[320px] h-[320px] rounded-full border-2 border-dashed border-primary/15 z-0"
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[320px] h-80 rounded-full border-2 border-dashed border-primary/15 z-0"
               animate={{ rotate: -360 }}
               transition={{ duration: 50, repeat: Infinity, ease: "linear" }}
             />
