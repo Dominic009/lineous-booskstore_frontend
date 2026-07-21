@@ -96,9 +96,6 @@ const CheckoutPage = () => {
     phone: user?.phone || "",
   });
 
-  const shippingCost =
-    shippingMethod === "express" ? 80 : totalPrice > 1500 ? 0 : 40;
-  const finalTotal = totalPrice + shippingCost;
 
   if (items.length === 0) {
     return (
@@ -144,7 +141,6 @@ const CheckoutPage = () => {
       const order = await createOrderMutation.mutateAsync({
         addressId,
         discount: 0,
-        shipping: shippingCost,
         paymentMethod,
         notes: "",
       });
@@ -420,7 +416,7 @@ const CheckoutPage = () => {
                         </div>
                       </div>
                       <span className="font-semibold text-primary">
-                        {totalPrice > 35 ? "Free" : "৳4.99"}
+                        Delivery charge will depend on your location
                       </span>
                     </label>
                     <label className="flex items-center justify-between p-4 border rounded-xl cursor-pointer hover:border-primary/40 transition-colors bg-card border-border">
@@ -433,7 +429,9 @@ const CheckoutPage = () => {
                           </p>
                         </div>
                       </div>
-                      <span className="font-semibold text-primary">৳9.99</span>
+                      <span className="font-semibold text-primary">
+                        Delivery charge will depend on your location
+                      </span>
                     </label>
                   </RadioGroup>
 
@@ -560,9 +558,7 @@ const CheckoutPage = () => {
                       onClick={handleSubmit}
                       disabled={isSubmitting}
                     >
-                      {isSubmitting
-                        ? "Processing..."
-                        : `Place Order - ৳${finalTotal}`}
+                      {isSubmitting ? "Processing..." : "Place Order"}
                     </Button>
                   </div>
                 </div>
@@ -617,7 +613,7 @@ const CheckoutPage = () => {
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Shipping</span>
                     <span className="font-medium text-foreground">
-                      {shippingCost === 0 ? "Free" : `৳${shippingCost}`}
+                      Delivery charge will depend on your location
                     </span>
                   </div>
                   {/* <div className="flex justify-between">
@@ -627,7 +623,7 @@ const CheckoutPage = () => {
                   <div className="flex justify-between text-lg font-bold">
                     <span className="text-foreground">Total</span>
                     <span className="text-primary">
-                      ৳{finalTotal.toFixed(2)}
+                      ৳{totalPrice.toFixed(2)}
                     </span>
                   </div>
                 </div>

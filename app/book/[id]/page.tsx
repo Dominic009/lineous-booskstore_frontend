@@ -139,7 +139,7 @@ const BookDetailsPage = () => {
   };
 
   const features = [
-    { icon: Truck, text: "Free shipping over ৳35" },
+    { icon: Truck, text: "Delivery charge will depend on your location" },
     { icon: Shield, text: "Secure payment" },
     { icon: RotateCcw, text: "30-day returns" },
   ];
