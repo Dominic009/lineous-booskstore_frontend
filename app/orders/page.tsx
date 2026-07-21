@@ -131,13 +131,13 @@ function OrderAccordionItem({
               >
                 {order.status}
               </span>
-              <span
+              {/* <span
                 className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border ${getPaymentColor(
                   order.paymentStatus
                 )}`}
               >
                 {order.paymentStatus}
-              </span>
+              </span> */}
             </div>
           </div>
         </div>
@@ -200,7 +200,7 @@ function OrderAccordionItem({
                 <Truck className="w-4 h-4 text-slate-400" />
                 <span className="text-slate-500">Shipping:</span>
                 <span className="font-medium text-slate-900">
-                  ৳{parsePrice(order.shipping).toFixed(2)}
+                  {parsePrice(order.shipping).toFixed(2) === "0.00" ? "Yet to confirm" : `৳${parsePrice(order.shipping).toFixed(2)}`}
                 </span>
               </div>
               <div className="h-px bg-slate-200 my-2" />
@@ -215,7 +215,22 @@ function OrderAccordionItem({
           <div className="h-px bg-slate-200 my-6" />
 
           {/* Actions */}
-          <div className="flex flex-wrap items-center gap-3">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+           
+            <button
+              type="button"
+              onClick={() => downloadReceipt(order.id, order.orderNumber)}
+              disabled={isDownloading || order.status === "PENDING"}
+              title={order.status === "PENDING" ? "Receipt will be available after confirmation" : ""}
+              className="inline-flex items-center gap-2 text-sm font-medium cursor-pointer hover:bg-orange-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed group px-3 py-1 border rounded-md border-orange-600"
+            >
+              <Download className="w-4 h-4 text-orange-500 group-hover:text-white" />
+              {order.status === "PENDING"
+                ? "Receipt Pending"
+                : isDownloading
+                  ? "Preparing..."
+                  :  <span className="text-orange-500 group-hover:text-white">Download Receipt</span>}
+            </button>
             <Link
               href={`/orders/${order.id}`}
               className="inline-flex items-center gap-2 text-sm font-medium text-violet-700 hover:text-violet-800 transition-colors"
@@ -223,15 +238,6 @@ function OrderAccordionItem({
               <Eye className="w-4 h-4" />
               View Details
             </Link>
-            <button
-              type="button"
-              onClick={() => downloadReceipt(order.id, order.orderNumber)}
-              disabled={isDownloading}
-              className="inline-flex items-center gap-2 text-sm font-medium text-slate-600 hover:text-violet-700 transition-colors disabled:opacity-50"
-            >
-              <Download className="w-4 h-4" />
-              {isDownloading ? "Preparing..." : "Download Receipt"}
-            </button>
           </div>
         </div>
       </AccordionContent>

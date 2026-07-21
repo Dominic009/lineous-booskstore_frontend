@@ -199,7 +199,7 @@ const CheckoutPage = () => {
                 <div
                   className={`flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-full font-semibold text-sm transition-all duration-300 ${
                     step >= s.number
-                      ? "bg-primary text-white shadow-lg shadow-primary/20 border border-primary/20"
+                      ? "bg-accent text-white shadow-lg shadow-primary/20 border border-primary/20"
                       : "bg-muted text-muted-foreground border border-border"
                   }`}
                 >
@@ -411,7 +411,7 @@ const CheckoutPage = () => {
                         <div>
                           <p className="font-medium text-foreground">Standard Shipping</p>
                           <p className="text-sm text-muted-foreground">
-                            5-7 business days
+                            2-3 business days
                           </p>
                         </div>
                       </div>
@@ -419,7 +419,7 @@ const CheckoutPage = () => {
                         Delivery charge will depend on your location
                       </span>
                     </label>
-                    <label className="flex items-center justify-between p-4 border rounded-xl cursor-pointer hover:border-primary/40 transition-colors bg-card border-border">
+                    {/* <label className="flex items-center justify-between p-4 border rounded-xl cursor-pointer hover:border-primary/40 transition-colors bg-card border-border">
                       <div className="flex items-center gap-3">
                         <RadioGroupItem value="express" className="border-border text-primary" />
                         <div>
@@ -432,11 +432,11 @@ const CheckoutPage = () => {
                       <span className="font-semibold text-primary">
                         Delivery charge will depend on your location
                       </span>
-                    </label>
+                    </label> */}
                   </RadioGroup>
 
                   <Button
-                    className="w-full mt-6 active:scale-95 transition-transform bg-gradient-to-r from-primary via-primary-hover to-primary hover:from-primary-hover hover:to-primary-hover text-white font-semibold rounded-xl border border-primary/20 shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30"
+                    className="w-full mt-6 active:scale-95 transition-transform bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-xl border border-primary/20 shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 cursor-pointer "
                     onClick={() => setStep(2)}
                   >
                     Continue to Payment
@@ -474,7 +474,7 @@ const CheckoutPage = () => {
                       Back
                     </Button>
                     <Button
-                      className="flex-1 active:scale-95 transition-transform bg-gradient-to-r from-primary via-primary-hover to-primary hover:from-primary-hover hover:to-primary-hover text-white font-semibold rounded-xl border border-primary/20 shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30"
+                      className="flex-1 active:scale-95 transition-transform bg-orange-500 hover:bg-orange-600 cursor-pointer text-white font-semibold rounded-xl border border-primary/20 shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30"
                       onClick={() => setStep(3)}
                     >
                       Review Order
@@ -554,7 +554,7 @@ const CheckoutPage = () => {
                       Back
                     </Button>
                     <Button
-                      className="flex-1 active:scale-95 transition-transform bg-gradient-to-r from-primary via-primary-hover to-primary hover:from-primary-hover hover:to-primary-hover text-white font-semibold rounded-xl border border-primary/20 shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30"
+                      className="flex-1 active:scale-95 transition-transform bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-xl border border-primary/20 shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 cursor-pointer"
                       onClick={handleSubmit}
                       disabled={isSubmitting}
                     >

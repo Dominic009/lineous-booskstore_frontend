@@ -277,6 +277,7 @@ export interface Order {
   orderItems: OrderItem[];
   payments: Payment[];
   address?: OrderAddress;
+  receipt?: Receipt;
 }
 
 // Order Address (nested in order detail response)

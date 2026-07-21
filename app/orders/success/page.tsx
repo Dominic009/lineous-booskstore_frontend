@@ -72,8 +72,9 @@ function OrderSuccessContent() {
               Order Placed Successfully!
             </h1>
             <p className="text-slate-500 mt-2">
-              Thank you for your purchase. A receipt has been generated for your
-              order.
+              {order?.status === "PENDING"
+                ? "Your order is pending confirmation. A receipt will be generated once the admin confirms your order."
+                : "Thank you for your purchase. Your receipt is ready below."}
             </p>
           </motion.div>
 
@@ -100,43 +101,60 @@ function OrderSuccessContent() {
             </motion.div>
           )}
 
-          {/* Receipt Preview */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.15 }}
-            className="bg-white rounded-2xl border border-slate-200 overflow-hidden mb-6"
-          >
-            <div className="p-6">
-              <h2 className="font-display text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
-                <FileText className="w-5 h-5 text-violet-600" />
-                Receipt Preview
-              </h2>
+          {/* Receipt Preview - only for confirmed orders */}
+          {order?.status !== "PENDING" && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.15 }}
+              className="bg-white rounded-2xl border border-slate-200 overflow-hidden mb-6"
+            >
+              <div className="p-6">
+                <h2 className="font-display text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+                  <FileText className="w-5 h-5 text-violet-600" />
+                  Receipt Preview
+                </h2>
 
-              {receiptLoading && (
-                <div className="w-full h-[500px] bg-slate-100 rounded-lg animate-pulse" />
-              )}
+                {receiptLoading && (
+                  <div className="w-full h-[500px] bg-slate-100 rounded-lg animate-pulse" />
+                )}
 
-              {receiptError && !receiptLoading && (
-                <div className="w-full h-[200px] flex flex-col items-center justify-center text-center bg-slate-50 rounded-lg">
-                  <p className="text-slate-500 mb-1">
-                    {(receiptError as Error).message}
-                  </p>
-                  <p className="text-sm text-slate-400">
-                    You can still download the receipt using the button below.
-                  </p>
-                </div>
-              )}
+                {receiptError && !receiptLoading && (
+                  <div className="w-full h-[200px] flex flex-col items-center justify-center text-center bg-slate-50 rounded-lg">
+                    <p className="text-slate-500 mb-1">
+                      {(receiptError as Error).message}
+                    </p>
+                    <p className="text-sm text-slate-400">
+                      You can still download the receipt using the button below.
+                    </p>
+                  </div>
+                )}
 
-              {receiptUrl && !receiptLoading && (
-                <iframe
-                  src={receiptUrl}
-                  title="Receipt Preview"
-                  className="w-full h-[500px] rounded-lg border border-slate-200 bg-white"
-                />
-              )}
-            </div>
-          </motion.div>
+                {receiptUrl && !receiptLoading && (
+                  <iframe
+                    src={receiptUrl}
+                    title="Receipt Preview"
+                    className="w-full h-[500px] rounded-lg border border-slate-200 bg-white"
+                  />
+                )}
+              </div>
+            </motion.div>
+          )}
+
+          {order?.status === "PENDING" && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.15 }}
+              className="bg-amber-50 rounded-2xl border border-amber-200 overflow-hidden mb-6"
+            >
+              <div className="p-6 text-center">
+                <p className="text-amber-800 font-medium">
+                  Your order is awaiting confirmation. The receipt will be available once an admin confirms your order.
+                </p>
+              </div>
+            </motion.div>
+          )}
 
           {/* Actions */}
           <motion.div
@@ -150,11 +168,15 @@ function OrderSuccessContent() {
                 orderId &&
                 downloadReceipt({ orderId, orderNumber: order?.orderNumber })
               }
-              disabled={isDownloading || !orderId}
-              className="flex-1 active:scale-95 transition-transform bg-orange-500 hover:bg-orange-600 text-white border border-orange-500/20 shadow-lg shadow-orange-100"
+              disabled={isDownloading || !orderId || order?.status === "PENDING"}
+              className="flex-1 active:scale-95 transition-transform bg-orange-500 hover:bg-orange-600 text-white border border-orange-500/20 shadow-lg shadow-orange-100 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Download className="w-4 h-4 mr-2" />
-              {isDownloading ? "Preparing..." : "Download Receipt"}
+              {order?.status === "PENDING"
+                ? "Receipt Not Available"
+                : isDownloading
+                  ? "Preparing..."
+                  : "Download Receipt"}
             </Button>
             <Link href="/orders" className="flex-1">
               <Button

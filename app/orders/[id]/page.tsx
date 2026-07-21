@@ -165,11 +165,15 @@ const OrderDetailPage = () => {
               </div>
               <Button
                 onClick={() => downloadReceipt(order.id, order.orderNumber)}
-                disabled={isDownloading}
-                className="active:scale-95 transition-transform bg-orange-500 hover:bg-orange-600 text-white border border-orange-500/20 shadow-lg shadow-orange-100"
+                disabled={isDownloading || order.status === "PENDING"}
+                className="active:scale-95 transition-transform bg-orange-500 hover:bg-orange-600 text-white border border-orange-500/20 shadow-lg shadow-orange-100 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <Download className="w-4 h-4 mr-2" />
-                {isDownloading ? "Preparing..." : "Download Receipt"}
+                {order.status === "PENDING"
+                  ? "Receipt Not Available"
+                  : isDownloading
+                    ? "Preparing..."
+                    : "Download Receipt"}
               </Button>
             </div>
           </motion.div>
@@ -198,6 +202,11 @@ const OrderDetailPage = () => {
                   >
                     Payment: {order.paymentStatus}
                   </span>
+                  {order.status === "PENDING" && (
+                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border bg-amber-100 text-amber-800 border-amber-200">
+                      Awaiting Confirmation
+                    </span>
+                  )}
                 </div>
               </motion.div>
 

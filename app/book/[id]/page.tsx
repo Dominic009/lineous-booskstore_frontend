@@ -293,7 +293,10 @@ const BookDetailsPage = () => {
                   </h3>
                   <Select
                     value={selectedPaperId || ""}
-                    onValueChange={setSelectedPaperId}
+                    onValueChange={(value) => {
+                      setSelectedPaperId(value);
+                      setQuantity(1);
+                    }}
                   >
                     <SelectTrigger className="w-full bg-white border-slate-200 focus:ring-primary/20">
                       <SelectValue placeholder="Choose a format" />
