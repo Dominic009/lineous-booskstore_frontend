@@ -26,45 +26,15 @@ import { useAuth } from "../../contexts/AuthContext";
 import { useCreateOrder } from "../../hooks/use-orders";
 import { useAddresses } from "../../hooks/use-addresses";
 import { AddressFormDialog } from "@/components/AddressFormDialog";
-import { BookPaper, Address } from "../../lib/types";
+import { Address } from "../../lib/types";
 import { toast } from "sonner";
-
-// Helper to calculate effective price from paper
-function getEffectivePrice(paper: BookPaper | null): number {
-  if (!paper) return 0;
-
-  // If effectivePrice is provided, use it
-  if (paper.effectivePrice !== undefined) {
-    return paper.effectivePrice;
-  }
-
-  // Calculate from price and discount
-  const price =
-    typeof paper.price === "string" ? parseFloat(paper.price) : paper.price;
-  const discountPrice = paper.discountPrice
-    ? typeof paper.discountPrice === "string"
-      ? parseFloat(paper.discountPrice)
-      : paper.discountPrice
-    : null;
-
-  // Check if discount is active
-  if (discountPrice && paper.discountStartDate && paper.discountEndDate) {
-    const now = new Date();
-    const startDate = new Date(paper.discountStartDate);
-    const endDate = new Date(paper.discountEndDate);
-    if (now >= startDate && now <= endDate) {
-      return discountPrice;
-    }
-  }
-
-  return price;
-}
+import { getEffectivePrice } from "@/lib/price-utils";
 
 const CheckoutPage = () => {
-  const { items, totalPrice, clearCart } = useCartContext();
+  const { items, totalPrice, clearCart, isLoading: cartLoading } = useCartContext();
   const { user } = useAuth();
   const createOrderMutation = useCreateOrder();
-  const { data: addresses = [], isLoading: addressesLoading } = useAddresses();
+  const { data: addresses = [], isLoading: addressesLoading } = useAddresses(user?.id);
   const router = useRouter();
 
   const [step, setStep] = useState(1);
@@ -84,7 +54,7 @@ const CheckoutPage = () => {
   const selectedAddress = addresses.find((a) => a.id === selectedAddressId) || newlyCreatedAddress;
 
 
-  if (items.length === 0) {
+  if (items.length === 0 && !cartLoading) {
     return (
       <div className="relative min-h-screen bg-background overflow-hidden">
         <Navbar />

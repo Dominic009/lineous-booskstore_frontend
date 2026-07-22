@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, ReactNode } from "react";
 import { useWishlist, useAddToWishlist, useRemoveFromWishlist } from "@/hooks/use-wishlist";
+import { useAuth } from "@/contexts/AuthContext";
 import { WishlistItem } from "@/lib/types";
 
 interface WishlistContextType {
@@ -16,7 +17,8 @@ interface WishlistContextType {
 const WishlistContext = createContext<WishlistContextType | undefined>(undefined);
 
 export const WishlistProvider = ({ children }: { children: ReactNode }) => {
-  const { data: items = [], isLoading } = useWishlist();
+  const { user } = useAuth();
+  const { data: items = [], isLoading } = useWishlist(user?.id);
   const { mutate: addToWishlist, isPending: isAdding } = useAddToWishlist();
   const { mutate: removeFromWishlist, isPending: isRemoving } = useRemoveFromWishlist();
 

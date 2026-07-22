@@ -29,6 +29,7 @@ export const useSocialLogin = () => {
     },
     onSuccess: (data) => {
       setToken(data.accessToken);
+      queryClient.clear();
       queryClient.setQueryData(["user"], data.user);
     },
   });

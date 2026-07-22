@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, ReactNode } from "react";
 import { useAddresses, useCreateAddress, useUpdateAddress, useDeleteAddress } from "@/hooks/use-addresses";
+import { useAuth } from "@/contexts/AuthContext";
 import { Address } from "@/lib/types";
 
 interface AddressContextType {
@@ -18,7 +19,8 @@ interface AddressContextType {
 const AddressContext = createContext<AddressContextType | undefined>(undefined);
 
 export const AddressProvider = ({ children }: { children: ReactNode }) => {
-  const { data: addresses = [], isLoading } = useAddresses();
+  const { user } = useAuth();
+  const { data: addresses = [], isLoading } = useAddresses(user?.id);
   const { mutate: createAddressMutate, isPending: isCreating } = useCreateAddress();
   const { mutate: updateAddressMutate, isPending: isUpdating } = useUpdateAddress();
   const { mutate: deleteAddressMutate, isPending: isDeleting } = useDeleteAddress();

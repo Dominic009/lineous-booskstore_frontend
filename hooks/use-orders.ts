@@ -6,9 +6,9 @@ import { apiClient, ApiError, getToken, BASE_URL } from "@/lib/api-client";
 import { Order, Receipt } from "@/lib/types";
 
 // Get all orders
-export const useOrders = () => {
+export const useOrders = (userId?: string) => {
   return useQuery<Order[], Error>({
-    queryKey: ["orders"],
+    queryKey: ["orders", userId],
     queryFn: async () => {
       const response = await apiClient.get<Order[]>("/orders");
       return response.data;

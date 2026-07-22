@@ -3,6 +3,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiClient, setToken, removeToken } from "@/lib/api-client";
 import { AuthResponse, AuthUser } from "@/lib/types";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface LoginCredentials {
   email: string;
@@ -44,18 +45,11 @@ export const useRegister = () => {
   });
 };
 
-export const useLogout = () => {
-  const queryClient = useQueryClient();
-
-  return () => {
-    removeToken();
-    queryClient.clear();
-  };
-};
-
 export const useCurrentUser = () => {
+  const { user } = useAuth();
+
   return {
-    data: null as AuthUser | null,
+    data: user as AuthUser | null,
     isLoading: false,
   };
 };

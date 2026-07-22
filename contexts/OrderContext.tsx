@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, ReactNode } from "react";
 import { useOrders, useCreateOrder, useDownloadReceipt } from "@/hooks/use-orders";
+import { useAuth } from "@/contexts/AuthContext";
 import { Order } from "@/lib/types";
 
 interface OrderContextType {
@@ -16,7 +17,8 @@ interface OrderContextType {
 const OrderContext = createContext<OrderContextType | undefined>(undefined);
 
 export const OrderProvider = ({ children }: { children: ReactNode }) => {
-  const { data: orders = [], isLoading } = useOrders();
+  const { user } = useAuth();
+  const { data: orders = [], isLoading } = useOrders(user?.id);
   const { mutate: createOrderMutate, isPending: isCreating } = useCreateOrder();
   const { mutate: downloadReceiptMutate, isPending: isDownloading } = useDownloadReceipt();
 

@@ -6,9 +6,9 @@ import { apiClient, ApiError } from "@/lib/api-client";
 import { Address } from "@/lib/types";
 
 // Get all addresses
-export const useAddresses = () => {
+export const useAddresses = (userId?: string) => {
   return useQuery<Address[], Error>({
-    queryKey: ["addresses"],
+    queryKey: ["addresses", userId],
     queryFn: async () => {
       const response = await apiClient.get<Address[]>("/addresses");
       return response.data;

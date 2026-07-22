@@ -6,9 +6,9 @@ import { apiClient, ApiError } from "@/lib/api-client";
 import { WishlistItem } from "@/lib/types";
 
 // Get wishlist
-export const useWishlist = () => {
+export const useWishlist = (userId?: string) => {
   return useQuery<WishlistItem[], Error>({
-    queryKey: ["wishlist"],
+    queryKey: ["wishlist", userId],
     queryFn: async () => {
       const response = await apiClient.get<WishlistItem[]>("/wishlist");
       return response.data;

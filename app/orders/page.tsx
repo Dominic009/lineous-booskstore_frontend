@@ -246,16 +246,15 @@ function OrderAccordionItem({
 }
 
 const OrdersPage = () => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, mounted, user } = useAuth();
   const router = useRouter();
-  const { data: orders = [], isLoading } = useOrders();
+  const { data: orders = [], isLoading } = useOrders(user?.id);
   const { downloadReceipt, isDownloading } = useOrderContext();
   const [filters, setFilters] = useState<OrderFilterState>(
     DEFAULT_ORDER_FILTERS
   );
 
-  if (!isAuthenticated) {
-    router.push("/login");
+  if (!mounted || !isAuthenticated) {
     return null;
   }
 
