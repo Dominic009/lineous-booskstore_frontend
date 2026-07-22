@@ -11,25 +11,23 @@ import {
   Lock,
   Check,
   ChevronRight,
+  MapPin,
+  Plus,
 } from "lucide-react";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
 import { Label } from "../../components/ui/label";
 import { RadioGroup, RadioGroupItem } from "../../components/ui/radio-group";
 import { Separator } from "../../components/ui/separator";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../../components/ui/select";
+
 import Navbar from "../../components/Navbar";
 import { useCartContext } from "../../contexts/CartContext";
 import { useAuth } from "../../contexts/AuthContext";
 import { useCreateOrder } from "../../hooks/use-orders";
-import { useAddresses, useCreateAddress } from "../../hooks/use-addresses";
-import { BookPaper } from "../../lib/types";
+import { useAddresses } from "../../hooks/use-addresses";
+import { AddressFormDialog } from "@/components/AddressFormDialog";
+import { BookPaper, Address } from "../../lib/types";
+import { toast } from "sonner";
 
 // Helper to calculate effective price from paper
 function getEffectivePrice(paper: BookPaper | null): number {
@@ -66,35 +64,24 @@ const CheckoutPage = () => {
   const { items, totalPrice, clearCart } = useCartContext();
   const { user } = useAuth();
   const createOrderMutation = useCreateOrder();
-  const { data: addresses = [] } = useAddresses();
-  const createAddressMutation = useCreateAddress();
+  const { data: addresses = [], isLoading: addressesLoading } = useAddresses();
   const router = useRouter();
 
   const [step, setStep] = useState(1);
   const [shippingMethod, setShippingMethod] = useState("standard");
   const [paymentMethod, setPaymentMethod] = useState("COD");
   const [isProcessing, setIsProcessing] = useState(false);
-  const [addressMode, setAddressMode] = useState<"existing" | "new">("new");
   const [selectedAddressId, setSelectedAddressId] = useState("");
+  const [isAddressDialogOpen, setIsAddressDialogOpen] = useState(false);
+  const [newlyCreatedAddress, setNewlyCreatedAddress] = useState<Address | null>(null);
 
   useEffect(() => {
-    if (addresses.length > 0) {
-      setAddressMode("existing");
+    if (addresses.length > 0 && !selectedAddressId) {
       setSelectedAddressId(addresses[0].id);
     }
-  }, [addresses]);
+  }, [addresses, selectedAddressId]);
 
-  const [formData, setFormData] = useState({
-    firstName: user?.name?.split(" ")[0] || "",
-    lastName: user?.name?.split(" ").slice(1).join(" ") || "",
-    addressLine: user?.address || "",
-    area: user?.city || "",
-    division: "",
-    district: "",
-    postalCode: "",
-    country: user?.country || "",
-    phone: user?.phone || "",
-  });
+  const selectedAddress = addresses.find((a) => a.id === selectedAddressId) || newlyCreatedAddress;
 
 
   if (items.length === 0) {
@@ -118,28 +105,13 @@ const CheckoutPage = () => {
     setIsProcessing(true);
 
     try {
-      let addressId = selectedAddressId;
-
-      if (addressMode === "new" || !addressId) {
-        const savedAddress = await createAddressMutation.mutateAsync({
-          name:
-            `${formData.firstName} ${formData.lastName}`.trim() ||
-            user?.name ||
-            "",
-          phone: user?.phone || formData.phone,
-          country: formData.country || null,
-          division: formData.division || null,
-          district: formData.district,
-          area: formData.area || null,
-          addressLine: formData.addressLine,
-          postalCode: formData.postalCode || null,
-          isDefault: false,
-        });
-        addressId = savedAddress.id;
+      if (!selectedAddressId) {
+        toast.error("Please select or create an address");
+        return;
       }
 
       const order = await createOrderMutation.mutateAsync({
-        addressId,
+        addressId: selectedAddressId,
         discount: 0,
         paymentMethod,
         notes: "",
@@ -152,18 +124,20 @@ const CheckoutPage = () => {
     }
   };
 
-  const isSubmitting =
-    isProcessing ||
-    createOrderMutation.isPending ||
-    createAddressMutation.isPending;
+  const isSubmitting = isProcessing || createOrderMutation.isPending;
+
+  const handleAddressCreated = (address?: Address) => {
+    if (address) {
+      setNewlyCreatedAddress(address);
+      setSelectedAddressId(address.id);
+    }
+  };
 
   const steps = [
     { number: 1, label: "Shipping" },
     { number: 2, label: "Payment" },
     { number: 3, label: "Review" },
   ];
-
-  const selectedAddress = addresses.find((a) => a.id === selectedAddressId);
 
   return (
     <div className="relative min-h-screen bg-background overflow-hidden">
@@ -241,161 +215,84 @@ const CheckoutPage = () => {
                     Shipping Information
                   </h2>
 
-                  {/* Address Mode Toggle */}
-                  {addresses.length > 0 && (
-                    <RadioGroup
-                      value={addressMode}
-                      onValueChange={(v) =>
-                        setAddressMode(v as "existing" | "new")
-                      }
-                      className="flex gap-4 mb-6"
-                    >
-                      <label className="flex items-center gap-2 cursor-pointer">
-                        <RadioGroupItem value="new" className="border-border text-primary" />
-                        <span className="font-medium text-body">New Address</span>
-                      </label>
-                      <label className="flex items-center gap-2 cursor-pointer">
-                        <RadioGroupItem value="existing" className="border-border text-primary" />
-                        <span className="font-medium text-body">Saved Address</span>
-                      </label>
-                    </RadioGroup>
-                  )}
+                  {/* Select Address Section */}
+                  <h3 className="font-display text-lg font-semibold mb-4 flex items-center gap-2 text-heading">
+                    <MapPin className="w-5 h-5 text-primary" />
+                    Select an address
+                  </h3>
 
-                  {addressMode === "existing" && addresses.length > 0 && (
-                    <div className="space-y-2 mb-6">
-                      <Select
-                        value={selectedAddressId}
-                        onValueChange={setSelectedAddressId}
-                      >
-                        <SelectTrigger className="bg-card border-border text-body hover:border-primary/40">
-                          <SelectValue placeholder="Select a saved address" />
-                        </SelectTrigger>
-                        <SelectContent className="bg-card border-border">
-                          {addresses.map((addr) => (
-                            <SelectItem key={addr.id} value={addr.id} className="text-body focus:bg-muted">
-                              {addr.name} — {addr.addressLine}, {addr.district}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      {selectedAddress && (
-                        <div className="p-3 bg-muted rounded-lg text-sm text-muted-foreground border border-border">
-                          <p className="font-medium text-foreground">
-                            {selectedAddress.name}
-                          </p>
-                          <p>{selectedAddress.addressLine}</p>
-                          <p>
-                            {selectedAddress.district}
-                            {selectedAddress.area &&
-                              `, ${selectedAddress.area}`}
-                          </p>
-                          {selectedAddress.country && (
-                            <p>
-                              {selectedAddress.country}
-                              {selectedAddress.postalCode &&
-                                ` ${selectedAddress.postalCode}`}
-                            </p>
-                          )}
-                          <p>Phone: {selectedAddress.phone}</p>
+                  {addressesLoading ? (
+                    <div className="space-y-3 mb-6">
+                      {[...Array(2)].map((_, i) => (
+                        <div key={i} className="animate-pulse">
+                          <div className="h-20 bg-muted rounded-xl" />
                         </div>
-                      )}
+                      ))}
+                    </div>
+                  ) : addresses.length > 0 ? (
+                    <div className="space-y-3 mb-6">
+                      {addresses.map((addr) => (
+                        <button
+                          key={addr.id}
+                          type="button"
+                          onClick={() => setSelectedAddressId(addr.id)}
+                          className={`w-full text-left p-4 rounded-xl border-2 transition-all flex items-start gap-3 ${
+                            selectedAddressId === addr.id
+                              ? "border-primary bg-primary/5 shadow-md"
+                              : "border-border bg-card hover:border-primary/40"
+                          }`}
+                        >
+                          <MapPin
+                            className={`w-5 h-5 mt-0.5 flex-shrink-0 ${
+                              selectedAddressId === addr.id
+                                ? "text-primary"
+                                : "text-muted-foreground"
+                            }`}
+                          />
+                          <div className="flex-1 min-w-0">
+                            <p className="font-medium text-foreground">{addr.name}</p>
+                            <p className="text-sm text-muted-foreground truncate">
+                              {addr.addressLine}
+                            </p>
+                            <p className="text-sm text-muted-foreground">
+                              {addr.district}
+                              {addr.area && `, ${addr.area}`}
+                            </p>
+                            {addr.country && (
+                              <p className="text-sm text-muted-foreground">
+                                {addr.country}
+                                {addr.postalCode && ` ${addr.postalCode}`}
+                              </p>
+                            )}
+                            <p className="text-sm text-muted-foreground">
+                              Phone: {addr.phone}
+                            </p>
+                          </div>
+                          {selectedAddressId === addr.id && (
+                            <Check className="w-5 h-5 text-primary flex-shrink-0" />
+                          )}
+                        </button>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-8 rounded-xl border-2 border-dashed border-border mb-6">
+                      <MapPin className="w-10 h-10 text-muted-foreground mx-auto mb-2" />
+                      <p className="text-muted-foreground">No saved addresses yet</p>
                     </div>
                   )}
 
-                  {addressMode === "new" && (
-                    <div className="grid sm:grid-cols-2 gap-4 mb-6">
-                      <div className="space-y-2">
-                        <Label htmlFor="firstName" className="text-sm font-medium text-body">First Name</Label>
-                        <Input
-                          id="firstName"
-                          value={formData.firstName}
-                          onChange={(e) =>
-                            setFormData({
-                              ...formData,
-                              firstName: e.target.value,
-                            })
-                          }
-                          required
-                          className="bg-card border-border text-foreground placeholder:text-muted-foreground focus:border-primary/50 focus:ring-2 focus:ring-primary/20"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="lastName" className="text-sm font-medium text-body">Last Name</Label>
-                        <Input
-                          id="lastName"
-                          value={formData.lastName}
-                          onChange={(e) =>
-                            setFormData({
-                              ...formData,
-                              lastName: e.target.value,
-                            })
-                          }
-                          required
-                          className="bg-card border-border text-foreground placeholder:text-muted-foreground focus:border-primary/50 focus:ring-2 focus:ring-primary/20"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="phone" className="text-sm font-medium text-body">Phone</Label>
-                        <Input
-                          id="phone"
-                          type="tel"
-                          value={formData.phone}
-                          onChange={(e) =>
-                            setFormData({
-                              ...formData,
-                              phone: e.target.value,
-                            })
-                          }
-                          className="bg-card border-border text-foreground placeholder:text-muted-foreground focus:border-primary/50 focus:ring-2 focus:ring-primary/20"
-                        />
-                      </div>
-                      <div className="sm:col-span-2 space-y-2">
-                        <Label htmlFor="addressLine" className="text-sm font-medium text-body">Address Line</Label>
-                        <Input
-                          id="addressLine"
-                          value={formData.addressLine}
-                          onChange={(e) =>
-                            setFormData({
-                              ...formData,
-                              addressLine: e.target.value,
-                            })
-                          }
-                          required
-                          className="bg-card border-border text-foreground placeholder:text-muted-foreground focus:border-primary/50 focus:ring-2 focus:ring-primary/20"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="district" className="text-sm font-medium text-body">District</Label>
-                        <Input
-                          id="district"
-                          value={formData.district}
-                          onChange={(e) =>
-                            setFormData({
-                              ...formData,
-                              district: e.target.value,
-                            })
-                          }
-                          required
-                          className="bg-card border-border text-foreground placeholder:text-muted-foreground focus:border-primary/50 focus:ring-2 focus:ring-primary/20"
-                        />
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor="postalCode" className="text-sm font-medium text-body">Postal Code</Label>
-                        <Input
-                          id="postalCode"
-                          value={formData.postalCode}
-                          onChange={(e) =>
-                            setFormData({
-                              ...formData,
-                              postalCode: e.target.value,
-                            })
-                          }
-                          className="bg-card border-border text-foreground placeholder:text-muted-foreground focus:border-primary/50 focus:ring-2 focus:ring-primary/20"
-                        />
-                      </div>
-                    </div>
-                  )}
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="w-full justify-between"
+                    onClick={() => setIsAddressDialogOpen(true)}
+                  >
+                    <span className="flex items-center gap-2">
+                      <MapPin className="w-4 h-4" />
+                      Create New Address
+                    </span>
+                    <Plus className="w-4 h-4" />
+                  </Button>
 
                   <Separator className="my-6 bg-border" />
 
@@ -516,14 +413,7 @@ const CheckoutPage = () => {
                         </p>
                       ) : (
                         <p className="text-muted-foreground">
-                          {formData.firstName} {formData.lastName}
-                          <br />
-                          {formData.addressLine}
-                          <br />
-                          {formData.district}
-                          {formData.area && `, ${formData.area}`}
-                          <br />
-                          {formData.country}
+                          No address selected
                         </p>
                       )}
                     </div>
@@ -564,6 +454,12 @@ const CheckoutPage = () => {
                 </div>
               )}
             </motion.div>
+
+            <AddressFormDialog
+              open={isAddressDialogOpen}
+              onOpenChange={setIsAddressDialogOpen}
+              onSuccess={handleAddressCreated}
+            />
 
             {/* Order Summary */}
             <motion.div

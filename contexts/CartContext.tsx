@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useState, ReactNode } from "react";
 import { useCart, useAddToCart, useUpdateCartItem, useRemoveFromCart, useClearCart } from "@/hooks/use-cart";
+import { useAuth } from "@/contexts/AuthContext";
 import { Cart, CartItem, BookPaper } from "@/lib/types";
 
 interface CartContextType {
@@ -49,13 +50,16 @@ function getEffectivePrice(paper: BookPaper | null): number {
 
 export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const { data: cart, isLoading } = useCart();
+  const { user } = useAuth();
+  const { data: cart, isLoading } = useCart(user?.id);
   const { mutate: addToCartMutate } = useAddToCart();
   const { mutate: updateCartItemMutate } = useUpdateCartItem();
   const { mutate: removeFromCartMutate } = useRemoveFromCart();
   const { mutate: clearCartMutate } = useClearCart();
+  const { mounted } = useAuth();
 
   const items = cart?.cartItems || [];
+  const isCartLoading = isLoading || !mounted;
 
   const addToCart = (bookId: string, paperId?: string, quantity: number = 1) => {
     addToCartMutate({ bookId, paperId, quantity });
@@ -91,7 +95,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         totalPrice,
         isCartOpen,
         setIsCartOpen,
-        isLoading,
+        isLoading: isCartLoading,
       }}
     >
       {children}

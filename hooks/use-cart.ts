@@ -6,9 +6,9 @@ import { apiClient, ApiError } from "@/lib/api-client";
 import { Cart, CartItem } from "@/lib/types";
 
 // Get cart
-export const useCart = () => {
+export const useCart = (userId?: string) => {
   return useQuery<Cart, Error>({
-    queryKey: ["cart"],
+    queryKey: ["cart", userId],
     queryFn: async () => {
       const response = await apiClient.get<Cart>("/cart");
       return response.data;

@@ -10,6 +10,7 @@ import React, {
   useCallback,
   useSyncExternalStore,
 } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { useLogin, useRegister } from "@/hooks/use-auth";
 import { removeToken, setToken } from "@/lib/api-client";
 import { AuthUser, AuthResponse } from "@/lib/types";
@@ -65,6 +66,7 @@ const getServerSnapshot = () => false;
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   // Use lazy initializer to set initial state from localStorage
   const [user, setUser] = useState<User | null>(() => getInitialUser());
+  const queryClient = useQueryClient();
   const loginMutation = useLogin();
   const registerMutation = useRegister();
   const socialLoginMutation = useSocialLogin();
@@ -111,7 +113,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const logout = useCallback(() => {
     setUser(null);
     removeToken();
-  }, []);
+    queryClient.clear();
+  }, [queryClient]);
 
   const updateProfile = useCallback((updates: Partial<User>) => {
     if (typeof window === "undefined") return;

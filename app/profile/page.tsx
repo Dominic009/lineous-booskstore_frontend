@@ -25,14 +25,7 @@ import { Input } from "../../components/ui/input";
 import { Label } from "../../components/ui/label";
 import { Textarea } from "../../components/ui/textarea";
 import { Button } from "../../components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-} from "../../components/ui/dialog";
+import { AddressFormDialog } from "@/components/AddressFormDialog";
 import {
   Avatar,
   AvatarImage,
@@ -66,17 +59,6 @@ const ProfilePage = () => {
 
   const [isAddressDialogOpen, setIsAddressDialogOpen] = useState(false);
   const [editingAddress, setEditingAddress] = useState<Address | null>(null);
-  const [addressForm, setAddressForm] = useState({
-    name: "",
-    phone: "",
-    country: "",
-    division: "",
-    district: "",
-    area: "",
-    addressLine: "",
-    postalCode: "",
-    isDefault: false,
-  });
 
   if (!isAuthenticated && !isLoggingOut) {
     router.push("/login");
@@ -105,50 +87,12 @@ const ProfilePage = () => {
   };
 
   const openAddressDialog = (address?: Address) => {
-    if (address) {
-      setEditingAddress(address);
-      setAddressForm({
-        name: address.name,
-        phone: address.phone,
-        country: address.country || "",
-        division: address.division || "",
-        district: address.district,
-        area: address.area || "",
-        addressLine: address.addressLine,
-        postalCode: address.postalCode || "",
-        isDefault: address.isDefault,
-      });
-    } else {
-      setEditingAddress(null);
-      setAddressForm({
-        name: user?.name || "",
-        phone: user?.phone || "",
-        country: "",
-        division: "",
-        district: "",
-        area: "",
-        addressLine: "",
-        postalCode: "",
-        isDefault: false,
-      });
-    }
+    setEditingAddress(address || null);
     setIsAddressDialogOpen(true);
   };
 
-  const handleAddressSubmit = async () => {
-    try {
-      if (editingAddress) {
-        await updateAddressMutation.mutateAsync({
-          id: editingAddress.id,
-          data: addressForm,
-        });
-      } else {
-        await createAddressMutation.mutateAsync(addressForm);
-      }
-      setIsAddressDialogOpen(false);
-    } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Failed to save address");
-    }
+  const handleAddressSuccess = () => {
+    // Addresses list will auto-refresh via query invalidation
   };
 
   const handleDeleteAddress = async (id: string) => {
@@ -481,7 +425,12 @@ const ProfilePage = () => {
         </div>
       </main>
 
-      {/* Address Dialog */}
+      <AddressFormDialog
+        open={isAddressDialogOpen}
+        onOpenChange={setIsAddressDialogOpen}
+        initialAddress={editingAddress}
+        onSuccess={handleAddressSuccess}
+      />
 
       {isLoggingOut && <LogoutLoader />}
     </div>
