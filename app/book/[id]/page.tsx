@@ -530,7 +530,7 @@ const BookDetailsPage = () => {
               </div>
               <div className="flex items-start gap-3 p-3 bg-slate-50 rounded-xl border border-slate-100">
                 <Package className="w-5 h-5 text-primary mt-0.5" />
-                <div>
+                {/* <div>
                   <p className="text-sm text-slate-500">Stock</p>
                   <p className="font-semibold text-slate-900">
                     {selectedPaper?.stock !== undefined ? (
@@ -545,7 +545,7 @@ const BookDetailsPage = () => {
                       "N/A"
                     )}
                   </p>
-                </div>
+                </div> */}
               </div>
             </div>
           </TabsContent>
