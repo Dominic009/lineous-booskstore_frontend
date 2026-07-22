@@ -368,7 +368,7 @@ const BookDetailsPage = () => {
                         {selectedPaper.pageCount || "N/A"}
                       </p>
                     </div>
-                    <div>
+                    {/* <div>
                       <p className="text-xs text-slate-500">Stock</p>
                       <p
                         className={`font-semibold text-sm ${
@@ -381,7 +381,7 @@ const BookDetailsPage = () => {
                           ? `${selectedPaper.stock} available`
                           : "Out of stock"}
                       </p>
-                    </div>
+                    </div> */}
                   </div>
                 </motion.div>
               )}
